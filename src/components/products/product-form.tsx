@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
+import ImageUpload from "./image-upload";
+import ProductPreview from "./product-preview";
 
 interface Category {
   id: string;
@@ -38,6 +40,7 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
     meta_title: '',
     meta_description: '',
     thumbnail_url: '',
+    images: [] as string[],
     featured: false,
     allow_affiliates: true,
     requires_shipping: false,
@@ -97,7 +100,7 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
         difficulty_level: formData.difficulty_level || null,
         meta_title: formData.meta_title || null,
         meta_description: formData.meta_description || null,
-        thumbnail_url: formData.thumbnail_url || null,
+        thumbnail_url: formData.images.length > 0 ? formData.images[0] : (formData.thumbnail_url || null),
         featured: formData.featured,
         allow_affiliates: formData.allow_affiliates,
         requires_shipping: formData.requires_shipping,
@@ -138,11 +141,14 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Novo Produto</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Form */}
+      <div className="lg:col-span-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Novo Produto</CardTitle>
+          </CardHeader>
+          <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information */}
           <div className="space-y-4">
@@ -185,8 +191,14 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
               />
             </div>
 
+            <ImageUpload
+              images={formData.images}
+              onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
+              maxImages={5}
+            />
+
             <div className="space-y-2">
-              <Label htmlFor="thumbnail_url">URL da Imagem</Label>
+              <Label htmlFor="thumbnail_url">URL da Imagem Adicional</Label>
               <Input
                 id="thumbnail_url"
                 type="url"
@@ -194,6 +206,9 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
                 onChange={(e) => setFormData(prev => ({ ...prev, thumbnail_url: e.target.value }))}
                 placeholder="https://exemplo.com/imagem.jpg"
               />
+              <p className="text-xs text-muted-foreground">
+                Use este campo apenas se quiser adicionar uma imagem por URL separadamente
+              </p>
             </div>
           </div>
 
@@ -407,9 +422,27 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
               </Button>
             )}
           </div>
-        </form>
-      </CardContent>
-    </Card>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+
+    {/* Preview */}
+    <div className="lg:col-span-1">
+      <div className="sticky top-4">
+        <ProductPreview
+          title={formData.title}
+          description={formData.description}
+          price_cents={formData.price_cents}
+          compare_price_cents={formData.compare_price_cents || undefined}
+          images={formData.images}
+          type={formData.type}
+          difficulty_level={formData.difficulty_level}
+          featured={formData.featured}
+        />
+      </div>
+    </div>
+  </div>
   );
 };
 
