@@ -12,6 +12,8 @@ import Library from "./pages/Library";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
+import CreateStore from "./pages/CreateStore";
+import Store from "./pages/Store";
 import NotFound from "./pages/NotFound";
 import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
@@ -45,6 +47,8 @@ const App = () => (
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/perfil" element={<Profile />} />
                     <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/criar-loja" element={<CreateStore />} />
+                    <Route path="/loja/:slug" element={<Store />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>

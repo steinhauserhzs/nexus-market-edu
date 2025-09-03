@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { useAuth } from "@/contexts/AuthContext";
 import CartSheet from "@/components/cart/cart-sheet";
 import NotificationBadge from "@/components/ui/notification-badge";
-import { BookOpen, Store, User, LogOut, Settings, Bell } from "lucide-react";
+import { BookOpen, Store, User, LogOut, Settings, Bell, Plus } from "lucide-react";
 
 export default function MainHeader() {
   const { user, profile, signOut } = useAuth();
@@ -67,6 +67,12 @@ export default function MainHeader() {
                 <DropdownMenuItem onClick={() => window.location.href = '/biblioteca'}>
                   <BookOpen className="mr-2 h-4 w-4" />
                   Minha Biblioteca
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => window.location.href = '/criar-loja'}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Criar Loja
                 </DropdownMenuItem>
 
                 {profile.role === 'seller' && (
