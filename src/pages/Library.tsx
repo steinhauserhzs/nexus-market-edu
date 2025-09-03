@@ -39,39 +39,69 @@ const Library = () => {
 
   const fetchLicenses = async () => {
     try {
-      const { data, error } = await supabase
+      console.log('[Library] Fetching licenses...');
+      // 1) Buscar apenas dados da licença (sem join, pois não há FK configurada)
+      const { data: licenseRows, error: licError } = await supabase
         .from('licenses')
-        .select(`
-          id,
-          expires_at,
-          created_at,
-          product:products(
-            id,
-            title,
-            description,
-            thumbnail_url,
-            type,
-            total_lessons,
-            total_duration_minutes
-          )
-        `)
+        .select('id, product_id, expires_at, created_at')
         .eq('user_id', user?.id)
         .eq('is_active', true);
 
-      if (error) throw error;
-      setLicenses(data || []);
+      if (licError) throw licError;
+
+      if (!licenseRows || licenseRows.length === 0) {
+        console.log('[Library] No licenses');
+        setLicenses([]);
+        return;
+      }
+
+      const productIds = licenseRows
+        .map((l: any) => l.product_id)
+        .filter(Boolean);
+
+      if (productIds.length === 0) {
+        setLicenses([]);
+        return;
+      }
+
+      // 2) Buscar produtos separados e mesclar
+      const { data: products, error: prodError } = await supabase
+        .from('products')
+        .select('id, title, description, thumbnail_url, type, total_lessons, total_duration_minutes, status')
+        .in('id', productIds);
+
+      if (prodError) throw prodError;
+
+      const productMap = new Map(products?.map((p: any) => [p.id, p]));
+
+      const merged: License[] = licenseRows.map((l: any) => ({
+        id: l.id,
+        expires_at: l.expires_at,
+        created_at: l.created_at,
+        product: {
+          id: l.product_id,
+          title: productMap.get(l.product_id)?.title ?? 'Produto indisponível',
+          description: productMap.get(l.product_id)?.description ?? 'Este item não está disponível no momento.',
+          thumbnail_url: productMap.get(l.product_id)?.thumbnail_url ?? null,
+          type: productMap.get(l.product_id)?.type ?? 'digital',
+          total_lessons: productMap.get(l.product_id)?.total_lessons ?? 0,
+          total_duration_minutes: productMap.get(l.product_id)?.total_duration_minutes ?? 0,
+        }
+      }));
+
+      setLicenses(merged);
     } catch (error: any) {
       console.error('Error fetching licenses:', error);
       toast({
-        title: "Erro ao carregar biblioteca",
-        description: "Tente novamente mais tarde.",
-        variant: "destructive",
+        title: 'Erro ao carregar biblioteca',
+        description: 'Tente novamente mais tarde.',
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
+      console.log('[Library] Loading finished');
     }
   };
-
   const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
