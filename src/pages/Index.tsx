@@ -35,12 +35,14 @@ const Index = () => {
   const productsLoading = false;
   const productsError = null;
 
-  if (authLoading || productsLoading) {
+  // Only show loading spinner if we're actually loading something important
+  // Home page should be accessible without waiting for auth
+  if (productsLoading) {
     return (
       <div className="min-h-screen bg-background">
         <MainHeader />
         <div className="flex items-center justify-center min-h-[60vh]">
-          <LoadingSpinner size="lg" text="Carregando plataforma..." />
+          <LoadingSpinner size="lg" text="Carregando produtos..." />
         </div>
       </div>
     );
