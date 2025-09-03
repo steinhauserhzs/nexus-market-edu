@@ -496,6 +496,45 @@ export type Database = {
           },
         ]
       }
+      payment_info_audit: {
+        Row: {
+          accessed_user_id: string
+          action: string
+          audit_timestamp: string
+          error_message: string | null
+          id: string
+          ip_address: unknown | null
+          session_id: string | null
+          success: boolean | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          accessed_user_id: string
+          action: string
+          audit_timestamp?: string
+          error_message?: string | null
+          id?: string
+          ip_address?: unknown | null
+          session_id?: string | null
+          success?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          accessed_user_id?: string
+          action?: string
+          audit_timestamp?: string
+          error_message?: string | null
+          id?: string
+          ip_address?: unknown | null
+          session_id?: string | null
+          success?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       product_commissions: {
         Row: {
           affiliate_id: string | null
@@ -938,9 +977,22 @@ export type Database = {
         Args: { amount_cents: number }
         Returns: number
       }
+      can_access_payment_info: {
+        Args: { target_user_id: string }
+        Returns: boolean
+      }
       generate_store_slug: {
         Args: { store_name: string }
         Returns: string
+      }
+      log_payment_info_access: {
+        Args: {
+          accessed_user_id: string
+          action_type: string
+          error_msg?: string
+          success_status?: boolean
+        }
+        Returns: undefined
       }
       validate_cpf: {
         Args: { cpf_input: string }
