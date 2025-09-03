@@ -985,6 +985,16 @@ export type Database = {
         Args: { store_name: string }
         Returns: string
       }
+      get_my_payment_audit_logs: {
+        Args: { end_date?: string; start_date?: string }
+        Returns: {
+          action: string
+          audit_timestamp: string
+          error_message: string
+          id: string
+          success: boolean
+        }[]
+      }
       log_payment_info_access: {
         Args: {
           accessed_user_id: string
@@ -993,6 +1003,34 @@ export type Database = {
           success_status?: boolean
         }
         Returns: undefined
+      }
+      secure_get_payment_info: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          bank_account: Json
+          created_at: string
+          id: string
+          pix_key: string
+          stripe_account_id: string
+          updated_at: string
+          verified: boolean
+        }[]
+      }
+      secure_insert_payment_info: {
+        Args: {
+          p_bank_account?: Json
+          p_pix_key?: string
+          p_stripe_account_id?: string
+        }
+        Returns: string
+      }
+      secure_update_payment_info: {
+        Args: {
+          p_bank_account?: Json
+          p_pix_key?: string
+          p_stripe_account_id?: string
+        }
+        Returns: boolean
       }
       validate_cpf: {
         Args: { cpf_input: string }
