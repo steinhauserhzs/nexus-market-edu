@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { CreditCard, ShoppingCart, User, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import StripeCheckout from "@/components/payment/stripe-checkout";
 import MainHeader from "@/components/layout/main-header";
 import BackNavigation from "@/components/layout/back-navigation";
 
@@ -191,22 +192,29 @@ const Checkout = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="border rounded-lg p-4 bg-accent/5">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                          <span className="text-green-600 font-bold text-sm">PIX</span>
-                        </div>
-                        <div>
-                          <h4 className="font-medium">PIX</h4>
-                          <p className="text-sm text-muted-foreground">
-                            Pagamento instantâneo via PIX
-                          </p>
-                        </div>
-                      </div>
-                      <Badge variant="outline">Disponível</Badge>
-                    </div>
-                  </div>
+                  <StripeCheckout
+                    products={items.map(item => ({
+                      id: item.product_id,
+                      title: item.title,
+                      price_cents: item.price_cents,
+                      thumbnail_url: item.thumbnail_url || undefined,
+                      type: item.type || 'digital'
+                    }))}
+                    onSuccess={() => {
+                      clearCart();
+                      toast({
+                        title: "Redirecionado para pagamento",
+                        description: "Complete sua compra na página do Stripe",
+                      });
+                    }}
+                    onError={(error) => {
+                      toast({
+                        title: "Erro no checkout",
+                        description: error,
+                        variant: "destructive",
+                      });
+                    }}
+                  />
                 </CardContent>
               </Card>
             </div>
