@@ -205,33 +205,35 @@ const CompleteProfileForm = () => {
       {/* Profile Header */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex items-center gap-6 mb-6">
-            <Avatar className="w-24 h-24">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-6">
+            <Avatar className="w-20 h-20 sm:w-24 sm:h-24 mx-auto sm:mx-0">
               <AvatarImage src={profile?.avatar_url || ''} />
-              <AvatarFallback className="text-2xl">
+              <AvatarFallback className="text-xl sm:text-2xl">
                 {profile?.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
             
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <h2 className="text-2xl font-bold">
+            <div className="space-y-2 flex-1 min-w-0 text-center sm:text-left">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <h2 className="text-xl sm:text-2xl font-bold truncate">
                   {profile?.full_name || 'Usuário'}
                 </h2>
-                <Badge variant={profile?.role === 'seller' ? 'default' : 'secondary'}>
-                  {profile?.role === 'seller' ? 'Vendedor' : 'Usuário'}
-                </Badge>
-                {profile?.is_verified && (
-                  <Badge variant="outline">
-                    <Shield className="w-3 h-3 mr-1" />
-                    Verificado
+                <div className="flex gap-2 justify-center sm:justify-start flex-wrap">
+                  <Badge variant={profile?.role === 'seller' ? 'default' : 'secondary'}>
+                    {profile?.role === 'seller' ? 'Vendedor' : 'Usuário'}
                   </Badge>
-                )}
+                  {profile?.is_verified && (
+                    <Badge variant="outline">
+                      <Shield className="w-3 h-3 mr-1" />
+                      Verificado
+                    </Badge>
+                  )}
+                </div>
               </div>
               
-              <p className="text-muted-foreground">{user.email}</p>
+              <p className="text-muted-foreground text-sm break-all">{user.email}</p>
               
-              <div className="flex gap-2 text-sm text-muted-foreground">
+              <div className="flex gap-2 text-sm text-muted-foreground justify-center sm:justify-start flex-wrap">
                 {profile?.phone_verified && (
                   <Badge variant="outline" className="text-xs">
                     <Smartphone className="w-3 h-3 mr-1" />
