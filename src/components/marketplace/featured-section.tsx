@@ -72,11 +72,7 @@ export default function FeaturedSection({
           total_lessons,
           total_duration_minutes,
           featured,
-          slug,
-          store_id,
-          stores!left (
-            name
-          )
+          slug
         `)
         .eq('status', 'published')
         .limit(limit);
