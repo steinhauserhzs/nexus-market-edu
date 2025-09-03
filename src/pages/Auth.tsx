@@ -5,20 +5,25 @@ import AdvancedSigninForm from "@/components/auth/advanced-signin-form";
 import AdvancedSignupForm from "@/components/auth/advanced-signup-form";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Auth = () => {
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
+
   return (
-    <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4 safe-area-top safe-area-bottom">
       <div className="w-full max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8">
           <Button
             variant="ghost"
-            onClick={() => window.location.href = '/'}
+            onClick={() => navigate('/')}
             className="absolute top-4 left-4 text-primary-foreground hover:bg-primary-foreground/10"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar
+            {!isMobile && "Voltar"}
           </Button>
           
           <div className="flex items-center justify-center gap-2 mb-4">

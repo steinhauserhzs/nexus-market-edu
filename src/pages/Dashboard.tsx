@@ -17,6 +17,8 @@ import {
   Settings
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import MainHeader from "@/components/layout/main-header";
+import BackNavigation from "@/components/layout/back-navigation";
 
 interface Store {
   id: string;
@@ -253,7 +255,10 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <MainHeader />
       <div className="container mx-auto px-4 py-8">
+        <BackNavigation title={`Dashboard - ${store.name}`} />
+        
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold mb-2">Dashboard - {store.name}</h1>

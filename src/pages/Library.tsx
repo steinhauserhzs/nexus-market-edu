@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Play, BookOpen, Clock, Award } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import BackNavigation from "@/components/layout/back-navigation";
+import MainHeader from "@/components/layout/main-header";
 
 interface License {
   id: string;
@@ -119,7 +121,10 @@ const Library = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <MainHeader />
       <div className="container mx-auto px-4 py-8">
+        <BackNavigation title="Minha Biblioteca" />
+        
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Minha Biblioteca</h1>
           <p className="text-muted-foreground">

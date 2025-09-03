@@ -10,6 +10,8 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { CreditCard, ShoppingCart, User, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import MainHeader from "@/components/layout/main-header";
+import BackNavigation from "@/components/layout/back-navigation";
 
 const Checkout = () => {
   const { user, profile } = useAuth();
@@ -133,8 +135,11 @@ const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background py-8">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-background">
+      <MainHeader />
+      <div className="container mx-auto px-4 py-8">
+        <BackNavigation title="Finalizar Compra" />
+        
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">Finalizar Compra</h1>
