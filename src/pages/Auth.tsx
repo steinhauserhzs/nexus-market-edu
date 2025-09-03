@@ -1,233 +1,79 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Eye, EyeOff, ArrowLeft } from "lucide-react";
+import AdvancedSigninForm from "@/components/auth/advanced-signin-form";
+import AdvancedSignupForm from "@/components/auth/advanced-signup-form";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-export default function Auth() {
-  const { signUp, signIn, user } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // Redirect if already logged in
-    if (user) {
-      navigate('/');
-    }
-  }, [user, navigate]);
-
-  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-
-    try {
-      const { error } = await signIn(email, password);
-      if (error) throw error;
-      navigate('/');
-    } catch (error: any) {
-      setError(error.message || 'Erro ao fazer login. Tente novamente.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-    const fullName = formData.get('fullName') as string;
-
-    try {
-      const { error } = await signUp(email, password, fullName);
-      if (error) throw error;
-    } catch (error: any) {
-      setError(error.message || 'Erro ao criar conta. Tente novamente.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+const Auth = () => {
   return (
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Back to home */}
-        <Button
-          variant="ghost"
-          onClick={() => navigate('/')}
-          className="mb-6 text-primary-foreground hover:bg-primary-foreground/10"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Voltar ao início
-        </Button>
-
-        <Card className="backdrop-blur-sm bg-background/95 shadow-2xl">
-          <CardHeader className="text-center">
-            <div className="w-12 h-12 bg-gradient-accent rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-accent-foreground font-bold text-xl">N</span>
+      <div className="w-full max-w-4xl">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <Button
+            variant="ghost"
+            onClick={() => window.location.href = '/'}
+            className="absolute top-4 left-4 text-primary-foreground hover:bg-primary-foreground/10"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Voltar
+          </Button>
+          
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
+              <span className="text-accent-foreground font-bold">N</span>
             </div>
-            <CardTitle className="text-2xl font-bold">Nexus Market EDU</CardTitle>
-            <CardDescription>
-              Entre ou crie sua conta para continuar
-            </CardDescription>
-          </CardHeader>
+            <span className="font-bold text-2xl text-primary-foreground">Nexus Market</span>
+          </div>
+          
+          <h1 className="text-3xl font-bold text-primary-foreground mb-2">
+            Bem-vindo à Plataforma Completa
+          </h1>
+          <p className="text-primary-foreground/80 text-lg">
+            Entre ou crie sua conta para acessar cursos e vender produtos
+          </p>
+        </div>
 
-          <CardContent>
-            <Tabs defaultValue="signin" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="signin">Entrar</TabsTrigger>
-                <TabsTrigger value="signup">Cadastrar</TabsTrigger>
-              </TabsList>
+        {/* Auth Forms */}
+        <div className="bg-background/95 backdrop-blur-sm rounded-2xl p-8 shadow-2xl">
+          <Tabs defaultValue="signin" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-8">
+              <TabsTrigger value="signin" className="text-lg py-3">
+                Entrar
+              </TabsTrigger>
+              <TabsTrigger value="signup" className="text-lg py-3">
+                Criar Conta
+              </TabsTrigger>
+            </TabsList>
 
-              {error && (
-                <Alert variant="destructive" className="mt-4">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
+            <TabsContent value="signin">
+              <AdvancedSigninForm />
+            </TabsContent>
 
-              {/* Sign In Tab */}
-              <TabsContent value="signin" className="space-y-4">
-                <form onSubmit={handleSignIn} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-email">Email</Label>
-                    <Input
-                      id="signin-email"
-                      name="email"
-                      type="email"
-                      placeholder="seu@email.com"
-                      required
-                      disabled={isLoading}
-                    />
-                  </div>
+            <TabsContent value="signup">
+              <AdvancedSignupForm />
+            </TabsContent>
+          </Tabs>
+        </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-password">Senha</Label>
-                    <div className="relative">
-                      <Input
-                        id="signin-password"
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Sua senha"
-                        required
-                        disabled={isLoading}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}
-                        disabled={isLoading}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Entrando...
-                      </>
-                    ) : (
-                      'Entrar'
-                    )}
-                  </Button>
-                </form>
-              </TabsContent>
-
-              {/* Sign Up Tab */}
-              <TabsContent value="signup" className="space-y-4">
-                <form onSubmit={handleSignUp} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-name">Nome completo</Label>
-                    <Input
-                      id="signup-name"
-                      name="fullName"
-                      type="text"
-                      placeholder="Seu nome completo"
-                      required
-                      disabled={isLoading}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
-                    <Input
-                      id="signup-email"
-                      name="email"
-                      type="email"
-                      placeholder="seu@email.com"
-                      required
-                      disabled={isLoading}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password">Senha</Label>
-                    <div className="relative">
-                      <Input
-                        id="signup-password"
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Mínimo 6 caracteres"
-                        required
-                        minLength={6}
-                        disabled={isLoading}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}
-                        disabled={isLoading}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Criando conta...
-                      </>
-                    ) : (
-                      'Criar conta'
-                    )}
-                  </Button>
-                </form>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+        {/* Footer */}
+        <div className="text-center mt-8 text-primary-foreground/60">
+          <p className="text-sm">
+            Ao continuar, você concorda com nossos{" "}
+            <a href="#" className="underline hover:text-primary-foreground">
+              Termos de Uso
+            </a>{" "}
+            e{" "}
+            <a href="#" className="underline hover:text-primary-foreground">
+              Política de Privacidade
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default Auth;

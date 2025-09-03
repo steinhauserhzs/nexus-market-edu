@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { User, Session } from '@supabase/supabase-js';
+import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -14,6 +14,38 @@ interface Profile {
   tax_id: string | null;
   seller_slug: string | null;
   is_verified: boolean;
+  
+  // Novos campos expandidos
+  phone: string | null;
+  cpf: string | null;
+  birth_date: string | null;
+  gender: string | null;
+  profession: string | null;
+  company: string | null;
+  linkedin_url: string | null;
+  website_url: string | null;
+  
+  // Endereço
+  address_line1: string | null;
+  address_line2: string | null;
+  city: string | null;
+  state: string | null;
+  postal_code: string | null;
+  country: string | null;
+  
+  // Preferências
+  preferred_language: string;
+  timezone: string;
+  email_notifications: boolean;
+  sms_notifications: boolean;
+  marketing_emails: boolean;
+  
+  // Verificações
+  phone_verified: boolean;
+  cpf_verified: boolean;
+  email_verified: boolean;
+  last_login_at: string | null;
+  login_method: string;
 }
 
 interface AuthContextType {
@@ -21,10 +53,12 @@ interface AuthContextType {
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, fullName: string, additionalData?: any) => Promise<{ error: any }>;
+  signIn: (identifier: string, password: string) => Promise<{ error: any }>;
+  signInWithGoogle: () => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  findUserByIdentifier: (identifier: string) => Promise<{ user: any; error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -68,10 +102,60 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Função para buscar usuário por CPF, telefone ou email
+  const findUserByIdentifier = async (identifier: string) => {
+    try {
+      // Remove caracteres especiais
+      const cleanIdentifier = identifier.replace(/[^\w@.-]/g, '');
+      
+      let query = supabase.from('profiles').select('*');
+      
+      // Determina o tipo de identificador
+      if (cleanIdentifier.includes('@')) {
+        // Email
+        query = query.eq('email', cleanIdentifier);
+      } else if (/^\d{10,11}$/.test(cleanIdentifier)) {
+        // Telefone
+        query = query.eq('phone', cleanIdentifier);
+      } else if (/^\d{11}$/.test(cleanIdentifier)) {
+        // CPF
+        query = query.eq('cpf', cleanIdentifier);
+      } else {
+        return { user: null, error: { message: 'Formato de identificador inválido' } };
+      }
+      
+      const { data, error } = await query.single();
+      return { user: data, error };
+    } catch (error: any) {
+      return { user: null, error };
+    }
+  };
+
   const refreshProfile = async () => {
     if (user) {
       const profileData = await fetchProfile(user.id);
       setProfile(profileData);
+    }
+  };
+
+  // Login com Google
+  const signInWithGoogle = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (error) throw error;
+      return { error: null };
+    } catch (error: any) {
+      return { error };
     }
   };
 
@@ -119,7 +203,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, fullName: string) => {
+  const signUp = async (email: string, password: string, fullName: string, additionalData: any = {}) => {
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -128,6 +212,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           emailRedirectTo: `${window.location.origin}/`,
           data: {
             full_name: fullName,
+            phone: additionalData.phone || null,
+            cpf: additionalData.cpf || null,
+            birth_date: additionalData.birth_date || null,
+            gender: additionalData.gender || null,
+            profession: additionalData.profession || null,
+            city: additionalData.city || null,
+            state: additionalData.state || null,
           },
         },
       });
@@ -145,14 +236,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (identifier: string, password: string) => {
     try {
+      let email = identifier;
+      
+      // Se não for email, busca o email pelo CPF ou telefone
+      if (!identifier.includes('@')) {
+        const { user: profileData, error: findError } = await findUserByIdentifier(identifier);
+        
+        if (findError || !profileData) {
+          throw new Error('Usuário não encontrado com este CPF/telefone');
+        }
+        
+        email = profileData.email;
+      }
+
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
+
+      // Atualizar método de login no perfil
+      setTimeout(async () => {
+        await supabase
+          .from('profiles')
+          .update({ 
+            login_method: identifier.includes('@') ? 'email' : (identifier.length === 11 ? 'cpf' : 'phone'),
+            last_login_at: new Date().toISOString()
+          })
+          .eq('email', email);
+      }, 1000);
 
       return { error: null };
     } catch (error: any) {
@@ -179,8 +294,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     loading,
     signUp,
     signIn,
+    signInWithGoogle,
     signOut,
     refreshProfile,
+    findUserByIdentifier,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
