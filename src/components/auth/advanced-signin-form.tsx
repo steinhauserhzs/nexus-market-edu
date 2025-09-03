@@ -240,7 +240,7 @@ const AdvancedSigninForm = () => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="remember"
@@ -251,14 +251,16 @@ const AdvancedSigninForm = () => {
                 Lembrar usuário e senha
               </Label>
             </div>
-            <Button
-              type="button"
-              variant="link"
-              size="sm"
-              className="p-0 h-auto text-sm"
-            >
-              Esqueci minha senha
-            </Button>
+            <div className="text-right">
+              <Button
+                type="button"
+                variant="link"
+                size="sm"
+                className="p-0 h-auto text-sm"
+              >
+                Esqueci minha senha
+              </Button>
+            </div>
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
