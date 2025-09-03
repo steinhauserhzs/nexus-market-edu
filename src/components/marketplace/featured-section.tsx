@@ -57,6 +57,7 @@ export default function FeaturedSection({
   const fetchProducts = async () => {
     try {
       setLoading(true);
+      console.log('🔍 Buscando produtos...', { categoryId, featured, limit });
       
       let query = supabase
         .from('products')
@@ -72,7 +73,8 @@ export default function FeaturedSection({
           total_duration_minutes,
           featured,
           slug,
-          stores (
+          store_id,
+          stores!left (
             name
           )
         `)
@@ -81,20 +83,68 @@ export default function FeaturedSection({
 
       if (categoryId) {
         query = query.eq('category_id', categoryId);
+        console.log('🏷️ Filtrando por categoria:', categoryId);
       }
 
       if (featured) {
         query = query.eq('featured', true);
+        console.log('⭐ Filtrando produtos em destaque');
       }
 
+      console.log('📡 Executando query...');
       const { data, error } = await query.order('created_at', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Erro na query:', error);
+        throw error;
+      }
+      
+      console.log('✅ Produtos encontrados:', data?.length || 0);
+      console.log('📦 Dados dos produtos:', data);
       setProducts(data || []);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('❌ Erro ao buscar produtos:', error);
+      // Fallback: tentar buscar sem a relação com stores
+      try {
+        console.log('🔄 Tentando busca alternativa sem stores...');
+        let fallbackQuery = supabase
+          .from('products')
+          .select(`
+            id,
+            title,
+            description,
+            thumbnail_url,
+            price_cents,
+            compare_price_cents,
+            type,
+            total_lessons,
+            total_duration_minutes,
+            featured,
+            slug
+          `)
+          .eq('status', 'published')
+          .limit(limit);
+
+        if (categoryId) {
+          fallbackQuery = fallbackQuery.eq('category_id', categoryId);
+        }
+
+        if (featured) {
+          fallbackQuery = fallbackQuery.eq('featured', true);
+        }
+
+        const { data: fallbackData, error: fallbackError } = await fallbackQuery.order('created_at', { ascending: false });
+        
+        if (fallbackError) throw fallbackError;
+        
+        console.log('✅ Busca alternativa bem-sucedida:', fallbackData?.length || 0);
+        setProducts(fallbackData || []);
+      } catch (fallbackError) {
+        console.error('❌ Erro na busca alternativa:', fallbackError);
+      }
     } finally {
       setLoading(false);
+      console.log('🏁 Loading finalizado');
     }
   };
 
@@ -123,8 +173,30 @@ export default function FeaturedSection({
     );
   }
 
-  if (products.length === 0) {
-    return null;
+  if (products.length === 0 && !loading) {
+    return (
+      <section className="py-12">
+        <div className="container mx-auto px-4">
+          <div className="space-y-2 mb-8">
+            <h2 className="text-3xl font-bold">{title}</h2>
+            {description && (
+              <p className="text-muted-foreground text-lg max-w-2xl">
+                {description}
+              </p>
+            )}
+          </div>
+          
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg">
+              Nenhum produto encontrado nesta categoria.
+            </p>
+            <p className="text-sm text-muted-foreground mt-2">
+              Tente ajustar os filtros ou explore outras categorias.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (
