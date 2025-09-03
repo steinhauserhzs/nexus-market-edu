@@ -1,12 +1,10 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
-import Header from "@/components/layout/header";
+import { useState } from "react";
+import MainHeader from "@/components/layout/main-header";
 import HeroSection from "@/components/marketplace/hero-section";
 import FeaturedSection from "@/components/marketplace/featured-section";
 import StatsSection from "@/components/marketplace/stats-section";
 import CategoryFilter from "@/components/ui/category-filter";
+import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 
@@ -27,9 +25,8 @@ interface Product {
 }
 
 const Index = () => {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
-  const navigate = useNavigate();
   const { toast } = useToast();
 
   // Mock data - Replace with real data from Supabase
@@ -145,56 +142,27 @@ const Index = () => {
   ];
 
 
-  const handleLogin = () => {
-    navigate('/auth');
-  };
-
-  const handleLogout = async () => {
-    await signOut();
-  };
-
-  const handleSearch = (query: string) => {
-    console.log('Searching for:', query);
-    // Implement search functionality
-    toast({
-      title: "Busca",
-      description: `Buscando por: ${query}`
-    });
-  };
-
-  const handleProductClick = (productId: string) => {
-    console.log('Product clicked:', productId);
-    // Navigate to product page
-    toast({
-      title: "Produto selecionado",
-      description: `Navegando para o produto ${productId}`
-    });
-  };
-
   const handleCategoryChange = (slug: string | undefined) => {
     setSelectedCategory(slug);
     console.log('Category changed:', slug);
   };
 
+  const handleProductClick = (productId: string) => {
+    console.log('Product clicked:', productId);
+    toast({
+      title: "Produto selecionado",
+      description: `Produto ${productId} adicionado ao carrinho!`
+    });
+  };
+
 
   return (
     <div className="min-h-screen bg-background">
-      <Header 
-        user={user ? {
-          id: user.id,
-          name: profile?.full_name || user.email?.split('@')[0] || 'Usuário',
-          email: user.email || '',
-          role: profile?.role || 'user',
-        } : null}
-        cartCount={0}
-        onLogin={handleLogin}
-        onLogout={handleLogout}
-        onSearch={handleSearch}
-      />
+      <MainHeader />
       
       <main>
         {/* Hero Section */}
-        <HeroSection onSearch={handleSearch} />
+        <HeroSection onSearch={(query) => console.log('Search:', query)} />
         
         {/* Stats Section */}
         <StatsSection />
@@ -254,13 +222,13 @@ const Index = () => {
                 {!user ? (
                   <>
                     <button 
-                      onClick={handleLogin}
+                      onClick={() => window.location.href = '/auth'}
                       className="bg-accent hover:bg-accent-hover text-accent-foreground px-8 py-4 rounded-full text-lg font-semibold transition-colors shadow-lg"
                     >
                       Começar Agora
                     </button>
                     <button 
-                      onClick={handleLogin}
+                      onClick={() => window.location.href = '/auth'}
                       className="border-2 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 px-8 py-4 rounded-full text-lg font-semibold transition-colors"
                     >
                       Vender Cursos

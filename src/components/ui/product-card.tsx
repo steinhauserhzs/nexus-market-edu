@@ -1,7 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, Play, Clock, Users } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { Star, Play, Clock, Users, ShoppingCart, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
@@ -23,6 +24,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({
+  id,
   title,
   description,
   thumbnail,
@@ -38,6 +40,7 @@ export default function ProductCard({
   className,
   onClick
 }: ProductCardProps) {
+  const { addToCart, isInCart } = useCart();
   const formatPrice = (cents: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -61,6 +64,20 @@ export default function ProductCard({
     };
     return labels[type as keyof typeof labels] || type;
   };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart({
+      id: `cart-${id}`,
+      product_id: id,
+      title,
+      price_cents: price,
+      thumbnail_url: thumbnail || null,
+      type,
+    });
+  };
+
+  const inCart = isInCart(id);
 
   return (
     <Card 
@@ -168,13 +185,21 @@ export default function ProductCard({
           {/* CTA */}
           <Button 
             className="w-full mt-4" 
-            variant="default"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick?.();
-            }}
+            variant={inCart ? "outline" : "default"}
+            onClick={handleAddToCart}
+            disabled={inCart}
           >
-            {type === 'curso' ? 'Assistir Agora' : 'Ver Detalhes'}
+            {inCart ? (
+              <>
+                <Check className="w-4 h-4 mr-2" />
+                No Carrinho
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Adicionar ao Carrinho
+              </>
+            )}
           </Button>
         </div>
       </CardContent>

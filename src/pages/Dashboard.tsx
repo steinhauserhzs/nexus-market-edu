@@ -337,10 +337,10 @@ const Dashboard = () => {
           <TabsContent value="products" className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold">Meus Produtos</h2>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Novo Produto
-              </Button>
+            <Button variant="outline" size="sm">
+              <Plus className="w-4 h-4 mr-2" />
+              Novo Produto
+            </Button>
             </div>
 
             {products.length === 0 ? (
