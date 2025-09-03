@@ -696,7 +696,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      validate_cpf: {
+        Args: { cpf_input: string }
+        Returns: boolean
+      }
+      validate_phone: {
+        Args: { phone_input: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
