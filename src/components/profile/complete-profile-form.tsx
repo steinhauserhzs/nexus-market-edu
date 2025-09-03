@@ -66,6 +66,8 @@ const CompleteProfileForm = () => {
     marketing_emails: false,
   });
 
+  const [loadingCEP, setLoadingCEP] = useState(false);
+
   useEffect(() => {
     if (profile) {
       setFormData({
@@ -175,6 +177,63 @@ const CompleteProfileForm = () => {
   const formatCEP = (value: string) => {
     const numbers = value.replace(/[^\d]/g, '');
     return numbers.replace(/(\d{5})(\d{3})/, '$1-$2');
+  };
+
+  const searchAddressByCEP = async (cep: string) => {
+    const cleanCEP = cep.replace(/[^\d]/g, '');
+    
+    // Verifica se o CEP tem 8 dígitos
+    if (cleanCEP.length !== 8) {
+      return;
+    }
+
+    setLoadingCEP(true);
+    
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cleanCEP}/json/`);
+      const data = await response.json();
+      
+      if (data.erro) {
+        toast({
+          title: "CEP não encontrado",
+          description: "Verifique se o CEP está correto e tente novamente.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Atualiza os campos automaticamente
+      setFormData(prev => ({
+        ...prev,
+        city: data.localidade || '',
+        state: data.uf || '',
+        address_line1: data.logradouro ? `${data.logradouro}${data.complemento ? `, ${data.complemento}` : ''}` : '',
+      }));
+
+      toast({
+        title: "Endereço encontrado!",
+        description: `${data.localidade} - ${data.uf}`,
+      });
+    } catch (error) {
+      console.error('Erro ao buscar CEP:', error);
+      toast({
+        title: "Erro na consulta",
+        description: "Não foi possível consultar o CEP. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingCEP(false);
+    }
+  };
+
+  const handleCEPChange = (value: string) => {
+    const formattedCEP = formatCEP(value);
+    setFormData(prev => ({ ...prev, postal_code: formattedCEP }));
+    
+    // Busca automaticamente quando o CEP tiver 9 caracteres (00000-000)
+    if (formattedCEP.length === 9) {
+      searchAddressByCEP(formattedCEP);
+    }
   };
 
   const generateSlug = () => {
@@ -381,15 +440,23 @@ const CompleteProfileForm = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="postal_code">CEP</Label>
-                  <Input
-                    id="postal_code"
-                    value={formData.postal_code}
-                    onChange={(e) => setFormData(prev => ({ 
-                      ...prev, 
-                      postal_code: formatCEP(e.target.value) 
-                    }))}
-                    placeholder="00000-000"
-                  />
+                  <div className="relative">
+                    <Input
+                      id="postal_code"
+                      value={formData.postal_code}
+                      onChange={(e) => handleCEPChange(e.target.value)}
+                      placeholder="00000-000"
+                      maxLength={9}
+                    />
+                    {loadingCEP && (
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Digite o CEP para preencher automaticamente
+                  </p>
                 </div>
 
                 <div className="space-y-2">
@@ -398,6 +465,7 @@ const CompleteProfileForm = () => {
                     id="city"
                     value={formData.city}
                     onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
+                    placeholder="Cidade será preenchida automaticamente"
                   />
                 </div>
 
@@ -408,7 +476,7 @@ const CompleteProfileForm = () => {
                     onValueChange={(value) => setFormData(prev => ({ ...prev, state: value }))}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione" />
+                      <SelectValue placeholder="Estado será preenchido automaticamente" />
                     </SelectTrigger>
                     <SelectContent>
                       {brasilStates.map((state) => (
@@ -427,8 +495,11 @@ const CompleteProfileForm = () => {
                   id="address_line1"
                   value={formData.address_line1}
                   onChange={(e) => setFormData(prev => ({ ...prev, address_line1: e.target.value }))}
-                  placeholder="Rua, número"
+                  placeholder="Rua e número serão preenchidos automaticamente"
                 />
+                <p className="text-xs text-muted-foreground">
+                  Complete com o número da residência se necessário
+                </p>
               </div>
 
               <div className="space-y-2">
