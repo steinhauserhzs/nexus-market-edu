@@ -251,7 +251,7 @@ const AdvancedSigninForm = () => {
                 Lembrar usuário e senha
               </Label>
             </div>
-            <div className="text-right">
+            <div className="text-center">
               <Button
                 type="button"
                 variant="link"
