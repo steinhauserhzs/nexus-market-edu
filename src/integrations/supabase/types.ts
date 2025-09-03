@@ -526,46 +526,118 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address_line1: string | null
+          address_line2: string | null
           avatar_url: string | null
           bio: string | null
+          birth_date: string | null
+          city: string | null
+          company: string | null
+          country: string | null
+          cpf: string | null
+          cpf_verified: boolean | null
           created_at: string | null
           email: string
+          email_notifications: boolean | null
+          email_verified: boolean | null
           full_name: string | null
+          gender: string | null
           id: string
           is_verified: boolean | null
+          last_login_at: string | null
+          linkedin_url: string | null
+          login_method: string | null
+          marketing_emails: boolean | null
+          phone: string | null
+          phone_verified: boolean | null
           pix_key: string | null
+          postal_code: string | null
+          preferred_language: string | null
+          profession: string | null
           role: string | null
           seller_slug: string | null
+          sms_notifications: boolean | null
+          state: string | null
           tax_id: string | null
+          timezone: string | null
           updated_at: string | null
+          website_url: string | null
         }
         Insert: {
+          address_line1?: string | null
+          address_line2?: string | null
           avatar_url?: string | null
           bio?: string | null
+          birth_date?: string | null
+          city?: string | null
+          company?: string | null
+          country?: string | null
+          cpf?: string | null
+          cpf_verified?: boolean | null
           created_at?: string | null
           email: string
+          email_notifications?: boolean | null
+          email_verified?: boolean | null
           full_name?: string | null
+          gender?: string | null
           id: string
           is_verified?: boolean | null
+          last_login_at?: string | null
+          linkedin_url?: string | null
+          login_method?: string | null
+          marketing_emails?: boolean | null
+          phone?: string | null
+          phone_verified?: boolean | null
           pix_key?: string | null
+          postal_code?: string | null
+          preferred_language?: string | null
+          profession?: string | null
           role?: string | null
           seller_slug?: string | null
+          sms_notifications?: boolean | null
+          state?: string | null
           tax_id?: string | null
+          timezone?: string | null
           updated_at?: string | null
+          website_url?: string | null
         }
         Update: {
+          address_line1?: string | null
+          address_line2?: string | null
           avatar_url?: string | null
           bio?: string | null
+          birth_date?: string | null
+          city?: string | null
+          company?: string | null
+          country?: string | null
+          cpf?: string | null
+          cpf_verified?: boolean | null
           created_at?: string | null
           email?: string
+          email_notifications?: boolean | null
+          email_verified?: boolean | null
           full_name?: string | null
+          gender?: string | null
           id?: string
           is_verified?: boolean | null
+          last_login_at?: string | null
+          linkedin_url?: string | null
+          login_method?: string | null
+          marketing_emails?: boolean | null
+          phone?: string | null
+          phone_verified?: boolean | null
           pix_key?: string | null
+          postal_code?: string | null
+          preferred_language?: string | null
+          profession?: string | null
           role?: string | null
           seller_slug?: string | null
+          sms_notifications?: boolean | null
+          state?: string | null
           tax_id?: string | null
+          timezone?: string | null
           updated_at?: string | null
+          website_url?: string | null
         }
         Relationships: []
       }
