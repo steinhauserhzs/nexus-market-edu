@@ -9,7 +9,8 @@ import {
   Store, 
   User, 
   ShoppingCart,
-  Search
+  Search,
+  Calendar
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +23,7 @@ const MobileNavigation = () => {
   const navItems = [
     { icon: Home, label: "Início", path: "/" },
     { icon: Search, label: "Explorar", path: "/?search=true" },
+    { icon: Calendar, label: "Eventos", path: "/eventos" },
     { icon: BookOpen, label: "Biblioteca", path: "/biblioteca", requireAuth: true },
     { icon: ShoppingCart, label: "Carrinho", path: "/checkout", badge: items.length },
     ...(profile?.role === 'seller' ? [

@@ -8,7 +8,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import { LazyRoute, LazyDashboard, LazyLibrary, LazyProfile, LazyCreateStore } from "./components/layout/lazy-route";
+import { LazyRoute, LazyDashboard, LazyLibrary, LazyProfile, LazyCreateStore, LazyEvents, LazyEventDetails, LazyCreateEvent } from "./components/layout/lazy-route";
 import { lazy } from "react";
 
 // Lazy load less critical pages
@@ -62,6 +62,9 @@ const App = () => (
                     <Route path="/criar-loja" element={<LazyRoute Component={LazyCreateStore} />} />
                     <Route path="/loja/:slug" element={<LazyRoute Component={LazyStore} />} />
                     <Route path="/produto/:slug" element={<LazyRoute Component={LazyProductDetails} />} />
+                    <Route path="/eventos" element={<LazyRoute Component={LazyEvents} />} />
+                    <Route path="/evento/:id" element={<LazyRoute Component={LazyEventDetails} />} />
+                    <Route path="/criar-evento" element={<LazyRoute Component={LazyCreateEvent} />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
                   </Routes>

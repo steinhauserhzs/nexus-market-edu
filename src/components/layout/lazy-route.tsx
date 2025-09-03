@@ -42,3 +42,21 @@ export const LazyProfile = lazy(() =>
     default: () => <ErrorState title="Erro ao carregar Perfil" onRetry={() => window.location.reload()} />
   }))
 );
+
+export const LazyEvents = lazy(() => 
+  import("@/pages/Events").catch(() => ({
+    default: () => <ErrorState title="Erro ao carregar Eventos" onRetry={() => window.location.reload()} />
+  }))
+);
+
+export const LazyEventDetails = lazy(() => 
+  import("@/pages/EventDetails").catch(() => ({
+    default: () => <ErrorState title="Erro ao carregar Evento" onRetry={() => window.location.reload()} />
+  }))
+);
+
+export const LazyCreateEvent = lazy(() => 
+  import("@/pages/CreateEvent").catch(() => ({
+    default: () => <ErrorState title="Erro ao carregar Criar Evento" onRetry={() => window.location.reload()} />
+  }))
+);
