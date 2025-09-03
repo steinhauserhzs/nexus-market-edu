@@ -696,6 +696,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_store_slug: {
+        Args: { store_name: string }
+        Returns: string
+      }
       validate_cpf: {
         Args: { cpf_input: string }
         Returns: boolean
