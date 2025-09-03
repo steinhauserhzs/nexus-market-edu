@@ -138,6 +138,184 @@ export type Database = {
           },
         ]
       }
+      event_images: {
+        Row: {
+          alt_text: string | null
+          created_at: string | null
+          event_id: string
+          id: string
+          image_url: string
+          is_primary: boolean | null
+          sort_order: number | null
+        }
+        Insert: {
+          alt_text?: string | null
+          created_at?: string | null
+          event_id: string
+          id?: string
+          image_url: string
+          is_primary?: boolean | null
+          sort_order?: number | null
+        }
+        Update: {
+          alt_text?: string | null
+          created_at?: string | null
+          event_id?: string
+          id?: string
+          image_url?: string
+          is_primary?: boolean | null
+          sort_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_images_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_tickets: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          event_id: string
+          id: string
+          is_active: boolean | null
+          name: string
+          price_cents: number
+          quantity_available: number
+          quantity_sold: number
+          sale_end_date: string | null
+          sale_start_date: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          event_id: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          price_cents?: number
+          quantity_available?: number
+          quantity_sold?: number
+          sale_end_date?: string | null
+          sale_start_date?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          event_id?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          price_cents?: number
+          quantity_available?: number
+          quantity_sold?: number
+          sale_end_date?: string | null
+          sale_start_date?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_tickets_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          age_restriction: string | null
+          banner_url: string | null
+          category: string
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string | null
+          description: string | null
+          event_date: string
+          event_type: string | null
+          id: string
+          is_featured: boolean | null
+          max_capacity: number | null
+          organizer_id: string
+          price_from: number | null
+          status: Database["public"]["Enums"]["event_status"] | null
+          terms_and_conditions: string | null
+          ticket_sales_end_date: string | null
+          ticket_sales_start_date: string | null
+          title: string
+          updated_at: string | null
+          venue_id: string | null
+        }
+        Insert: {
+          age_restriction?: string | null
+          banner_url?: string | null
+          category: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          description?: string | null
+          event_date: string
+          event_type?: string | null
+          id?: string
+          is_featured?: boolean | null
+          max_capacity?: number | null
+          organizer_id: string
+          price_from?: number | null
+          status?: Database["public"]["Enums"]["event_status"] | null
+          terms_and_conditions?: string | null
+          ticket_sales_end_date?: string | null
+          ticket_sales_start_date?: string | null
+          title: string
+          updated_at?: string | null
+          venue_id?: string | null
+        }
+        Update: {
+          age_restriction?: string | null
+          banner_url?: string | null
+          category?: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          description?: string | null
+          event_date?: string
+          event_type?: string | null
+          id?: string
+          is_featured?: boolean | null
+          max_capacity?: number | null
+          organizer_id?: string
+          price_from?: number | null
+          status?: Database["public"]["Enums"]["event_status"] | null
+          terms_and_conditions?: string | null
+          ticket_sales_end_date?: string | null
+          ticket_sales_start_date?: string | null
+          title?: string
+          updated_at?: string | null
+          venue_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_organizer_id_fkey"
+            columns: ["organizer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_progress: {
         Row: {
           completed: boolean | null
@@ -711,6 +889,7 @@ export type Database = {
           birth_date: string | null
           city: string | null
           company: string | null
+          company_name: string | null
           country: string | null
           cpf: string | null
           cpf_verified: boolean | null
@@ -749,6 +928,7 @@ export type Database = {
           birth_date?: string | null
           city?: string | null
           company?: string | null
+          company_name?: string | null
           country?: string | null
           cpf?: string | null
           cpf_verified?: boolean | null
@@ -787,6 +967,7 @@ export type Database = {
           birth_date?: string | null
           city?: string | null
           company?: string | null
+          company_name?: string | null
           country?: string | null
           cpf?: string | null
           cpf_verified?: boolean | null
@@ -968,6 +1149,60 @@ export type Database = {
           },
         ]
       }
+      venues: {
+        Row: {
+          accessibility_features: string[] | null
+          address: string
+          capacity: number | null
+          city: string
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string | null
+          description: string | null
+          facilities: string[] | null
+          id: string
+          name: string
+          parking_available: boolean | null
+          state: string
+          updated_at: string | null
+          website_url: string | null
+        }
+        Insert: {
+          accessibility_features?: string[] | null
+          address: string
+          capacity?: number | null
+          city: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          description?: string | null
+          facilities?: string[] | null
+          id?: string
+          name: string
+          parking_available?: boolean | null
+          state: string
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          accessibility_features?: string[] | null
+          address?: string
+          capacity?: number | null
+          city?: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          description?: string | null
+          facilities?: string[] | null
+          id?: string
+          name?: string
+          parking_available?: boolean | null
+          state?: string
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -1042,7 +1277,8 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      event_status: "draft" | "published" | "cancelled" | "completed"
+      user_role: "client" | "organizer" | "promoter" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1169,6 +1405,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      event_status: ["draft", "published", "cancelled", "completed"],
+      user_role: ["client", "organizer", "promoter", "admin"],
+    },
   },
 } as const
