@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 import { Eye, EyeOff, Mail, Phone, CreditCard, Chrome } from "lucide-react";
 
 const AdvancedSigninForm = () => {
@@ -15,7 +17,18 @@ const AdvancedSigninForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [savedCredentials, setSavedCredentials] = useLocalStorage('rememberedCredentials', null);
   const { toast } = useToast();
+
+  // Load saved credentials on component mount
+  useEffect(() => {
+    if (savedCredentials) {
+      setIdentifier(savedCredentials.identifier);
+      setPassword(savedCredentials.password);
+      setRememberMe(true);
+    }
+  }, [savedCredentials]);
 
   const getIdentifierType = (value: string) => {
     if (value.includes('@')) return 'email';
@@ -89,6 +102,13 @@ const AdvancedSigninForm = () => {
       
       if (error) {
         throw error;
+      }
+
+      // Save credentials if remember me is checked
+      if (rememberMe) {
+        setSavedCredentials({ identifier, password });
+      } else {
+        setSavedCredentials(null);
       }
 
       toast({
@@ -221,6 +241,16 @@ const AdvancedSigninForm = () => {
           </div>
 
           <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="remember"
+                checked={rememberMe}
+                onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+              />
+              <Label htmlFor="remember" className="text-sm font-normal">
+                Lembrar usuário e senha
+              </Label>
+            </div>
             <Button
               type="button"
               variant="link"
