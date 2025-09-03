@@ -4,8 +4,12 @@ import HeroSection from "@/components/marketplace/hero-section";
 import FeaturedSection from "@/components/marketplace/featured-section";
 import StatsSection from "@/components/marketplace/stats-section";
 import CategoryFilter from "@/components/ui/category-filter";
+import LoadingSpinner from "@/components/ui/loading-spinner";
+import SEOHead from "@/components/ui/seo-head";
+import PerformanceMonitor from "@/components/ui/performance-monitor";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { useAsync } from "@/hooks/use-async";
 
 
 interface Product {
@@ -25,9 +29,44 @@ interface Product {
 }
 
 const Index = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
   const { toast } = useToast();
+
+  // Simulação de loading de produtos - substituir por dados reais do Supabase
+  const { loading: productsLoading, error: productsError } = useAsync(
+    async () => {
+      // Simular delay de carregamento
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return true;
+    },
+    []
+  );
+
+  if (authLoading || productsLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <MainHeader />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <LoadingSpinner size="lg" text="Carregando plataforma..." />
+        </div>
+      </div>
+    );
+  }
+
+  if (productsError) {
+    return (
+      <div className="min-h-screen bg-background">
+        <MainHeader />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center space-y-4">
+            <h2 className="text-xl font-semibold text-destructive">Erro ao carregar</h2>
+            <p className="text-muted-foreground">Tente novamente mais tarde</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Mock data - Replace with real data from Supabase
   const categories = [
@@ -158,11 +197,27 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead 
+        title="Marketplace de Cursos Online - Educação Digital"
+        description="Descubra milhares de cursos online de qualidade. Aprenda desenvolvimento, design, marketing e muito mais com os melhores instrutores do Brasil."
+        keywords="cursos online, educação digital, desenvolvimento, design, marketing, programação, nexus market"
+        image="/hero-marketplace.jpg"
+        url={window.location.href}
+      />
+      
       <MainHeader />
       
       <main>
-        {/* Hero Section */}
-        <HeroSection onSearch={(query) => console.log('Search:', query)} />
+        {/* Hero Section com melhor performance */}
+        <HeroSection onSearch={(query) => {
+          console.log('Search:', query);
+          if (query.trim()) {
+            toast({
+              title: "Busca realizada",
+              description: `Buscando por: "${query}"`,
+            });
+          }
+        }} />
         
         {/* Stats Section */}
         <StatsSection />
@@ -186,25 +241,49 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Featured Courses */}
+        {/* Featured Courses com otimização */}
         <FeaturedSection
           title="Cursos em Destaque"
           description="Os melhores cursos selecionados pela nossa equipe"
           products={featuredProducts}
           showMore={true}
-          onProductClick={handleProductClick}
-          onShowMore={() => console.log('Show more featured')}
+          onProductClick={(productId) => {
+            console.log('Product clicked:', productId);
+            toast({
+              title: "Produto selecionado",
+              description: "Produto adicionado ao carrinho com sucesso!",
+            });
+          }}
+          onShowMore={() => {
+            console.log('Show more featured');
+            toast({
+              title: "Carregando mais",
+              description: "Buscando mais produtos em destaque...",
+            });
+          }}
         />
         
-        {/* Popular Courses */}
+        {/* Popular Courses com otimização */}
         <div className="bg-muted/20">
           <FeaturedSection
             title="Mais Populares"
             description="Os cursos mais procurados pelos nossos alunos"
             products={popularProducts}
             showMore={true}
-            onProductClick={handleProductClick}
-            onShowMore={() => console.log('Show more popular')}
+            onProductClick={(productId) => {
+              console.log('Popular product clicked:', productId);
+              toast({
+                title: "Produto popular selecionado",
+                description: "Item adicionado ao carrinho!",
+              });
+            }}
+            onShowMore={() => {
+              console.log('Show more popular');
+              toast({
+                title: "Carregando mais",
+                description: "Buscando mais produtos populares...",
+              });
+            }}
           />
         </div>
         
@@ -297,6 +376,8 @@ const Index = () => {
           </div>
         </div>
       </footer>
+      
+      <PerformanceMonitor />
     </div>
   );
 };

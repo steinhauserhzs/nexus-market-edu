@@ -4,7 +4,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
 import CartSheet from "@/components/cart/cart-sheet";
-import { BookOpen, Store, User, LogOut, Settings } from "lucide-react";
+import NotificationBadge from "@/components/ui/notification-badge";
+import { BookOpen, Store, User, LogOut, Settings, Bell } from "lucide-react";
 
 export default function MainHeader() {
   const { user, profile, signOut } = useAuth();
@@ -28,6 +29,15 @@ export default function MainHeader() {
 
         {/* Actions */}
         <div className="flex items-center gap-4">
+          {/* Notifications */}
+          {user && profile && (
+            <NotificationBadge count={0} size="sm">
+              <Button variant="ghost" size="sm" className="p-2">
+                <Bell className="w-4 h-4" />
+              </Button>
+            </NotificationBadge>
+          )}
+          
           <CartSheet />
           
           {user && profile ? (

@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
+import OptimizedImage from "@/components/ui/optimized-image";
 import { Star, Play, Clock, Users, ShoppingCart, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -91,18 +92,14 @@ export default function ProductCard({
     >
       <CardContent className="p-0 space-y-4">
         {/* Thumbnail */}
-        <div className="relative aspect-video overflow-hidden rounded-t-lg bg-muted">
-          {thumbnail ? (
-            <img 
-              src={thumbnail} 
-              alt={title}
-              className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-            />
-          ) : (
-            <div className="flex items-center justify-center w-full h-full bg-gradient-accent">
-              <Play className="w-12 h-12 text-accent-foreground/80" />
-            </div>
-          )}
+        <div className="relative">
+          <OptimizedImage
+            src={thumbnail || ''}
+            alt={title}
+            aspectRatio="video"
+            className="rounded-t-lg"
+            fallbackClassName="rounded-t-lg"
+          />
           
           {/* Type badge */}
           <div className="absolute top-3 left-3">
@@ -182,24 +179,25 @@ export default function ProductCard({
             )}
           </div>
           
-          {/* CTA */}
           <Button 
             className="w-full mt-4" 
             variant={inCart ? "outline" : "default"}
             onClick={handleAddToCart}
             disabled={inCart}
           >
-            {inCart ? (
-              <>
-                <Check className="w-4 h-4 mr-2" />
-                No Carrinho
-              </>
-            ) : (
-              <>
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Adicionar ao Carrinho
-              </>
-            )}
+            <div className="flex items-center justify-center">
+              {inCart ? (
+                <>
+                  <Check className="w-4 h-4 mr-2" />
+                  No Carrinho
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Adicionar ao Carrinho
+                </>
+              )}
+            </div>
           </Button>
         </div>
       </CardContent>
