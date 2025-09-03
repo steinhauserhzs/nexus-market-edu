@@ -36,7 +36,8 @@ export default function CartSheet() {
       </SheetTrigger>
       
       <SheetContent className="flex flex-col">
-        <SheetHeader>
+        <SheetHeader className="space-y-3">
+          <div></div>
           <SheetTitle>Carrinho de Compras</SheetTitle>
         </SheetHeader>
         
