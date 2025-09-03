@@ -255,23 +255,23 @@ const CompleteProfileForm = () => {
         <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 h-auto p-2">
           <TabsTrigger value="personal" className="flex items-center gap-2 min-h-[3rem] text-sm">
             <User className="w-4 h-4" />
-            <span className="hidden sm:inline">Pessoal</span>
+            Pessoal
           </TabsTrigger>
           <TabsTrigger value="address" className="flex items-center gap-2 min-h-[3rem] text-sm">
             <MapPin className="w-4 h-4" />
-            <span className="hidden sm:inline">Endereço</span>
+            Endereço
           </TabsTrigger>
           <TabsTrigger value="business" className="flex items-center gap-2 min-h-[3rem] text-sm">
             <Building2 className="w-4 h-4" />
-            <span className="hidden sm:inline">Profissional</span>
+            Profissional
           </TabsTrigger>
           <TabsTrigger value="preferences" className="flex items-center gap-2 min-h-[3rem] text-sm">
             <Bell className="w-4 h-4" />
-            <span className="hidden sm:inline">Preferências</span>
+            Preferências
           </TabsTrigger>
           <TabsTrigger value="security" className="flex items-center gap-2 min-h-[3rem] text-sm">
             <Lock className="w-4 h-4" />
-            <span className="hidden sm:inline">Segurança</span>
+            Segurança
           </TabsTrigger>
         </TabsList>
 
