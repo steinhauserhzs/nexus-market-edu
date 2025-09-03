@@ -251,27 +251,27 @@ const CompleteProfileForm = () => {
       </Card>
 
       {/* Profile Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
-          <TabsTrigger value="personal" className="flex items-center gap-2">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 h-auto p-2">
+          <TabsTrigger value="personal" className="flex items-center gap-2 min-h-[3rem] text-sm">
             <User className="w-4 h-4" />
-            Pessoal
+            <span className="hidden sm:inline">Pessoal</span>
           </TabsTrigger>
-          <TabsTrigger value="address" className="flex items-center gap-2">
+          <TabsTrigger value="address" className="flex items-center gap-2 min-h-[3rem] text-sm">
             <MapPin className="w-4 h-4" />
-            Endereço
+            <span className="hidden sm:inline">Endereço</span>
           </TabsTrigger>
-          <TabsTrigger value="business" className="flex items-center gap-2">
+          <TabsTrigger value="business" className="flex items-center gap-2 min-h-[3rem] text-sm">
             <Building2 className="w-4 h-4" />
-            Profissional
+            <span className="hidden sm:inline">Profissional</span>
           </TabsTrigger>
-          <TabsTrigger value="preferences" className="flex items-center gap-2">
+          <TabsTrigger value="preferences" className="flex items-center gap-2 min-h-[3rem] text-sm">
             <Bell className="w-4 h-4" />
-            Preferências
+            <span className="hidden sm:inline">Preferências</span>
           </TabsTrigger>
-          <TabsTrigger value="security" className="flex items-center gap-2">
+          <TabsTrigger value="security" className="flex items-center gap-2 min-h-[3rem] text-sm">
             <Lock className="w-4 h-4" />
-            Segurança
+            <span className="hidden sm:inline">Segurança</span>
           </TabsTrigger>
         </TabsList>
 
