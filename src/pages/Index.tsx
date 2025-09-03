@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/layout/header";
 import HeroSection from "@/components/marketplace/hero-section";
@@ -8,13 +9,6 @@ import StatsSection from "@/components/marketplace/stats-section";
 import CategoryFilter from "@/components/ui/category-filter";
 import { useToast } from "@/hooks/use-toast";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  role: 'user' | 'seller' | 'admin';
-}
 
 interface Product {
   id: string;
@@ -33,9 +27,8 @@ interface Product {
 }
 
 const Index = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const { user, profile, signOut } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
-  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -151,63 +144,13 @@ const Index = () => {
     },
   ];
 
-  useEffect(() => {
-    // Check for existing session
-    const getSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          // In a real app, you'd fetch user profile from your profiles table
-          setUser({
-            id: session.user.id,
-            name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'Usuário',
-            email: session.user.email || '',
-            role: 'user', // This would come from your profiles table
-          });
-        }
-      } catch (error) {
-        console.error('Error getting session:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    getSession();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === 'SIGNED_IN' && session?.user) {
-          setUser({
-            id: session.user.id,
-            name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'Usuário',
-            email: session.user.email || '',
-            role: 'user',
-          });
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null);
-        }
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   const handleLogin = () => {
     navigate('/auth');
   };
 
   const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut();
-      setUser(null);
-      toast({
-        title: "Logout realizado",
-        description: "Você foi desconectado com sucesso."
-      });
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
+    await signOut();
   };
 
   const handleSearch = (query: string) => {
@@ -233,18 +176,16 @@ const Index = () => {
     console.log('Category changed:', slug);
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-accent"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background">
       <Header 
-        user={user}
+        user={user ? {
+          id: user.id,
+          name: profile?.full_name || user.email?.split('@')[0] || 'Usuário',
+          email: user.email || '',
+          role: profile?.role || 'user',
+        } : null}
         cartCount={0}
         onLogin={handleLogin}
         onLogout={handleLogout}

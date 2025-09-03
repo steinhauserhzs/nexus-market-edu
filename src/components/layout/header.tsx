@@ -191,12 +191,12 @@ export default function Header({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/perfil'}>
                     <User className="mr-2 h-4 w-4" />
                     Meu Perfil
                   </DropdownMenuItem>
                   
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = '/biblioteca'}>
                     <BookOpen className="mr-2 h-4 w-4" />
                     Minha Biblioteca
                   </DropdownMenuItem>
@@ -204,7 +204,7 @@ export default function Header({
                   {(user.role === 'seller' || user.role === 'admin') && (
                     <>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => window.location.href = '/dashboard'}>
                         <Store className="mr-2 h-4 w-4" />
                         Painel Vendedor
                       </DropdownMenuItem>
