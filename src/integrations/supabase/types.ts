@@ -345,12 +345,16 @@ export type Database = {
           currency: string | null
           customer_email: string | null
           customer_name: string | null
+          customer_phone: string | null
           gateway: string | null
           gateway_payment_id: string | null
           gateway_session_id: string | null
           id: string
+          payment_method: string | null
+          payment_status: string | null
           shipping_address: Json | null
           status: string | null
+          stripe_payment_intent_id: string | null
           total_cents: number
           updated_at: string | null
           user_id: string | null
@@ -360,12 +364,16 @@ export type Database = {
           currency?: string | null
           customer_email?: string | null
           customer_name?: string | null
+          customer_phone?: string | null
           gateway?: string | null
           gateway_payment_id?: string | null
           gateway_session_id?: string | null
           id?: string
+          payment_method?: string | null
+          payment_status?: string | null
           shipping_address?: Json | null
           status?: string | null
+          stripe_payment_intent_id?: string | null
           total_cents: number
           updated_at?: string | null
           user_id?: string | null
@@ -375,12 +383,16 @@ export type Database = {
           currency?: string | null
           customer_email?: string | null
           customer_name?: string | null
+          customer_phone?: string | null
           gateway?: string | null
           gateway_payment_id?: string | null
           gateway_session_id?: string | null
           id?: string
+          payment_method?: string | null
+          payment_status?: string | null
           shipping_address?: Json | null
           status?: string | null
+          stripe_payment_intent_id?: string | null
           total_cents?: number
           updated_at?: string | null
           user_id?: string | null
@@ -641,6 +653,39 @@ export type Database = {
         }
         Relationships: []
       }
+      seller_payment_info: {
+        Row: {
+          bank_account: Json | null
+          created_at: string | null
+          id: string
+          pix_key: string | null
+          stripe_account_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          verified: boolean | null
+        }
+        Insert: {
+          bank_account?: Json | null
+          created_at?: string | null
+          id?: string
+          pix_key?: string | null
+          stripe_account_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+        }
+        Update: {
+          bank_account?: Json | null
+          created_at?: string | null
+          id?: string
+          pix_key?: string | null
+          stripe_account_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+        }
+        Relationships: []
+      }
       stores: {
         Row: {
           banner_url: string | null
@@ -691,11 +736,81 @@ export type Database = {
           },
         ]
       }
+      transactions: {
+        Row: {
+          amount_cents: number
+          buyer_id: string | null
+          created_at: string | null
+          id: string
+          order_id: string | null
+          platform_fee_cents: number | null
+          processed_at: string | null
+          product_id: string | null
+          seller_amount_cents: number
+          seller_id: string | null
+          status: string | null
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          amount_cents: number
+          buyer_id?: string | null
+          created_at?: string | null
+          id?: string
+          order_id?: string | null
+          platform_fee_cents?: number | null
+          processed_at?: string | null
+          product_id?: string | null
+          seller_amount_cents: number
+          seller_id?: string | null
+          status?: string | null
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          buyer_id?: string | null
+          created_at?: string | null
+          id?: string
+          order_id?: string | null
+          platform_fee_cents?: number | null
+          processed_at?: string | null
+          product_id?: string | null
+          seller_amount_cents?: number
+          seller_id?: string | null
+          status?: string | null
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      calculate_platform_fee: {
+        Args: { amount_cents: number }
+        Returns: number
+      }
       generate_store_slug: {
         Args: { store_name: string }
         Returns: string
