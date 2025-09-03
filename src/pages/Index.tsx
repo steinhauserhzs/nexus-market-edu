@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MainHeader from "@/components/layout/main-header";
 import HeroSection from "@/components/marketplace/hero-section";
 import FeaturedSection from "@/components/marketplace/featured-section";
@@ -30,6 +31,7 @@ const Index = () => {
   const { user, profile, loading: authLoading } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Remove artificial loading - will use real data loading
   const productsLoading = false;
@@ -180,12 +182,8 @@ const Index = () => {
     console.log('Category changed:', slug);
   };
 
-  const handleProductClick = (productId: string) => {
-    console.log('Product clicked:', productId);
-    toast({
-      title: "Produto selecionado",
-      description: `Produto ${productId} adicionado ao carrinho!`
-    });
+  const handleProductClick = (slug: string) => {
+    navigate(`/produto/${slug}`);
   };
 
 
@@ -235,48 +233,26 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Featured Courses com otimização */}
+        {/* Featured Courses com dados reais */}
         <FeaturedSection
           title="Cursos em Destaque"
           description="Os melhores cursos selecionados pela nossa equipe"
-          products={featuredProducts}
+          featured={true}
           showMore={true}
-          onProductClick={(productId) => {
-            console.log('Product clicked:', productId);
-            toast({
-              title: "Produto selecionado",
-              description: "Produto adicionado ao carrinho com sucesso!",
-            });
-          }}
           onShowMore={() => {
-            console.log('Show more featured');
-            toast({
-              title: "Carregando mais",
-              description: "Buscando mais produtos em destaque...",
-            });
+            navigate('/biblioteca');
           }}
         />
         
-        {/* Popular Courses com otimização */}
+        {/* Popular Courses com dados reais */}
         <div className="bg-muted/20">
           <FeaturedSection
             title="Mais Populares"
             description="Os cursos mais procurados pelos nossos alunos"
-            products={popularProducts}
             showMore={true}
-            onProductClick={(productId) => {
-              console.log('Popular product clicked:', productId);
-              toast({
-                title: "Produto popular selecionado",
-                description: "Item adicionado ao carrinho!",
-              });
-            }}
+            limit={4}
             onShowMore={() => {
-              console.log('Show more popular');
-              toast({
-                title: "Carregando mais",
-                description: "Buscando mais produtos populares...",
-              });
+              navigate('/biblioteca');
             }}
           />
         </div>

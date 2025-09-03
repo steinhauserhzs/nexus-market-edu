@@ -14,6 +14,7 @@ import { lazy } from "react";
 // Lazy load less critical pages
 const LazyCheckout = lazy(() => import("./pages/Checkout"));
 const LazyStore = lazy(() => import("./pages/Store"));
+const LazyProductDetails = lazy(() => import("./pages/ProductDetails"));
 const LazyNotFound = lazy(() => import("./pages/NotFound"));
 import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
@@ -60,6 +61,7 @@ const App = () => (
                     <Route path="/checkout" element={<LazyRoute Component={LazyCheckout} />} />
                     <Route path="/criar-loja" element={<LazyRoute Component={LazyCreateStore} />} />
                     <Route path="/loja/:slug" element={<LazyRoute Component={LazyStore} />} />
+                    <Route path="/produto/:slug" element={<LazyRoute Component={LazyProductDetails} />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
                   </Routes>
