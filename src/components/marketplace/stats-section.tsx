@@ -89,7 +89,7 @@ export default function StatsSection({
           </p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 lg:gap-6">
+        <div className="flex flex-col gap-4 max-w-2xl mx-auto">
           {statItems.map((stat, index) => {
             const IconComponent = stat.icon;
             
