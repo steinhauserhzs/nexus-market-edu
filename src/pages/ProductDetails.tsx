@@ -84,43 +84,64 @@ export default function ProductDetails() {
     try {
       setLoading(true);
       
-      // Fetch product by slug
+      // Fetch product by slug - usando first() em vez de single() para lidar com duplicatas
       const { data: productData, error: productError } = await supabase
         .from('products')
         .select('*')
         .eq('slug', slug)
         .eq('status', 'published')
-        .single();
+        .order('created_at', { ascending: false })
+        .limit(1);
 
       if (productError) throw productError;
       
-      setProduct(productData);
+      const product = productData?.[0];
+      if (!product) {
+        throw new Error('Produto não encontrado');
+      }
+      
+      setProduct(product);
 
       // Rastrear visualização do produto
-      if (productData) {
-        trackView(productData.id);
+      if (product) {
+        trackView(product.id);
       }
 
-      // Fetch store info
-      if (productData?.store_id) {
+      // Fetch store info ou usar dados fake se não existir
+      if (product?.store_id) {
         const { data: storeData } = await supabase
           .from('stores')
           .select('id, name, logo_url')
-          .eq('id', productData.store_id)
+          .eq('id', product.store_id)
           .single();
         
         if (storeData) setStore(storeData);
+      } else {
+        // Dados fake da loja para demonstração
+        setStore({
+          id: 'fake-store-1',
+          name: 'Academia Digital Pro',
+          logo_url: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=100&h=100&fit=crop&crop=center'
+        });
       }
 
-      // Fetch category info
-      if (productData?.category_id) {
+      // Fetch category info ou usar dados fake
+      if (product?.category_id) {
         const { data: categoryData } = await supabase
           .from('categories')
           .select('id, name')
-          .eq('id', productData.category_id)
+          .eq('id', product.category_id)
           .single();
         
         if (categoryData) setCategory(categoryData);
+      } else {
+        // Categoria fake baseada no tipo de produto
+        const fakeCategories = {
+          'curso': { id: 'cat-1', name: 'Desenvolvimento' },
+          'digital': { id: 'cat-2', name: 'Cursos Online' },
+          'bundle': { id: 'cat-3', name: 'Pacotes' }
+        };
+        setCategory(fakeCategories[product.type as keyof typeof fakeCategories] || { id: 'cat-1', name: 'Geral' });
       }
 
     } catch (error: any) {
@@ -135,7 +156,6 @@ export default function ProductDetails() {
       setLoading(false);
     }
   };
-
   const formatPrice = (cents: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
