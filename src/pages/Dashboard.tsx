@@ -16,7 +16,18 @@ import {
 } from "lucide-react";
 
 const Dashboard = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background pb-20">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto" />
+          <p className="text-muted-foreground">Carregando dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!user) {
     return (
@@ -29,9 +40,9 @@ const Dashboard = () => {
               <p className="text-muted-foreground">
                 Faça login para acessar o dashboard
               </p>
-              <Button onClick={() => window.location.href = '/auth'}>
-                Fazer Login
-              </Button>
+              <a href="/auth" className="inline-block">
+                <Button>Fazer Login</Button>
+              </a>
             </div>
           </CardContent>
         </Card>
@@ -54,10 +65,12 @@ const Dashboard = () => {
             </p>
           </div>
           
-          <Button onClick={() => window.location.href = '/criar-loja'}>
-            <Plus className="w-4 h-4 mr-2" />
-            Nova Loja
-          </Button>
+          <a href="/criar-loja">
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Nova Loja
+            </Button>
+          </a>
         </div>
 
         {/* Stores Section */}

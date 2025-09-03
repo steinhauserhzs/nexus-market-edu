@@ -6,10 +6,8 @@ import StatsSection from "@/components/marketplace/stats-section";
 import CategoryFilter from "@/components/ui/category-filter";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import SEOHead from "@/components/ui/seo-head";
-import PerformanceMonitor from "@/components/ui/performance-monitor";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { useAsync } from "@/hooks/use-async";
 
 
 interface Product {
@@ -33,15 +31,9 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
   const { toast } = useToast();
 
-  // Simulação de loading de produtos - substituir por dados reais do Supabase
-  const { loading: productsLoading, error: productsError } = useAsync(
-    async () => {
-      // Simular delay de carregamento
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      return true;
-    },
-    []
-  );
+  // Remove artificial loading - will use real data loading
+  const productsLoading = false;
+  const productsError = null;
 
   if (authLoading || productsLoading) {
     return (
@@ -300,18 +292,18 @@ const Index = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 {!user ? (
                   <>
-                    <button 
-                      onClick={() => window.location.href = '/auth'}
-                      className="bg-accent hover:bg-accent-hover text-accent-foreground px-8 py-4 rounded-full text-lg font-semibold transition-colors shadow-lg"
+                    <a 
+                      href="/auth"
+                      className="bg-accent hover:bg-accent-hover text-accent-foreground px-8 py-4 rounded-full text-lg font-semibold transition-colors shadow-lg inline-block text-center"
                     >
                       Começar Agora
-                    </button>
-                    <button 
-                      onClick={() => window.location.href = '/auth'}
-                      className="border-2 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 px-8 py-4 rounded-full text-lg font-semibold transition-colors"
+                    </a>
+                    <a 
+                      href="/auth"
+                      className="border-2 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 px-8 py-4 rounded-full text-lg font-semibold transition-colors inline-block text-center"
                     >
                       Vender Cursos
-                    </button>
+                    </a>
                   </>
                 ) : (
                   <button className="bg-accent hover:bg-accent-hover text-accent-foreground px-8 py-4 rounded-full text-lg font-semibold transition-colors shadow-lg">
@@ -376,8 +368,6 @@ const Index = () => {
           </div>
         </div>
       </footer>
-      
-      <PerformanceMonitor />
     </div>
   );
 };

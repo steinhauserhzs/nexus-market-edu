@@ -8,16 +8,17 @@ import { CartProvider } from "@/contexts/CartContext";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import Library from "./pages/Library";
-import Dashboard from "./pages/Dashboard";
-import Profile from "./pages/Profile";
-import Checkout from "./pages/Checkout";
-import CreateStore from "./pages/CreateStore";
-import Store from "./pages/Store";
-import NotFound from "./pages/NotFound";
+import { LazyRoute, LazyDashboard, LazyLibrary, LazyProfile, LazyCreateStore } from "./components/layout/lazy-route";
+import { lazy } from "react";
+
+// Lazy load less critical pages
+const LazyCheckout = lazy(() => import("./pages/Checkout"));
+const LazyStore = lazy(() => import("./pages/Store"));
+const LazyNotFound = lazy(() => import("./pages/NotFound"));
 import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
 import PWAInstallPrompt from "./components/ui/pwa-install-prompt";
+import PerformanceMonitor from "./components/ui/performance-monitor";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +26,11 @@ const queryClient = new QueryClient({
       retry: 1,
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
+      refetchOnReconnect: 'always',
+    },
+    mutations: {
+      retry: 1,
     },
   },
 });
@@ -37,23 +43,29 @@ const App = () => (
           <TooltipProvider>
             <Toaster />
             <Sonner />
-            <BrowserRouter>
+            <BrowserRouter 
+              future={{ 
+                v7_startTransition: true,
+                v7_relativeSplatPath: true 
+              }}
+            >
               <MobileGestures>
                 <div className="pb-16 md:pb-0">
                   <Routes>
                     <Route path="/" element={<Index />} />
                     <Route path="/auth" element={<Auth />} />
-                    <Route path="/biblioteca" element={<Library />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/perfil" element={<Profile />} />
-                    <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/criar-loja" element={<CreateStore />} />
-                    <Route path="/loja/:slug" element={<Store />} />
+                    <Route path="/biblioteca" element={<LazyRoute Component={LazyLibrary} />} />
+                    <Route path="/dashboard" element={<LazyRoute Component={LazyDashboard} />} />
+                    <Route path="/perfil" element={<LazyRoute Component={LazyProfile} />} />
+                    <Route path="/checkout" element={<LazyRoute Component={LazyCheckout} />} />
+                    <Route path="/criar-loja" element={<LazyRoute Component={LazyCreateStore} />} />
+                    <Route path="/loja/:slug" element={<LazyRoute Component={LazyStore} />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                    <Route path="*" element={<NotFound />} />
+                    <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
                   </Routes>
                   <MobileNavigation />
                   <PWAInstallPrompt />
+                  <PerformanceMonitor />
                 </div>
               </MobileGestures>
             </BrowserRouter>

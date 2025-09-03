@@ -1,9 +1,13 @@
-const CACHE_NAME = 'nexus-market-v1';
+const CACHE_NAME = 'nexus-market-v2';
 const urlsToCache = [
   '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
-  '/manifest.json'
+  '/auth',
+  '/dashboard',
+  '/biblioteca',
+  '/perfil',
+  '/manifest.json',
+  '/maskable-icon-512x512.png',
+  '/pwa-192x192.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -20,7 +24,20 @@ self.addEventListener('fetch', (event) => {
         if (response) {
           return response;
         }
-        return fetch(event.request);
+        
+        return fetch(event.request.clone()).then((response) => {
+          if (!response || response.status !== 200 || response.type !== 'basic') {
+            return response;
+          }
+
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME)
+            .then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+
+          return response;
+        });
       })
   );
 });
