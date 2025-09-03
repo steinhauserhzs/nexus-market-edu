@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
+import { useTrackProductView } from "@/hooks/use-analytics";
 import BackNavigation from "@/components/layout/back-navigation";
 import OptimizedImage from "@/components/ui/optimized-image";
 import ProductReviews from "@/components/product/product-reviews";
@@ -64,6 +65,7 @@ export default function ProductDetails() {
   const navigate = useNavigate();
   const { addToCart, isInCart } = useCart();
   const { toast } = useToast();
+  const { trackView } = useTrackProductView();
   
   const [product, setProduct] = useState<Product | null>(null);
   const [store, setStore] = useState<Store | null>(null);
@@ -93,6 +95,11 @@ export default function ProductDetails() {
       if (productError) throw productError;
       
       setProduct(productData);
+
+      // Rastrear visualização do produto
+      if (productData) {
+        trackView(productData.id);
+      }
 
       // Fetch store info
       if (productData?.store_id) {

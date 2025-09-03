@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import BackNavigation from "@/components/layout/back-navigation";
 import StoresSection from "@/components/dashboard/stores-section";
+import AnalyticsSection from "@/components/dashboard/analytics-section";
+import MessagesSection from "@/components/dashboard/messages-section";
 import { 
   TrendingUp, 
   Package, 
@@ -76,56 +78,11 @@ const Dashboard = () => {
         {/* Stores Section */}
         <StoresSection />
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Produtos</p>
-                  <p className="text-xl font-bold">12</p>
-                </div>
-                <Package className="w-6 h-6 text-muted-foreground" />
-              </div>
-            </CardContent>
-          </Card>
+        {/* Analytics Section */}
+        <AnalyticsSection />
 
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Vendas</p>
-                  <p className="text-xl font-bold">45</p>
-                </div>
-                <TrendingUp className="w-6 h-6 text-muted-foreground" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Receita</p>
-                  <p className="text-xl font-bold">R$ 2.400</p>
-                </div>
-                <DollarSign className="w-6 h-6 text-muted-foreground" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Clientes</p>
-                  <p className="text-xl font-bold">28</p>
-                </div>
-                <Users className="w-6 h-6 text-muted-foreground" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Messages Section */}
+        <MessagesSection />
 
         {/* Quick Actions */}
         <Card>

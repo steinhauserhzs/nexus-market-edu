@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useTrackCartAdd } from '@/hooks/use-analytics';
 
 interface CartItem {
   id: string;
@@ -35,6 +36,7 @@ export const useCart = () => {
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
+  const { trackCartAdd } = useTrackCartAdd();
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -57,6 +59,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const totalAmount = items.reduce((sum, item) => sum + (item.price_cents * item.quantity), 0);
 
   const addToCart = (product: Omit<CartItem, 'quantity'>) => {
+    // Rastrear adição ao carrinho
+    trackCartAdd(product.product_id, 1);
+    
     setItems(currentItems => {
       const existingItem = currentItems.find(item => item.product_id === product.product_id);
       
