@@ -138,6 +138,48 @@ export type Database = {
           },
         ]
       }
+      checkout_sessions: {
+        Row: {
+          cancel_url: string | null
+          completed_at: string | null
+          created_at: string
+          id: string
+          products: Json
+          status: string | null
+          stripe_session_id: string | null
+          success_url: string | null
+          total_amount_cents: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          cancel_url?: string | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          products: Json
+          status?: string | null
+          stripe_session_id?: string | null
+          success_url?: string | null
+          total_amount_cents: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          cancel_url?: string | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          products?: Json
+          status?: string | null
+          stripe_session_id?: string | null
+          success_url?: string | null
+          total_amount_cents?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       event_images: {
         Row: {
           alt_text: string | null
@@ -613,11 +655,14 @@ export type Database = {
           customer_email: string | null
           customer_name: string | null
           customer_phone: string | null
+          external_order_id: string | null
           gateway: string | null
           gateway_payment_id: string | null
           gateway_session_id: string | null
           id: string
+          metadata: Json | null
           payment_method: string | null
+          payment_provider: string | null
           payment_status: string | null
           shipping_address: Json | null
           status: string | null
@@ -632,11 +677,14 @@ export type Database = {
           customer_email?: string | null
           customer_name?: string | null
           customer_phone?: string | null
+          external_order_id?: string | null
           gateway?: string | null
           gateway_payment_id?: string | null
           gateway_session_id?: string | null
           id?: string
+          metadata?: Json | null
           payment_method?: string | null
+          payment_provider?: string | null
           payment_status?: string | null
           shipping_address?: Json | null
           status?: string | null
@@ -651,11 +699,14 @@ export type Database = {
           customer_email?: string | null
           customer_name?: string | null
           customer_phone?: string | null
+          external_order_id?: string | null
           gateway?: string | null
           gateway_payment_id?: string | null
           gateway_session_id?: string | null
           id?: string
+          metadata?: Json | null
           payment_method?: string | null
+          payment_provider?: string | null
           payment_status?: string | null
           shipping_address?: Json | null
           status?: string | null
@@ -1216,6 +1267,15 @@ export type Database = {
         Args: { target_user_id: string }
         Returns: boolean
       }
+      create_stripe_session: {
+        Args: {
+          cancel_url?: string
+          product_ids: string[]
+          success_url?: string
+          user_id: string
+        }
+        Returns: Json
+      }
       generate_store_slug: {
         Args: { store_name: string }
         Returns: string
@@ -1229,6 +1289,10 @@ export type Database = {
           id: string
           success: boolean
         }[]
+      }
+      handle_successful_payment: {
+        Args: { payment_intent_id?: string; session_id: string }
+        Returns: undefined
       }
       log_payment_info_access: {
         Args: {
