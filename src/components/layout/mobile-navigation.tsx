@@ -25,13 +25,16 @@ const MobileNavigation = () => {
     { icon: User, label: user ? "Perfil" : "Entrar", path: user ? "/perfil" : "/auth" }
   ];
 
-  const handleNavigation = (item: typeof navItems[0]) => {
+  const handleNavigation = (path: string) => {
+    const item = navItems.find(item => item.path === path);
+    if (!item) return;
+    
     if (item.requireAuth && !user) {
       navigate('/auth');
       return;
     }
     
-    if (item.path === "/?search=true") {
+    if (path === "/?search=true") {
       navigate('/');
       // Trigger search focus after navigation
       setTimeout(() => {
@@ -43,36 +46,38 @@ const MobileNavigation = () => {
       return;
     }
     
-    navigate(item.path);
+    navigate(path);
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border md:hidden safe-area-bottom">
-      <div className="flex items-center justify-around px-2 py-3">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-t border-border/50 md:hidden safe-area-bottom mobile-nav">
+      <div className="flex items-center justify-around px-2 sm:px-4 py-3 max-w-md mx-auto">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          const Icon = item.icon;
+          const isActive = location.pathname === item.path || 
+                          (item.path === "/" && location.pathname === "/" && !location.search);
+          const canAccess = !item.requireAuth || user;
           
           return (
             <Button
               key={item.path}
               variant="ghost"
               size="sm"
-              onClick={() => handleNavigation(item)}
+              onClick={() => handleNavigation(item.path)}
               className={cn(
-                "flex flex-col items-center gap-1.5 h-auto py-2 px-3 relative rounded-xl min-w-[60px] transition-all duration-200",
-                isActive && "text-primary bg-primary/10 shadow-sm"
+                "flex flex-col items-center justify-center p-2 h-auto min-w-[48px] min-h-[48px] transition-colors duration-200 rounded-lg btn-mobile",
+                isActive && "text-accent bg-accent/10"
               )}
+              disabled={!canAccess}
             >
-              <div className="relative">
-                <Icon className={cn(
+              <div className="relative mb-1">
+                <item.icon className={cn(
                   "w-5 h-5 transition-transform duration-200",
                   isActive && "scale-110"
                 )} />
               </div>
               <span className={cn(
-                "text-xs font-medium transition-all duration-200",
-                isActive ? "text-primary font-semibold" : "text-muted-foreground"
+                "text-xs font-medium transition-all duration-200 text-center truncate max-w-[60px]",
+                isActive ? "text-accent" : "text-muted-foreground"
               )}>
                 {item.label}
               </span>

@@ -21,14 +21,14 @@ const Auth = () => {
   }, [authLoading, user, navigate]);
 
   return (
-    <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4 safe-area-top safe-area-bottom">
-      <div className="w-full max-w-4xl">
+    <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4 sm:p-6 safe-area-top safe-area-bottom">
+      <div className="w-full max-w-4xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8 px-2">
           <Button
             variant="ghost"
             onClick={() => navigate('/')}
-            className="absolute top-4 left-4 text-primary-foreground hover:bg-primary-foreground/10"
+            className="absolute top-4 left-4 text-primary-foreground hover:bg-primary-foreground/10 z-10 min-h-[48px] min-w-[48px]"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             {!isMobile && "Voltar"}
@@ -38,25 +38,25 @@ const Auth = () => {
             <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
               <span className="text-accent-foreground font-bold">N</span>
             </div>
-            <span className="font-bold text-2xl text-primary-foreground">Nexus Market</span>
+            <span className="font-bold text-xl sm:text-2xl text-primary-foreground">Nexus Market</span>
           </div>
           
-          <h1 className="text-3xl font-bold text-primary-foreground mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-primary-foreground mb-2">
             Bem-vindo à Plataforma Completa
           </h1>
-          <p className="text-primary-foreground/80 text-lg">
+          <p className="text-primary-foreground/80 text-base sm:text-lg px-4">
             Entre ou crie sua conta para acessar cursos e vender produtos
           </p>
         </div>
 
         {/* Auth Forms */}
-        <div className="bg-background/95 backdrop-blur-sm rounded-2xl p-8 shadow-2xl">
+        <div className="bg-background/95 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl mx-2 sm:mx-0 modal-content">
           <Tabs defaultValue="signin" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8">
-              <TabsTrigger value="signin" className="text-lg py-3">
+            <TabsList className="grid w-full grid-cols-2 mb-6 sm:mb-8 h-12 sm:h-auto">
+              <TabsTrigger value="signin" className="text-sm sm:text-lg py-2 sm:py-3 font-medium">
                 Entrar
               </TabsTrigger>
-              <TabsTrigger value="signup" className="text-lg py-3">
+              <TabsTrigger value="signup" className="text-sm sm:text-lg py-2 sm:py-3 font-medium">
                 Criar Conta
               </TabsTrigger>
             </TabsList>
@@ -72,14 +72,14 @@ const Auth = () => {
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-8 text-primary-foreground/60">
-          <p className="text-sm">
+        <div className="text-center mt-6 sm:mt-8 text-primary-foreground/60 px-4">
+          <p className="text-xs sm:text-sm">
             Ao continuar, você concorda com nossos{" "}
-            <button className="underline hover:text-primary-foreground" onClick={(e) => e.preventDefault()}>
+            <button className="underline hover:text-primary-foreground min-h-[48px] px-2" onClick={(e) => e.preventDefault()}>
               Termos de Uso
             </button>{" "}
             e{" "}
-            <button className="underline hover:text-primary-foreground" onClick={(e) => e.preventDefault()}>
+            <button className="underline hover:text-primary-foreground min-h-[48px] px-2" onClick={(e) => e.preventDefault()}>
               Política de Privacidade
             </button>
           </p>

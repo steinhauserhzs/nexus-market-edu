@@ -83,8 +83,9 @@ export default function ProductCard({
   return (
     <Card 
       className={cn(
-        "group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in",
-        "bg-gradient-card border-border/50 hover:border-accent/50 rounded-2xl overflow-hidden",
+        "group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 sm:hover:-translate-y-2 animate-fade-in",
+        "bg-gradient-card border-border/50 hover:border-accent/50 rounded-xl sm:rounded-2xl overflow-hidden",
+        "mx-2 sm:mx-0 max-w-sm mx-auto w-full",
         featured && "ring-2 ring-accent/30 shadow-accent/20 shadow-lg",
         className
       )}
@@ -97,8 +98,8 @@ export default function ProductCard({
             src={thumbnail || ''}
             alt={title}
             aspectRatio="video"
-            className="rounded-t-2xl group-hover:scale-105 transition-transform duration-300"
-            fallbackClassName="rounded-t-2xl"
+            className="rounded-t-xl sm:rounded-t-2xl group-hover:scale-105 transition-transform duration-300"
+            fallbackClassName="rounded-t-xl sm:rounded-t-2xl"
           />
           
           {/* Type badge */}
@@ -134,17 +135,17 @@ export default function ProductCard({
           </div>
         </div>
 
-        <div className="p-5 space-y-4">
+        <div className="p-4 sm:p-5 space-y-3 sm:space-y-4">
           {/* Title */}
-          <h3 className="font-bold text-lg leading-tight line-clamp-2 group-hover:text-accent transition-colors">
+          <h3 className="font-bold text-base sm:text-lg leading-tight line-clamp-2 group-hover:text-accent transition-colors">
             {title}
           </h3>
           
           {/* Instructor */}
-          <p className="text-sm text-muted-foreground font-medium">{instructor}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground font-medium truncate">{instructor}</p>
           
           {/* Description */}
-          <p className="text-sm text-muted-foreground/80 line-clamp-2 leading-relaxed">
+          <p className="text-xs sm:text-sm text-muted-foreground/80 line-clamp-2 leading-relaxed">
             {description}
           </p>
           
@@ -180,22 +181,22 @@ export default function ProductCard({
           </div>
           
           <Button 
-            className="w-full mt-4 rounded-xl font-semibold" 
+            className="w-full mt-3 sm:mt-4 rounded-xl font-semibold h-10 sm:h-12" 
             variant={inCart ? "outline" : "accent"}
             onClick={handleAddToCart}
             disabled={inCart}
-            size="lg"
+            size={inCart ? "default" : "lg"}
           >
             <div className="flex items-center justify-center">
               {inCart ? (
                 <>
                   <Check className="w-4 h-4 mr-2" />
-                  No Carrinho
+                  <span className="text-sm sm:text-base">No Carrinho</span>
                 </>
               ) : (
                 <>
                   <ShoppingCart className="w-4 h-4 mr-2" />
-                  Adicionar ao Carrinho
+                  <span className="text-sm sm:text-base">Adicionar</span>
                 </>
               )}
             </div>

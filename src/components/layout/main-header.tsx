@@ -64,8 +64,8 @@ export default function MainHeader() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 safe-area-top">
+      <div className="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between max-w-7xl">
         {/* Mobile Menu */}
         <div className="flex items-center gap-3">
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -74,36 +74,36 @@ export default function MainHeader() {
                 <Menu className="w-5 h-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-80">
-              <SheetHeader className="text-left">
-                <SheetTitle className="flex items-center gap-2">
+            <SheetContent side="left" className="w-80 modal-content safe-area-top">
+              <SheetHeader className="text-left pb-4">
+                <SheetTitle className="flex items-center gap-3 px-1">
                   <div className="w-8 h-8 bg-gradient-accent rounded-lg flex items-center justify-center">
                     <span className="text-accent-foreground font-bold text-sm">N</span>
                   </div>
-                  Nexus Market
+                  <span className="font-bold text-lg">Nexus Market</span>
                 </SheetTitle>
               </SheetHeader>
               
-              <div className="mt-6 space-y-6">
+              <div className="mt-6 space-y-6 px-1">
                 {/* Navigation Links */}
                 <div>
-                  <h3 className="font-medium text-sm text-muted-foreground mb-3">Navegação</h3>
+                  <h3 className="font-medium text-sm text-muted-foreground mb-4 px-1">Navegação</h3>
                   <NavLinks mobile />
                 </div>
 
                 {/* User Section */}
                 {user && profile ? (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                      <Avatar className="w-10 h-10">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 p-4 rounded-xl bg-muted/50 border border-border/50">
+                      <Avatar className="w-12 h-12">
                         <AvatarImage src={profile.avatar_url || ''} />
-                        <AvatarFallback>
+                        <AvatarFallback className="text-sm font-medium">
                           {profile.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="flex-1">
-                        <p className="font-medium text-sm">{profile.full_name || 'Usuário'}</p>
-                        <Badge variant="outline" className="text-xs">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm truncate">{profile.full_name || 'Usuário'}</p>
+                        <Badge variant="outline" className="text-xs mt-1">
                           {profile.role === 'seller' ? 'Vendedor' : 'Usuário'}
                         </Badge>
                       </div>
@@ -145,9 +145,9 @@ export default function MainHeader() {
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-3 px-1">
                     <Button 
-                      className="w-full"
+                      className="w-full h-12 rounded-xl font-medium"
                       onClick={() => {
                         handleAuth();
                         setMobileMenuOpen(false);
@@ -157,7 +157,7 @@ export default function MainHeader() {
                     </Button>
                     <Button 
                       variant="outline"
-                      className="w-full"
+                      className="w-full h-12 rounded-xl font-medium"
                       onClick={() => {
                         handleAuth();
                         setMobileMenuOpen(false);

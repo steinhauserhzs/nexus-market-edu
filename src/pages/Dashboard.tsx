@@ -62,15 +62,17 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20 safe-area-bottom">
-      <BackNavigation title="Dashboard" />
+      <div className="px-4 sm:px-6">
+        <BackNavigation title="Dashboard" />
+      </div>
       
-      <div className="container mx-auto px-4 py-6 space-y-8">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in">
-          <div className="space-y-2">
-            <h1 className="text-2xl md:text-3xl font-bold">
+      <div className="container mx-auto px-4 sm:px-6 py-6 space-y-6 md:space-y-8 max-w-7xl">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in px-2">
+          <div className="space-y-2 flex-1 min-w-0">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold truncate">
               Dashboard - {profile?.full_name || "Usuário"}
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-sm sm:text-base text-muted-foreground">
               Gerencie suas lojas, produtos e vendas
             </p>
           </div>
@@ -79,22 +81,22 @@ const Dashboard = () => {
             onClick={() => navigate('/criar-loja')}
             variant="accent"
             size="lg"
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto h-12 rounded-xl font-medium flex-shrink-0"
           >
             <Plus className="w-4 h-4 mr-2" />
             Nova Loja
           </Button>
         </div>
 
-        <Tabs defaultValue="overview" className="space-y-8">
-          <div className="w-full overflow-x-auto animate-slide-up">
-            <TabsList className="inline-flex w-max min-w-full justify-start gap-2 bg-muted/50 p-2 rounded-2xl">
-              <TabsTrigger value="overview" className="flex-shrink-0 rounded-xl font-medium">Visão Geral</TabsTrigger>
-              <TabsTrigger value="stores" className="flex-shrink-0 rounded-xl font-medium">Lojas</TabsTrigger>
-              <TabsTrigger value="products" className="flex-shrink-0 rounded-xl font-medium">Produtos</TabsTrigger>
-              <TabsTrigger value="analytics" className="flex-shrink-0 rounded-xl font-medium">Analytics</TabsTrigger>
-              <TabsTrigger value="content" className="flex-shrink-0 rounded-xl font-medium">Conteúdo</TabsTrigger>
-              <TabsTrigger value="messages" className="flex-shrink-0 rounded-xl font-medium">Mensagens</TabsTrigger>
+        <Tabs defaultValue="overview" className="space-y-6 md:space-y-8">
+          <div className="w-full overflow-x-auto animate-slide-up px-2">
+            <TabsList className="inline-flex w-max min-w-full justify-start gap-1 sm:gap-2 bg-muted/50 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl">
+              <TabsTrigger value="overview" className="flex-shrink-0 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm px-3 sm:px-4 py-2">Visão Geral</TabsTrigger>
+              <TabsTrigger value="stores" className="flex-shrink-0 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm px-3 sm:px-4 py-2">Lojas</TabsTrigger>
+              <TabsTrigger value="products" className="flex-shrink-0 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm px-3 sm:px-4 py-2">Produtos</TabsTrigger>
+              <TabsTrigger value="analytics" className="flex-shrink-0 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm px-3 sm:px-4 py-2">Analytics</TabsTrigger>
+              <TabsTrigger value="content" className="flex-shrink-0 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm px-3 sm:px-4 py-2">Conteúdo</TabsTrigger>
+              <TabsTrigger value="messages" className="flex-shrink-0 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm px-3 sm:px-4 py-2">Mensagens</TabsTrigger>
             </TabsList>
           </div>
 
@@ -103,19 +105,19 @@ const Dashboard = () => {
             <AnalyticsSection />
 
             {/* Quick Actions */}
-            <Card className="rounded-2xl border-border/50 shadow-lg">
+            <Card className="rounded-xl sm:rounded-2xl border-border/50 shadow-lg mx-2">
               <CardHeader className="pb-4">
-                <CardTitle className="text-xl">Ações Rápidas</CardTitle>
+                <CardTitle className="text-lg sm:text-xl">Ações Rápidas</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4">
+              <CardContent className="px-4 sm:px-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                   <Button 
                     variant="outline" 
-                    className="h-auto p-6 flex-col gap-3 rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg"
+                    className="h-auto p-4 sm:p-6 flex-col gap-2 sm:gap-3 rounded-xl sm:rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg min-h-[80px] sm:min-h-[100px]"
                     onClick={() => navigate('#products')}
                   >
-                    <Plus className="w-8 h-8 text-accent" />
-                    <span className="text-sm font-semibold">Novo Produto</span>
+                    <Plus className="w-6 h-6 sm:w-8 sm:h-8 text-accent" />
+                    <span className="text-xs sm:text-sm font-semibold text-center">Novo Produto</span>
                   </Button>
                   
                   <Button 
