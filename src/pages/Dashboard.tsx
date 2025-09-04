@@ -69,9 +69,14 @@ const Dashboard = () => {
       <div className="container mx-auto px-4 sm:px-6 py-6 space-y-6 md:space-y-8 max-w-7xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in px-2">
           <div className="space-y-2 flex-1 min-w-0">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold truncate">
-              Dashboard - {profile?.full_name || "Usuário"}
-            </h1>
+            <div className="space-y-1">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">
+                Dashboard
+              </h1>
+              <p className="text-lg sm:text-xl text-primary/80 font-medium truncate">
+                {profile?.full_name || "Usuário"}
+              </p>
+            </div>
             <p className="text-sm sm:text-base text-muted-foreground">
               Gerencie suas lojas, produtos e vendas
             </p>
