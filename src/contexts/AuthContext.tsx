@@ -262,11 +262,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signIn = async (identifier: string, password: string) => {
     try {
+      console.info('[AuthContext] signIn start', { identifierType: identifier.includes('@') ? 'email' : 'other' });
       let email = identifier;
       
-      // Se não for email, busca o email pelo CPF ou telefone
+      // Se não for email, busca o email pelo CPF ou telefone (requer políticas que permitam esta leitura)
       if (!identifier.includes('@')) {
         const { user: profileData, error: findError } = await findUserByIdentifier(identifier);
+        console.info('[AuthContext] findUserByIdentifier', { hasUser: !!profileData, findError });
         
         if (findError || !profileData) {
           throw new Error('Usuário não encontrado com este CPF/telefone');
@@ -279,22 +281,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         email,
         password,
       });
+      console.info('[AuthContext] signInWithPassword done', { error });
 
       if (error) throw error;
 
-      // Atualizar método de login no perfil
+      // Atualizar método de login no perfil (adiado para fora do callback)
       setTimeout(async () => {
-        await supabase
-          .from('profiles')
-          .update({ 
-            login_method: identifier.includes('@') ? 'email' : (identifier.length === 11 ? 'cpf' : 'phone'),
-            last_login_at: new Date().toISOString()
-          })
-          .eq('email', email);
-      }, 1000);
+        try {
+          await supabase
+            .from('profiles')
+            .update({ 
+              login_method: identifier.includes('@') ? 'email' : (identifier.replace(/\D/g, '').length === 11 ? 'cpf' : 'phone'),
+              last_login_at: new Date().toISOString()
+            })
+            .eq('email', email);
+        } catch (e) {
+          console.warn('[AuthContext] Failed to update profile login_method', e);
+        }
+      }, 500);
 
       return { error: null };
     } catch (error: any) {
+      console.error('[AuthContext] signIn error', error);
       return { error };
     }
   };

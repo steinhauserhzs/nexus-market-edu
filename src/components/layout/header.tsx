@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Link, useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   user?: {
@@ -55,6 +56,7 @@ export default function Header({
   onSearch 
 }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,12 +129,12 @@ export default function Header({
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <a href="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-accent rounded-lg flex items-center justify-center">
               <span className="text-accent-foreground font-bold text-sm">N</span>
             </div>
             <span className="font-bold text-xl">Nexus Market</span>
-          </a>
+          </Link>
         </div>
 
         {/* Search - Desktop */}
@@ -191,12 +193,12 @@ export default function Header({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem onClick={() => window.location.href = '/perfil'}>
+                  <DropdownMenuItem onClick={() => navigate('/perfil')}>
                     <User className="mr-2 h-4 w-4" />
                     Meu Perfil
                   </DropdownMenuItem>
                   
-                  <DropdownMenuItem onClick={() => window.location.href = '/biblioteca'}>
+                  <DropdownMenuItem onClick={() => navigate('/biblioteca')}>
                     <BookOpen className="mr-2 h-4 w-4" />
                     Minha Biblioteca
                   </DropdownMenuItem>
@@ -204,7 +206,7 @@ export default function Header({
                   {(user.role === 'seller' || user.role === 'admin') && (
                     <>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => window.location.href = '/dashboard'}>
+                      <DropdownMenuItem onClick={() => navigate('/dashboard')}>
                         <Store className="mr-2 h-4 w-4" />
                         Painel Vendedor
                       </DropdownMenuItem>
@@ -269,7 +271,8 @@ export default function Header({
                   {categories.map((category) => (
                     <a
                       key={category.name}
-                      href={category.href}
+                      href="#"
+                      onClick={(e) => { e.preventDefault(); navigate(category.href); }}
                       className="flex items-center gap-2 p-2 rounded-md hover:bg-accent/10 transition-colors"
                     >
                       <span>{category.icon}</span>

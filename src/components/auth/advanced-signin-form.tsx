@@ -87,6 +87,7 @@ const AdvancedSigninForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.info('[Auth] Submitting login form', { hasIdentifier: !!identifier, hasPassword: !!password });
     
     if (!identifier || !password) {
       toast({
@@ -98,8 +99,15 @@ const AdvancedSigninForm = () => {
     }
 
     setLoading(true);
+    const timeout = window.setTimeout(() => {
+      console.warn('[Auth] Login timeout - resetting state');
+      setLoading(false);
+      toast({ title: 'Tempo esgotado', description: 'A conexão demorou muito. Tente novamente.', variant: 'destructive' });
+    }, 15000);
     try {
+      console.info('[Auth] Calling signIn...');
       const { error } = await signIn(identifier, password);
+      console.info('[Auth] signIn returned', { error });
       
       if (error) {
         throw error;
@@ -117,24 +125,27 @@ const AdvancedSigninForm = () => {
         description: "Bem-vindo de volta!",
       });
       // Redireciona após sucesso
+      console.info('[Auth] Navigating to /biblioteca');
       navigate('/biblioteca');
     } catch (error: any) {
       let errorMessage = "Erro no login. Tente novamente.";
       
-      if (error.message.includes('Invalid login credentials')) {
+      if (error?.message?.includes('Invalid login credentials')) {
         errorMessage = "Email/CPF/telefone ou senha incorretos";
-      } else if (error.message.includes('not found')) {
+      } else if (error?.message?.includes('not found')) {
         errorMessage = "Usuário não encontrado";
-      } else if (error.message) {
+      } else if (error?.message) {
         errorMessage = error.message;
       }
 
+      console.error('[Auth] Login error', error);
       toast({
         title: "Erro no login",
         description: errorMessage,
         variant: "destructive",
       });
     } finally {
+      console.info('[Auth] Resetting loading state');
       setLoading(false);
     }
   };

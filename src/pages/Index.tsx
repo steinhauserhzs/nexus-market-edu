@@ -9,6 +9,7 @@ import LoadingSpinner from "@/components/ui/loading-spinner";
 import SEOHead from "@/components/ui/seo-head";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 
 
 interface Product {
@@ -270,18 +271,19 @@ const Index = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 {!user ? (
                   <>
-                    <a 
-                      href="/auth"
-                      className="bg-accent hover:bg-accent-hover text-accent-foreground px-8 py-4 rounded-full text-lg font-semibold transition-colors shadow-lg inline-block text-center"
+                    <Button 
+                      onClick={() => navigate('/auth')}
+                      className="bg-accent hover:bg-accent-hover text-accent-foreground px-8 py-4 rounded-full text-lg font-semibold transition-colors shadow-lg"
                     >
                       Começar Agora
-                    </a>
-                    <a 
-                      href="/auth"
-                      className="border-2 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 px-8 py-4 rounded-full text-lg font-semibold transition-colors inline-block text-center"
+                    </Button>
+                    <Button 
+                      onClick={() => navigate('/auth')}
+                      variant="outline"
+                      className="border-2 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 px-8 py-4 rounded-full text-lg font-semibold transition-colors"
                     >
                       Vender Cursos
-                    </a>
+                    </Button>
                   </>
                 ) : (
                   <button className="bg-accent hover:bg-accent-hover text-accent-foreground px-8 py-4 rounded-full text-lg font-semibold transition-colors shadow-lg">
