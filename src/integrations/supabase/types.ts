@@ -216,6 +216,13 @@ export type Database = {
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "event_images_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       event_tickets: {
@@ -267,6 +274,13 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_tickets_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events_public"
             referencedColumns: ["id"]
           },
         ]
@@ -1521,7 +1535,87 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      events_public: {
+        Row: {
+          age_restriction: string | null
+          banner_url: string | null
+          category: string | null
+          created_at: string | null
+          description: string | null
+          event_date: string | null
+          event_type: string | null
+          id: string | null
+          is_featured: boolean | null
+          max_capacity: number | null
+          organizer_id: string | null
+          price_from: number | null
+          status: Database["public"]["Enums"]["event_status"] | null
+          terms_and_conditions: string | null
+          ticket_sales_end_date: string | null
+          ticket_sales_start_date: string | null
+          title: string | null
+          updated_at: string | null
+          venue_id: string | null
+        }
+        Insert: {
+          age_restriction?: string | null
+          banner_url?: string | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          event_date?: string | null
+          event_type?: string | null
+          id?: string | null
+          is_featured?: boolean | null
+          max_capacity?: number | null
+          organizer_id?: string | null
+          price_from?: number | null
+          status?: Database["public"]["Enums"]["event_status"] | null
+          terms_and_conditions?: string | null
+          ticket_sales_end_date?: string | null
+          ticket_sales_start_date?: string | null
+          title?: string | null
+          updated_at?: string | null
+          venue_id?: string | null
+        }
+        Update: {
+          age_restriction?: string | null
+          banner_url?: string | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          event_date?: string | null
+          event_type?: string | null
+          id?: string | null
+          is_featured?: boolean | null
+          max_capacity?: number | null
+          organizer_id?: string | null
+          price_from?: number | null
+          status?: Database["public"]["Enums"]["event_status"] | null
+          terms_and_conditions?: string | null
+          ticket_sales_end_date?: string | null
+          ticket_sales_start_date?: string | null
+          title?: string | null
+          updated_at?: string | null
+          venue_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_organizer_id_fkey"
+            columns: ["organizer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       calculate_platform_fee: {
@@ -1553,6 +1647,13 @@ export type Database = {
         Args: { p_identifier: string }
         Returns: string
       }
+      get_event_contact_info: {
+        Args: { event_id: string }
+        Returns: {
+          contact_email: string
+          contact_phone: string
+        }[]
+      }
       get_my_payment_audit_logs: {
         Args: { end_date?: string; start_date?: string }
         Returns: {
@@ -1561,6 +1662,30 @@ export type Database = {
           error_message: string
           id: string
           success: boolean
+        }[]
+      }
+      get_public_events: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          age_restriction: string
+          banner_url: string
+          category: string
+          created_at: string
+          description: string
+          event_date: string
+          event_type: string
+          id: string
+          is_featured: boolean
+          max_capacity: number
+          organizer_id: string
+          price_from: number
+          status: Database["public"]["Enums"]["event_status"]
+          terms_and_conditions: string
+          ticket_sales_end_date: string
+          ticket_sales_start_date: string
+          title: string
+          updated_at: string
+          venue_id: string
         }[]
       }
       handle_successful_payment: {
