@@ -242,6 +242,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             profession: additionalData.profession || null,
             city: additionalData.city || null,
             state: additionalData.state || null,
+            role: 'seller',  // Todos usuários começam como vendedores
           },
         },
       });

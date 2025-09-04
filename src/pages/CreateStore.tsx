@@ -124,7 +124,10 @@ const CreateStore = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log('🚀 Iniciando criação de loja', { user: user?.id, formData });
+    
     if (!user) {
+      console.error('❌ Usuário não autenticado');
       toast({
         title: "Erro",
         description: "Você precisa estar logado para criar uma loja",
@@ -134,6 +137,7 @@ const CreateStore = () => {
     }
 
     if (!formData.name.trim()) {
+      console.error('❌ Nome da loja vazio');
       toast({
         title: "Campo obrigatório",
         description: "O nome da loja é obrigatório",
@@ -145,38 +149,53 @@ const CreateStore = () => {
     setLoading(true);
     
     try {
+      console.log('📁 Iniciando uploads de imagens...');
+      
       let logoUrl = "";
       let bannerUrl = "";
 
       // Upload logo if provided
       if (logoFile) {
+        console.log('📤 Fazendo upload do logo...');
         const logoPath = `${user.id}/logo-${Date.now()}.${logoFile.name.split('.').pop()}`;
         logoUrl = await uploadFile(logoFile, 'store-logos', logoPath);
+        console.log('✅ Logo uploadado:', logoUrl);
       }
 
       // Upload banner if provided
       if (bannerFile) {
+        console.log('📤 Fazendo upload do banner...');
         const bannerPath = `${user.id}/banner-${Date.now()}.${bannerFile.name.split('.').pop()}`;
         bannerUrl = await uploadFile(bannerFile, 'store-banners', bannerPath);
+        console.log('✅ Banner uploadado:', bannerUrl);
       }
+
+      const storeData = {
+        name: formData.name.trim(),
+        description: formData.description.trim() || null,
+        slug: formData.slug,
+        owner_id: user.id,
+        logo_url: logoUrl || null,
+        banner_url: bannerUrl || null,
+        theme: theme,
+        is_active: true,
+      };
+
+      console.log('🏪 Criando loja no banco:', storeData);
 
       // Create store
       const { data: store, error } = await supabase
         .from('stores')
-        .insert({
-          name: formData.name.trim(),
-          description: formData.description.trim() || null,
-          slug: formData.slug,
-          owner_id: user.id,
-          logo_url: logoUrl || null,
-          banner_url: bannerUrl || null,
-          theme: theme,
-          is_active: true,
-        })
+        .insert(storeData)
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Erro RLS/DB:', error);
+        throw error;
+      }
+
+      console.log('✅ Loja criada com sucesso:', store);
 
       toast({
         title: "Loja criada com sucesso!",
@@ -187,11 +206,16 @@ const CreateStore = () => {
       navigate(`/dashboard`);
       
     } catch (error: any) {
-      console.error('Error creating store:', error);
+      console.error('💥 Erro ao criar loja:', error);
       
       let errorMessage = "Erro ao criar loja. Tente novamente.";
+      
       if (error.message?.includes('duplicate key')) {
         errorMessage = "Já existe uma loja com esse nome. Tente outro nome.";
+      } else if (error.message?.includes('policy')) {
+        errorMessage = "Erro de permissão. Verifique se você está logado corretamente.";
+      } else if (error.message?.includes('RLS')) {
+        errorMessage = "Erro de segurança. Contate o suporte.";
       } else if (error.message) {
         errorMessage = error.message;
       }
