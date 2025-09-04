@@ -16,9 +16,11 @@ import {
   Plus,
   Package,
   MapPin,
-  Globe
+  Globe,
+  Palette
 } from "lucide-react";
 import ProductCard from "@/components/ui/product-card";
+import CustomStoreRenderer from "@/components/store/custom-store-renderer";
 
 interface Store {
   id: string;
