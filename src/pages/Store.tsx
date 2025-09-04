@@ -206,11 +206,9 @@ const Store = () => {
   const textColor = theme.textColor || "#1f2937";
 
   return (
-    <div 
-      className="min-h-screen pb-20"
-      style={{ backgroundColor }}
-    >
-      <BackNavigation title={store.name} />
+    <CustomStoreRenderer theme={store.theme || {}} storeName={store.name}>
+      <div className="min-h-screen pb-20">
+        <BackNavigation title={store.name} />
       
       {/* Store Header */}
       <div className="relative">
@@ -235,14 +233,24 @@ const Store = () => {
           {/* Action buttons */}
           <div className="absolute top-4 right-4 flex gap-2">
             {isOwner && (
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={() => navigate(`/store/${store.slug}/settings`)}
-                className="bg-white/90 hover:bg-white"
-              >
-                <Settings className="w-4 h-4" />
-              </Button>
+              <>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => navigate(`/loja/${store.slug}/customizar`)}
+                  className="bg-white/90 hover:bg-white"
+                >
+                  <Palette className="w-4 h-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => navigate(`/store/${store.slug}/settings`)}
+                  className="bg-white/90 hover:bg-white"
+                >
+                  <Settings className="w-4 h-4" />
+                </Button>
+              </>
             )}
             <Button
               size="sm"
@@ -256,12 +264,12 @@ const Store = () => {
         </div>
 
         {/* Store Info */}
-        <div className="container mx-auto px-4 -mt-16 relative z-10">
-          <Card className="mb-6">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
+        <div className="store-container -mt-16 relative z-10">
+          <Card className="store-card mb-6">
+            <CardContent className="store-spacing-md">
+              <div className="flex items-start store-gap-md">
                 {/* Logo */}
-                <div className="w-24 h-24 rounded-xl border-4 border-background shadow-lg flex items-center justify-center bg-white flex-shrink-0">
+                <div className="store-logo rounded-xl border-4 border-background shadow-lg flex items-center justify-center bg-white flex-shrink-0">
                   {store.logo_url ? (
                     <img
                       src={store.logo_url}
@@ -277,18 +285,15 @@ const Store = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <h1 
-                        className="text-2xl font-bold"
-                        style={{ color: textColor }}
-                      >
+                      <h1 className="store-text-3xl font-bold">
                         {store.name}
                       </h1>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="secondary" className="text-xs">
+                      <div className="flex items-center store-gap-xs mt-1">
+                        <Badge variant="secondary" className="store-text-xs">
                           <Globe className="w-3 h-3 mr-1" />
                           {store.slug}
                         </Badge>
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="store-text-xs">
                           <Package className="w-3 h-3 mr-1" />
                           {products.length} produto{products.length !== 1 ? 's' : ''}
                         </Badge>
@@ -297,21 +302,17 @@ const Store = () => {
                   </div>
 
                   {store.description && (
-                    <p 
-                      className="text-sm mb-4 opacity-75"
-                      style={{ color: textColor }}
-                    >
+                    <p className="store-text-sm mb-4 opacity-75">
                       {store.description}
                     </p>
                   )}
 
                   {/* Action buttons */}
-                  <div className="flex gap-2">
+                  <div className="flex store-gap-xs">
                     {!isOwner && (
                       <Button
                         onClick={handleFollow}
-                        style={{ backgroundColor: primaryColor }}
-                        className="text-white"
+                        className="store-button-primary"
                       >
                         <Users className="w-4 h-4 mr-2" />
                         {following ? "Seguindo" : "Seguir"}
@@ -321,8 +322,7 @@ const Store = () => {
                     {isOwner && (
                       <Button
                         onClick={() => navigate('/products/new')}
-                        style={{ backgroundColor: primaryColor }}
-                        className="text-white"
+                        className="store-button-primary"
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         Adicionar Produto
@@ -331,10 +331,7 @@ const Store = () => {
 
                     <Button
                       variant="outline"
-                      style={{ 
-                        color: accentColor,
-                        borderColor: accentColor
-                      }}
+                      className="store-button-accent"
                     >
                       <Star className="w-4 h-4 mr-2" />
                       Avaliar
@@ -348,51 +345,49 @@ const Store = () => {
       </div>
 
       {/* Products Section */}
-      <div className="container mx-auto px-4">
+      <div className="store-container">
         {products.length > 0 ? (
           <div>
-            <div className="flex items-center justify-between mb-6">
-              <h2 
-                className="text-xl font-semibold"
-                style={{ color: textColor }}
-              >
+            <div className="flex items-center justify-between store-spacing-lg">
+              <h2 className="store-text-2xl font-semibold">
                 Produtos da Loja
               </h2>
               {products.filter(p => p.featured).length > 0 && (
                 <Badge 
                   variant="secondary"
-                  style={{ backgroundColor: `${accentColor}20`, color: accentColor }}
+                  className="store-button-accent"
                 >
                   {products.filter(p => p.featured).length} em destaque
                 </Badge>
               )}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="store-products-grid store-gap-lg">
               {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  title={product.title}
-                  description={product.description || ""}
-                  thumbnail={product.thumbnail_url || ""}
-                  price={product.price_cents}
-                  comparePrice={product.compare_price_cents || undefined}
-                  type={product.type === 'physical' ? 'fisico' : product.type as "digital" | "curso" | "fisico" | "servico" | "bundle" | "assinatura"}
-                  instructor="Loja"
-                  featured={product.featured}
-                />
+                <div key={product.id} className="store-card modern">
+                  <ProductCard
+                    id={product.id}
+                    title={product.title}
+                    description={product.description || ""}
+                    thumbnail={product.thumbnail_url || ""}
+                    price={product.price_cents}
+                    comparePrice={product.compare_price_cents || undefined}
+                    type={product.type === 'physical' ? 'fisico' : product.type as "digital" | "curso" | "fisico" | "servico" | "bundle" | "assinatura"}
+                    instructor="Loja"
+                    featured={product.featured}
+                  />
+                </div>
               ))}
             </div>
           </div>
         ) : (
-          <Card>
-            <CardContent className="py-12 text-center">
+          <Card className="store-card">
+            <CardContent className="store-spacing-xl text-center">
               <div className="mx-auto w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
                 <Package className="w-8 h-8 text-muted-foreground" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Nenhum produto ainda</h3>
-              <p className="text-muted-foreground mb-4">
+              <h3 className="store-text-xl font-semibold mb-2">Nenhum produto ainda</h3>
+              <p className="store-text-base text-muted-foreground mb-4">
                 {isOwner 
                   ? "Adicione produtos para começar a vender" 
                   : "Esta loja ainda não possui produtos publicados"
@@ -401,8 +396,7 @@ const Store = () => {
               {isOwner && (
                 <Button
                   onClick={() => navigate('/products/new')}
-                  style={{ backgroundColor: primaryColor }}
-                  className="text-white"
+                  className="store-button-primary"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Adicionar Primeiro Produto
@@ -413,6 +407,7 @@ const Store = () => {
         )}
       </div>
     </div>
+    </CustomStoreRenderer>
   );
 };
 
