@@ -82,14 +82,16 @@ const Dashboard = () => {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-            <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-            <TabsTrigger value="stores">Lojas</TabsTrigger>
-            <TabsTrigger value="products">Produtos</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
-            <TabsTrigger value="content">Conteúdo</TabsTrigger>
-            <TabsTrigger value="messages">Mensagens</TabsTrigger>
-          </TabsList>
+          <div className="w-full overflow-x-auto">
+            <TabsList className="inline-flex w-max min-w-full justify-start">
+              <TabsTrigger value="overview" className="flex-shrink-0">Visão Geral</TabsTrigger>
+              <TabsTrigger value="stores" className="flex-shrink-0">Lojas</TabsTrigger>
+              <TabsTrigger value="products" className="flex-shrink-0">Produtos</TabsTrigger>
+              <TabsTrigger value="analytics" className="flex-shrink-0">Analytics</TabsTrigger>
+              <TabsTrigger value="content" className="flex-shrink-0">Conteúdo</TabsTrigger>
+              <TabsTrigger value="messages" className="flex-shrink-0">Mensagens</TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="overview" className="space-y-6">
             {/* Quick Stats */}
