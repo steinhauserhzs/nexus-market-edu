@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { Eye, EyeOff, Mail, Phone, CreditCard, Chrome } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { logger } from "@/lib/logger";
 
 const AdvancedSigninForm = () => {
   const { signIn, signInWithGoogle } = useAuth();
@@ -145,7 +146,7 @@ const AdvancedSigninForm = () => {
         errorMessage = error.message;
       }
 
-      console.error('[Auth] Login error', error);
+      logger.error('[Auth] Login error', error);
       toast({
         title: "Erro no login",
         description: errorMessage,

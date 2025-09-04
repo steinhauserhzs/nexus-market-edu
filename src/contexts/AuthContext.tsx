@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { logger } from '@/lib/logger';
 
 interface Profile {
   id: string;
@@ -87,7 +88,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         .single();
       
       if (error) {
-        console.error('Error fetching profile:', error);
+        logger.error('Error fetching profile', error);
         return null;
       }
       
@@ -97,7 +98,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         role: (data.role as 'user' | 'seller' | 'admin') || 'user'
       };
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      logger.error('Error fetching profile', error);
       return null;
     }
   };

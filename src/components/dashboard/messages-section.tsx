@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { logger } from '@/lib/logger';
 import { 
   MessageCircle, 
   Send, 
@@ -74,7 +75,7 @@ const MessagesSection = () => {
       setMessages((receivedMessages as any) || []);
       setUnreadCount(receivedMessages?.filter(m => !m.is_read).length || 0);
     } catch (error) {
-      console.error('Erro ao buscar mensagens:', error);
+      logger.error('Erro ao buscar mensagens', error);
       toast({
         title: "Erro",
         description: "Não foi possível carregar as mensagens.",
