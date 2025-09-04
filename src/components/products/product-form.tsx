@@ -258,7 +258,7 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
             <ImageUpload
               images={formData.images}
               onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
-              maxImages={5}
+              storeId={selectedStoreId}
             />
 
             <div className="space-y-2">
