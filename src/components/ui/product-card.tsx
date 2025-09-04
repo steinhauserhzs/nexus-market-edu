@@ -83,27 +83,27 @@ export default function ProductCard({
   return (
     <Card 
       className={cn(
-        "group cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1",
-        "bg-gradient-card border-border/50 hover:border-accent/50",
-        featured && "ring-2 ring-accent/20 shadow-accent",
+        "group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in",
+        "bg-gradient-card border-border/50 hover:border-accent/50 rounded-2xl overflow-hidden",
+        featured && "ring-2 ring-accent/30 shadow-accent/20 shadow-lg",
         className
       )}
       onClick={onClick}
     >
-      <CardContent className="p-0 space-y-4">
+      <CardContent className="p-0 space-y-0">
         {/* Thumbnail */}
-        <div className="relative">
+        <div className="relative overflow-hidden">
           <OptimizedImage
             src={thumbnail || ''}
             alt={title}
             aspectRatio="video"
-            className="rounded-t-lg"
-            fallbackClassName="rounded-t-lg"
+            className="rounded-t-2xl group-hover:scale-105 transition-transform duration-300"
+            fallbackClassName="rounded-t-2xl"
           />
           
           {/* Type badge */}
           <div className="absolute top-3 left-3">
-            <Badge variant="secondary" className="bg-background/90 backdrop-blur-sm">
+            <Badge variant="secondary" className="bg-background/90 backdrop-blur-sm rounded-lg">
               {getTypeLabel(type)}
             </Badge>
           </div>
@@ -111,7 +111,7 @@ export default function ProductCard({
           {/* Featured badge */}
           {featured && (
             <div className="absolute top-3 right-3">
-              <Badge className="bg-accent text-accent-foreground">
+              <Badge className="bg-accent text-accent-foreground rounded-lg animate-bounce-in">
                 ⭐ Destaque
               </Badge>
             </div>
@@ -119,7 +119,7 @@ export default function ProductCard({
           
           {/* Price overlay */}
           <div className="absolute bottom-3 right-3">
-            <div className="bg-background/95 backdrop-blur-sm rounded-lg px-3 py-2">
+            <div className="bg-background/95 backdrop-blur-sm rounded-xl px-3 py-2 shadow-lg">
               <div className="flex items-center gap-2">
                 {comparePrice && comparePrice > price && (
                   <span className="text-sm text-muted-foreground line-through">
@@ -134,17 +134,17 @@ export default function ProductCard({
           </div>
         </div>
 
-        <div className="p-4 space-y-3">
+        <div className="p-5 space-y-4">
           {/* Title */}
-          <h3 className="font-semibold text-lg leading-tight line-clamp-2 group-hover:text-accent transition-colors">
+          <h3 className="font-bold text-lg leading-tight line-clamp-2 group-hover:text-accent transition-colors">
             {title}
           </h3>
           
           {/* Instructor */}
-          <p className="text-sm text-muted-foreground">{instructor}</p>
+          <p className="text-sm text-muted-foreground font-medium">{instructor}</p>
           
           {/* Description */}
-          <p className="text-sm text-muted-foreground line-clamp-2">
+          <p className="text-sm text-muted-foreground/80 line-clamp-2 leading-relaxed">
             {description}
           </p>
           
@@ -152,38 +152,39 @@ export default function ProductCard({
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             {rating > 0 && (
               <div className="flex items-center gap-1">
-                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                <span>{rating}</span>
+                <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+                <span className="font-medium">{rating}</span>
               </div>
             )}
             
             {totalLessons > 0 && (
               <div className="flex items-center gap-1">
-                <Play className="w-3 h-3" />
+                <Play className="w-3.5 h-3.5" />
                 <span>{totalLessons} aulas</span>
               </div>
             )}
             
             {totalDuration > 0 && (
               <div className="flex items-center gap-1">
-                <Clock className="w-3 h-3" />
+                <Clock className="w-3.5 h-3.5" />
                 <span>{formatDuration(totalDuration)}</span>
               </div>
             )}
             
             {studentCount > 0 && (
               <div className="flex items-center gap-1">
-                <Users className="w-3 h-3" />
+                <Users className="w-3.5 h-3.5" />
                 <span>{studentCount}</span>
               </div>
             )}
           </div>
           
           <Button 
-            className="w-full mt-4" 
-            variant={inCart ? "outline" : "default"}
+            className="w-full mt-4 rounded-xl font-semibold" 
+            variant={inCart ? "outline" : "accent"}
             onClick={handleAddToCart}
             disabled={inCart}
+            size="lg"
           >
             <div className="flex items-center justify-center">
               {inCart ? (

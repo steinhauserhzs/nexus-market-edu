@@ -61,13 +61,13 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-20 safe-area-bottom">
       <BackNavigation title="Dashboard" />
       
-      <div className="container mx-auto px-4 py-6 space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold mb-2">
+      <div className="container mx-auto px-4 py-6 space-y-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in">
+          <div className="space-y-2">
+            <h1 className="text-2xl md:text-3xl font-bold">
               Dashboard - {profile?.full_name || "Usuário"}
             </h1>
             <p className="text-muted-foreground">
@@ -75,106 +75,111 @@ const Dashboard = () => {
             </p>
           </div>
           
-          <Button onClick={() => navigate('/criar-loja')}>
+          <Button 
+            onClick={() => navigate('/criar-loja')}
+            variant="accent"
+            size="lg"
+            className="w-full sm:w-auto"
+          >
             <Plus className="w-4 h-4 mr-2" />
             Nova Loja
           </Button>
         </div>
 
-        <Tabs defaultValue="overview" className="space-y-6">
-          <div className="w-full overflow-x-auto">
-            <TabsList className="inline-flex w-max min-w-full justify-start">
-              <TabsTrigger value="overview" className="flex-shrink-0">Visão Geral</TabsTrigger>
-              <TabsTrigger value="stores" className="flex-shrink-0">Lojas</TabsTrigger>
-              <TabsTrigger value="products" className="flex-shrink-0">Produtos</TabsTrigger>
-              <TabsTrigger value="analytics" className="flex-shrink-0">Analytics</TabsTrigger>
-              <TabsTrigger value="content" className="flex-shrink-0">Conteúdo</TabsTrigger>
-              <TabsTrigger value="messages" className="flex-shrink-0">Mensagens</TabsTrigger>
+        <Tabs defaultValue="overview" className="space-y-8">
+          <div className="w-full overflow-x-auto animate-slide-up">
+            <TabsList className="inline-flex w-max min-w-full justify-start gap-2 bg-muted/50 p-2 rounded-2xl">
+              <TabsTrigger value="overview" className="flex-shrink-0 rounded-xl font-medium">Visão Geral</TabsTrigger>
+              <TabsTrigger value="stores" className="flex-shrink-0 rounded-xl font-medium">Lojas</TabsTrigger>
+              <TabsTrigger value="products" className="flex-shrink-0 rounded-xl font-medium">Produtos</TabsTrigger>
+              <TabsTrigger value="analytics" className="flex-shrink-0 rounded-xl font-medium">Analytics</TabsTrigger>
+              <TabsTrigger value="content" className="flex-shrink-0 rounded-xl font-medium">Conteúdo</TabsTrigger>
+              <TabsTrigger value="messages" className="flex-shrink-0 rounded-xl font-medium">Mensagens</TabsTrigger>
             </TabsList>
           </div>
 
-          <TabsContent value="overview" className="space-y-6">
+          <TabsContent value="overview" className="space-y-8 animate-fade-in">
             {/* Quick Stats */}
             <AnalyticsSection />
 
             {/* Quick Actions */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Ações Rápidas</CardTitle>
+            <Card className="rounded-2xl border-border/50 shadow-lg">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl">Ações Rápidas</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4">
                   <Button 
                     variant="outline" 
-                    className="h-auto p-4 flex-col gap-2"
+                    className="h-auto p-6 flex-col gap-3 rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg"
                     onClick={() => navigate('#products')}
                   >
-                    <Plus className="w-6 h-6" />
-                    <span className="text-sm">Novo Produto</span>
+                    <Plus className="w-8 h-8 text-accent" />
+                    <span className="text-sm font-semibold">Novo Produto</span>
                   </Button>
                   
                   <Button 
                     variant="outline" 
-                    className="h-auto p-4 flex-col gap-2"
+                    className="h-auto p-6 flex-col gap-3 rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg"
                     onClick={() => navigate('#analytics')}
                   >
-                    <BarChart3 className="w-6 h-6" />
-                    <span className="text-sm">Analytics</span>
+                    <BarChart3 className="w-8 h-8 text-accent" />
+                    <span className="text-sm font-semibold">Analytics</span>
                   </Button>
                   
                   <Button 
                     variant="outline" 
-                    className="h-auto p-4 flex-col gap-2"
+                    className="h-auto p-6 flex-col gap-3 rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg"
                     onClick={() => navigate('#content')}
                   >
-                    <Users className="w-6 h-6" />
-                    <span className="text-sm">Gerenciar Cursos</span>
+                    <Users className="w-8 h-8 text-accent" />
+                    <span className="text-sm font-semibold">Gerenciar Cursos</span>
                   </Button>
                   
                   <Button 
                     variant="outline" 
-                    className="h-auto p-4 flex-col gap-2"
+                    className="h-auto p-6 flex-col gap-3 rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg"
                     onClick={() => navigate('/biblioteca')}
                   >
-                    <Eye className="w-6 h-6" />
-                    <span className="text-sm">Ver Biblioteca</span>
+                    <Eye className="w-8 h-8 text-accent" />
+                    <span className="text-sm font-semibold">Ver Biblioteca</span>
                   </Button>
                 </div>
               </CardContent>
             </Card>
 
             {/* Recent Activity */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Atividade Recente</CardTitle>
+            <Card className="rounded-2xl border-border/50 shadow-lg">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl">Atividade Recente</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg">
-                    <div className="w-2 h-2 bg-green-500 rounded-full" />
+                  <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-2xl border border-border/50 hover:border-accent/50 transition-colors">
+                    <div className="w-3 h-3 bg-success rounded-full animate-bounce-in" />
                     <div className="flex-1">
-                      <p className="text-sm font-medium">Nova venda realizada</p>
+                      <p className="text-sm font-semibold">Nova venda realizada</p>
                       <p className="text-xs text-muted-foreground">Curso de React - R$ 197,00</p>
                     </div>
-                    <span className="text-xs text-muted-foreground">há 2h</span>
+                    <span className="text-xs text-muted-foreground bg-background/50 px-3 py-1 rounded-full">há 2h</span>
                   </div>
                   
-                  <div className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                  <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-2xl border border-border/50 hover:border-accent/50 transition-colors">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce-in" style={{ animationDelay: '0.1s' }} />
                     <div className="flex-1">
-                      <p className="text-sm font-medium">Produto visualizado</p>
+                      <p className="text-sm font-semibold">Produto visualizado</p>
                       <p className="text-xs text-muted-foreground">Curso de Design UI</p>
                     </div>
-                    <span className="text-xs text-muted-foreground">há 4h</span>
+                    <span className="text-xs text-muted-foreground bg-background/50 px-3 py-1 rounded-full">há 4h</span>
                   </div>
                   
-                  <div className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full" />
+                  <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-2xl border border-border/50 hover:border-accent/50 transition-colors">
+                    <div className="w-3 h-3 bg-warning rounded-full animate-bounce-in" style={{ animationDelay: '0.2s' }} />
                     <div className="flex-1">
-                      <p className="text-sm font-medium">Novo afiliado</p>
+                      <p className="text-sm font-semibold">Novo afiliado</p>
                       <p className="text-xs text-muted-foreground">João Silva se cadastrou</p>
                     </div>
-                    <span className="text-xs text-muted-foreground">há 6h</span>
+                    <span className="text-xs text-muted-foreground bg-background/50 px-3 py-1 rounded-full">há 6h</span>
                   </div>
                 </div>
               </CardContent>

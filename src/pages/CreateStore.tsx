@@ -207,26 +207,26 @@ const CreateStore = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-20 safe-area-bottom animate-fade-in">
       <BackNavigation title="Criar Loja" />
       
-      <div className="container mx-auto px-4 py-6 max-w-4xl">
-        <div className="mb-6 text-center">
-          <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-            <Store className="w-8 h-8 text-primary" />
+      <div className="container mx-auto px-4 py-6 max-w-5xl">
+        <div className="mb-8 text-center animate-slide-up">
+          <div className="mx-auto w-20 h-20 bg-gradient-accent rounded-2xl flex items-center justify-center mb-6 shadow-lg animate-bounce-in">
+            <Store className="w-10 h-10 text-accent-foreground" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">Crie sua Loja Personalizada</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl md:text-3xl font-bold mb-3">Crie sua Loja Personalizada</h1>
+          <p className="text-muted-foreground text-lg">
             Configure sua loja com cores, logo e banner únicos
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
           <Tabs defaultValue="basic" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="basic">Informações</TabsTrigger>
-              <TabsTrigger value="design">Design</TabsTrigger>
-              <TabsTrigger value="preview">Visualizar</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-3 bg-muted/50 p-2 rounded-2xl">
+              <TabsTrigger value="basic" className="rounded-xl font-medium">Informações</TabsTrigger>
+              <TabsTrigger value="design" className="rounded-xl font-medium">Design</TabsTrigger>
+              <TabsTrigger value="preview" className="rounded-xl font-medium">Visualizar</TabsTrigger>
             </TabsList>
             
             <TabsContent value="basic" className="space-y-6">

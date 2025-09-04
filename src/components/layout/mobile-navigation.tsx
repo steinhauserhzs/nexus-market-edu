@@ -52,8 +52,8 @@ const MobileNavigation = () => {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border md:hidden">
-      <div className="flex items-center justify-around px-2 py-2">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border md:hidden safe-area-bottom">
+      <div className="flex items-center justify-around px-2 py-3">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           const Icon = item.icon;
@@ -65,22 +65,30 @@ const MobileNavigation = () => {
               size="sm"
               onClick={() => handleNavigation(item)}
               className={cn(
-                "flex flex-col items-center gap-1 h-auto py-2 px-3 relative",
-                isActive && "text-primary bg-primary/10"
+                "flex flex-col items-center gap-1.5 h-auto py-2 px-3 relative rounded-xl min-w-[60px] transition-all duration-200",
+                isActive && "text-primary bg-primary/10 shadow-sm"
               )}
             >
               <div className="relative">
-                <Icon className="w-5 h-5" />
+                <Icon className={cn(
+                  "w-5 h-5 transition-transform duration-200",
+                  isActive && "scale-110"
+                )} />
                 {item.badge && item.badge > 0 && (
                   <Badge 
                     variant="destructive" 
-                    className="absolute -top-2 -right-2 w-5 h-5 p-0 text-xs flex items-center justify-center"
+                    className="absolute -top-2 -right-2 w-5 h-5 p-0 text-xs flex items-center justify-center animate-bounce-in"
                   >
                     {item.badge > 99 ? '99+' : item.badge}
                   </Badge>
                 )}
               </div>
-              <span className="text-xs font-medium">{item.label}</span>
+              <span className={cn(
+                "text-xs font-medium transition-all duration-200",
+                isActive ? "text-primary font-semibold" : "text-muted-foreground"
+              )}>
+                {item.label}
+              </span>
             </Button>
           );
         })}
