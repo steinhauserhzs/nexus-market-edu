@@ -1415,6 +1415,56 @@ export type Database = {
           },
         ]
       }
+      upload_sessions: {
+        Row: {
+          chunks_total: number
+          chunks_uploaded: number | null
+          created_at: string | null
+          file_name: string
+          file_size: number
+          final_url: string | null
+          id: string
+          status: string | null
+          store_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          chunks_total: number
+          chunks_uploaded?: number | null
+          created_at?: string | null
+          file_name: string
+          file_size: number
+          final_url?: string | null
+          id?: string
+          status?: string | null
+          store_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          chunks_total?: number
+          chunks_uploaded?: number | null
+          created_at?: string | null
+          file_name?: string
+          file_size?: number
+          final_url?: string | null
+          id?: string
+          status?: string | null
+          store_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "upload_sessions_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       venues: {
         Row: {
           accessibility_features: string[] | null
@@ -1481,6 +1531,10 @@ export type Database = {
       can_access_payment_info: {
         Args: { target_user_id: string }
         Returns: boolean
+      }
+      cleanup_old_upload_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       create_stripe_session: {
         Args: {
