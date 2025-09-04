@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -17,11 +18,39 @@ const Auth = () => {
   const [showRecovery, setShowRecovery] = useState(false);
 
   useEffect(() => {
-    // Detect recovery flow from URL (#type=recovery or ?type=recovery)
-    const hash = window.location.hash || "";
-    const search = window.location.search || "";
-    if (hash.includes("type=recovery") || search.includes("type=recovery")) {
-      setShowRecovery(true);
+    const url = new URL(window.location.href);
+    const hash = url.hash || "";
+    const searchParams = url.searchParams;
+    const isRecovery = hash.includes("type=recovery") || searchParams.get("type") === "recovery";
+    const code = searchParams.get("code");
+
+    const activateSessionFromUrl = async () => {
+      try {
+        // Newer flow (?code=...) — exchange for a session
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(window.location.href);
+          if (error) console.error("exchangeCodeForSession error", error);
+        } else {
+          // Legacy flow (#access_token, #refresh_token)
+          const params = new URLSearchParams(hash.replace('#', ''));
+          const access_token = params.get('access_token');
+          const refresh_token = params.get('refresh_token');
+          if (access_token && refresh_token) {
+            const { error } = await supabase.auth.setSession({ access_token, refresh_token });
+            if (error) console.error("setSession error", error);
+          }
+        }
+      } finally {
+        // Clean URL to avoid leaking tokens/params
+        if (code || hash.includes('access_token')) {
+          window.history.replaceState({}, document.title, `${window.location.origin}/auth?type=recovery`);
+        }
+        if (isRecovery) setShowRecovery(true);
+      }
+    };
+
+    if (isRecovery) {
+      activateSessionFromUrl();
     }
   }, []);
 
