@@ -1570,6 +1570,37 @@ export type Database = {
           success: boolean
         }[]
       }
+      get_organizer_event_contact_info: {
+        Args: { event_id: string }
+        Returns: {
+          contact_email: string
+          contact_phone: string
+        }[]
+      }
+      get_public_event_data: {
+        Args: { event_id: string }
+        Returns: {
+          age_restriction: string
+          banner_url: string
+          category: string
+          created_at: string
+          description: string
+          event_date: string
+          event_type: string
+          id: string
+          is_featured: boolean
+          max_capacity: number
+          organizer_id: string
+          price_from: number
+          status: Database["public"]["Enums"]["event_status"]
+          terms_and_conditions: string
+          ticket_sales_end_date: string
+          ticket_sales_start_date: string
+          title: string
+          updated_at: string
+          venue_id: string
+        }[]
+      }
       get_public_events: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -1634,6 +1665,15 @@ export type Database = {
       log_security_event: {
         Args: { p_action: string; p_details?: Json; p_user_id?: string }
         Returns: string
+      }
+      log_sensitive_access: {
+        Args: {
+          p_action: string
+          p_details?: Json
+          p_record_id: string
+          p_table_name: string
+        }
+        Returns: undefined
       }
       secure_get_payment_info: {
         Args: Record<PropertyKey, never>

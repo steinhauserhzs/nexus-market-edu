@@ -158,60 +158,74 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Separate function to handle profile setup outside auth callback
+  const setupUserProfile = async (user: User) => {
+    try {
+      // Ensure profile exists
+      const { data: existing, error: existingErr } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (existingErr || !existing) {
+        await supabase.from('profiles').upsert({
+          id: user.id,
+          email: user.email || '',
+          full_name: (user.user_metadata as any)?.full_name || null,
+          avatar_url: (user.user_metadata as any)?.avatar_url || null,
+          role: 'user',
+          preferred_language: 'pt-BR',
+          timezone: 'America/Sao_Paulo',
+        });
+      }
+
+      const profileData = await fetchProfile(user.id);
+      setProfile(profileData);
+    } catch (e) {
+      console.error('Auth change post-processing error', e);
+    }
+  };
+
   useEffect(() => {
     let mounted = true;
 
-    const handleAuthChange = (event: string, session: Session | null) => {
-      if (!mounted) return;
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (!mounted) return;
+        
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
 
-      setSession(session);
-      setUser(session?.user ?? null);
-
-      if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
-        // Defer any async work to avoid deadlocks inside the callback
-        setTimeout(async () => {
-          try {
-            // Ensure profile exists
-            const { data: existing, error: existingErr } = await supabase
-              .from('profiles')
-              .select('id')
-              .eq('id', session.user!.id)
-              .maybeSingle();
-
-            if (existingErr || !existing) {
-              await supabase.from('profiles').upsert({
-                id: session.user!.id,
-                email: session.user!.email || '',
-                full_name: (session.user!.user_metadata as any)?.full_name || null,
-                avatar_url: (session.user!.user_metadata as any)?.avatar_url || null,
-                role: 'user',
-                preferred_language: 'pt-BR',
-                timezone: 'America/Sao_Paulo',
-              });
+        if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
+          // Defer async profile setup to avoid callback deadlocks
+          setTimeout(() => {
+            if (mounted) {
+              setupUserProfile(session.user);
             }
-
-            const profileData = await fetchProfile(session.user!.id);
-            if (mounted) setProfile(profileData);
-          } catch (e) {
-            console.error('Auth change post-processing error', e);
-          }
-        }, 0);
-      } else if (event === 'SIGNED_OUT') {
-        if (mounted) setProfile(null);
+          }, 0);
+        } else if (event === 'SIGNED_OUT') {
+          setProfile(null);
+        }
       }
+    );
 
-      if (mounted) setLoading(false);
-    };
-
-    // Subscribe FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      handleAuthChange(event, session);
-    });
-
-    // THEN check existing session
+    // THEN check for existing session
     supabase.auth.getSession()
       .then(({ data: { session } }) => {
-        handleAuthChange('INITIAL_SESSION', session);
+        if (!mounted) return;
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          setTimeout(() => {
+            if (mounted) {
+              setupUserProfile(session.user);
+            }
+          }, 0);
+        }
       })
       .catch((error) => {
         console.error('Error getting session:', error);
@@ -224,7 +238,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, []); // Empty dependencies - this effect should only run once
 
   const signUp = async (email: string, password: string, fullName: string, additionalData: any = {}) => {
     try {
@@ -265,7 +279,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.info('[AuthContext] signIn start', { identifierType: identifier.includes('@') ? 'email' : 'other' });
       let email = identifier;
       
-      // Se não for email, busca o email pelo CPF ou telefone (requer políticas que permitam esta leitura)
+      // Se não for email, busca o email pelo CPF ou telefone
       if (!identifier.includes('@')) {
         const { user: profileData, error: findError } = await findUserByIdentifier(identifier);
         console.info('[AuthContext] findUserByIdentifier', { hasUser: !!profileData, findError });
@@ -284,21 +298,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.info('[AuthContext] signInWithPassword done', { error });
 
       if (error) throw error;
-
-      // Atualizar método de login no perfil (adiado para fora do callback)
-      setTimeout(async () => {
-        try {
-          await supabase
-            .from('profiles')
-            .update({ 
-              login_method: identifier.includes('@') ? 'email' : (identifier.replace(/\D/g, '').length === 11 ? 'cpf' : 'phone'),
-              last_login_at: new Date().toISOString()
-            })
-            .eq('email', email);
-        } catch (e) {
-          console.warn('[AuthContext] Failed to update profile login_method', e);
-        }
-      }, 500);
 
       return { error: null };
     } catch (error: any) {
