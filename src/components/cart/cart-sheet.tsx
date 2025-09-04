@@ -5,10 +5,12 @@ import { Separator } from "@/components/ui/separator";
 import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function CartSheet() {
   const { items, totalItems, totalAmount, updateQuantity, removeFromCart } = useCart();
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const formatPrice = (cents: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -19,7 +21,7 @@ export default function CartSheet() {
 
   const handleCheckout = () => {
     setOpen(false);
-    window.location.href = '/checkout';
+    navigate('/checkout');
   };
 
   return (

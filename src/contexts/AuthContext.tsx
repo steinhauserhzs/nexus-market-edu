@@ -162,57 +162,64 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     let mounted = true;
 
-    // Get initial session
-    const getSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!mounted) return;
-        
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          const profileData = await fetchProfile(session.user.id);
-          if (mounted) {
-            setProfile(profileData);
+    const handleAuthChange = (event: string, session: Session | null) => {
+      if (!mounted) return;
+
+      setSession(session);
+      setUser(session?.user ?? null);
+
+      if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
+        // Defer any async work to avoid deadlocks inside the callback
+        setTimeout(async () => {
+          try {
+            // Ensure profile exists
+            const { data: existing, error: existingErr } = await supabase
+              .from('profiles')
+              .select('id')
+              .eq('id', session.user!.id)
+              .maybeSingle();
+
+            if (existingErr || !existing) {
+              await supabase.from('profiles').upsert({
+                id: session.user!.id,
+                email: session.user!.email || '',
+                full_name: (session.user!.user_metadata as any)?.full_name || null,
+                avatar_url: (session.user!.user_metadata as any)?.avatar_url || null,
+                role: 'user',
+                preferred_language: 'pt-BR',
+                timezone: 'America/Sao_Paulo',
+              });
+            }
+
+            const profileData = await fetchProfile(session.user!.id);
+            if (mounted) setProfile(profileData);
+          } catch (e) {
+            console.error('Auth change post-processing error', e);
           }
-        }
-      } catch (error) {
-        console.error('Error getting session:', error);
-      } finally {
-        if (mounted) {
-          setLoading(false);
-        }
+        }, 0);
+      } else if (event === 'SIGNED_OUT') {
+        if (mounted) setProfile(null);
       }
+
+      if (mounted) setLoading(false);
     };
 
-    getSession();
+    // Subscribe FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      handleAuthChange(event, session);
+    });
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (!mounted) return;
-        
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (event === 'SIGNED_IN' && session?.user) {
-          // Fetch or create profile for new user
-          const profileData = await fetchProfile(session.user.id);
-          if (mounted) {
-            setProfile(profileData);
-          }
-        } else if (event === 'SIGNED_OUT') {
-          if (mounted) {
-            setProfile(null);
-          }
-        }
-        
-        if (mounted) {
-          setLoading(false);
-        }
-      }
-    );
+    // THEN check existing session
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        handleAuthChange('INITIAL_SESSION', session);
+      })
+      .catch((error) => {
+        console.error('Error getting session:', error);
+      })
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
 
     return () => {
       mounted = false;

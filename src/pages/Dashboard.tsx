@@ -50,9 +50,7 @@ const Dashboard = () => {
               <p className="text-muted-foreground">
                 Faça login para acessar o dashboard
               </p>
-              <a href="/auth" className="inline-block">
-                <Button>Fazer Login</Button>
-              </a>
+              <Button onClick={() => navigate('/auth')}>Fazer Login</Button>
             </div>
           </CardContent>
         </Card>
@@ -75,12 +73,10 @@ const Dashboard = () => {
             </p>
           </div>
           
-          <a href="/criar-loja">
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Nova Loja
-            </Button>
-          </a>
+          <Button onClick={() => navigate('/criar-loja')}>
+            <Plus className="w-4 h-4 mr-2" />
+            Nova Loja
+          </Button>
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">

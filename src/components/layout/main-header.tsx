@@ -9,13 +9,15 @@ import NotificationBadge from "@/components/ui/notification-badge";
 import { BookOpen, Store, User, LogOut, Settings, Bell, Plus, Menu, Home, Search } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function MainHeader() {
   const { user, profile, signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleAuth = () => {
-    window.location.href = '/auth';
+    navigate('/auth');
   };
 
   const NavLinks = ({ mobile = false }: { mobile?: boolean }) => (
@@ -24,7 +26,7 @@ export default function MainHeader() {
         variant="ghost" 
         size="sm"
         onClick={() => {
-          window.location.href = '/';
+          navigate('/');
           if (mobile) setMobileMenuOpen(false);
         }}
         className={cn(mobile && "justify-start")}
@@ -36,7 +38,7 @@ export default function MainHeader() {
         variant="ghost" 
         size="sm"
         onClick={() => {
-          window.location.href = '/biblioteca';
+          navigate('/biblioteca');
           if (mobile) setMobileMenuOpen(false);
         }}
         className={cn(mobile && "justify-start")}
@@ -48,10 +50,10 @@ export default function MainHeader() {
         <Button 
           variant="ghost" 
           size="sm"
-          onClick={() => {
-            window.location.href = '/dashboard';
-            if (mobile) setMobileMenuOpen(false);
-          }}
+            onClick={() => {
+              navigate('/dashboard');
+              if (mobile) setMobileMenuOpen(false);
+            }}
           className={cn(mobile && "justify-start")}
         >
           <Store className="w-4 h-4 mr-2" />
@@ -109,7 +111,7 @@ export default function MainHeader() {
                     
                     <div className="space-y-1">
                       <Button variant="ghost" className="w-full justify-start" onClick={() => {
-                        window.location.href = '/perfil';
+                        navigate('/perfil');
                         setMobileMenuOpen(false);
                       }}>
                         <User className="w-4 h-4 mr-3" />
@@ -117,7 +119,7 @@ export default function MainHeader() {
                       </Button>
                       
                       <Button variant="ghost" className="w-full justify-start" onClick={() => {
-                        window.location.href = '/criar-loja';
+                        navigate('/criar-loja');
                         setMobileMenuOpen(false);
                       }}>
                         <Plus className="w-4 h-4 mr-3" />
@@ -170,12 +172,12 @@ export default function MainHeader() {
           </Sheet>
 
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-accent rounded-lg flex items-center justify-center">
               <span className="text-accent-foreground font-bold text-sm">N</span>
             </div>
             <span className="font-bold text-lg md:text-xl">Nexus Market</span>
-          </a>
+          </Link>
         </div>
 
         {/* Desktop Navigation */}
@@ -232,25 +234,25 @@ export default function MainHeader() {
                 
                 <DropdownMenuSeparator />
                 
-                <DropdownMenuItem onClick={() => window.location.href = '/perfil'}>
+                <DropdownMenuItem onClick={() => navigate('/perfil')}>
                   <User className="mr-2 h-4 w-4" />
                   Meu Perfil
                 </DropdownMenuItem>
                 
-                <DropdownMenuItem onClick={() => window.location.href = '/biblioteca'}>
+                <DropdownMenuItem onClick={() => navigate('/biblioteca')}>
                   <BookOpen className="mr-2 h-4 w-4" />
                   Minha Biblioteca
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
                 
-                <DropdownMenuItem onClick={() => window.location.href = '/criar-loja'}>
+                <DropdownMenuItem onClick={() => navigate('/criar-loja')}>
                   <Plus className="mr-2 h-4 w-4" />
                   Criar Loja
                 </DropdownMenuItem>
 
                 {profile.role === 'seller' && (
-                  <DropdownMenuItem onClick={() => window.location.href = '/dashboard'}>
+                  <DropdownMenuItem onClick={() => navigate('/dashboard')}>
                     <Store className="mr-2 h-4 w-4" />
                     Dashboard
                   </DropdownMenuItem>

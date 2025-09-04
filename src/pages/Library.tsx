@@ -9,6 +9,7 @@ import { Play, BookOpen, Clock, Award } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import BackNavigation from "@/components/layout/back-navigation";
 import MainHeader from "@/components/layout/main-header";
+import { useNavigate } from "react-router-dom";
 
 interface License {
   id: string;
@@ -30,6 +31,7 @@ const Library = () => {
   const [licenses, setLicenses] = useState<License[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (authLoading) return;
@@ -134,7 +136,7 @@ const Library = () => {
               <p className="text-muted-foreground">
                 Faça login para acessar sua biblioteca
               </p>
-              <Button onClick={() => window.location.href = '/auth'}>
+              <Button onClick={() => navigate('/auth')}>
                 Fazer Login
               </Button>
             </div>
@@ -174,7 +176,7 @@ const Library = () => {
                 <p className="text-muted-foreground">
                   Você ainda não possui nenhum curso ou conteúdo.
                 </p>
-                <Button onClick={() => window.location.href = '/'}>
+                <Button onClick={() => navigate('/') }>
                   Explorar Cursos
                 </Button>
               </div>

@@ -20,17 +20,16 @@ const AdvancedSigninForm = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [savedCredentials, setSavedCredentials] = useLocalStorage('rememberedCredentials', null);
+  const [rememberedIdentifier, setRememberedIdentifier] = useLocalStorage('rememberedIdentifier', '');
   const { toast } = useToast();
 
-  // Load saved credentials on component mount
+  // Load remembered identifier on component mount
   useEffect(() => {
-    if (savedCredentials) {
-      setIdentifier(savedCredentials.identifier);
-      setPassword(savedCredentials.password);
+    if (rememberedIdentifier) {
+      setIdentifier(rememberedIdentifier);
       setRememberMe(true);
     }
-  }, [savedCredentials]);
+  }, [rememberedIdentifier]);
 
   const getIdentifierType = (value: string) => {
     if (value.includes('@')) return 'email';
@@ -106,11 +105,11 @@ const AdvancedSigninForm = () => {
         throw error;
       }
 
-      // Save credentials if remember me is checked
+      // Save identifier if remember me is checked (no password storage)
       if (rememberMe) {
-        setSavedCredentials({ identifier, password });
+        setRememberedIdentifier(identifier);
       } else {
-        setSavedCredentials(null);
+        setRememberedIdentifier('');
       }
 
       toast({
