@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AdvancedSigninForm from "@/components/auth/advanced-signin-form";
 import AdvancedSignupForm from "@/components/auth/advanced-signup-form";
+import ResetPasswordDialog from "@/components/auth/reset-password-dialog";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -13,12 +14,23 @@ const Auth = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { user, loading: authLoading } = useAuth();
+  const [showRecovery, setShowRecovery] = useState(false);
+
+  useEffect(() => {
+    // Detect recovery flow from URL (#type=recovery or ?type=recovery)
+    const hash = window.location.hash || "";
+    const search = window.location.search || "";
+    if (hash.includes("type=recovery") || search.includes("type=recovery")) {
+      setShowRecovery(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (!authLoading && user) {
-      navigate('/biblioteca');
+      // If user is signed in and not in recovery, redirect
+      if (!showRecovery) navigate('/biblioteca');
     }
-  }, [authLoading, user, navigate]);
+  }, [authLoading, user, navigate, showRecovery]);
 
   return (
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4 sm:p-6 safe-area-top safe-area-bottom">
@@ -71,7 +83,9 @@ const Auth = () => {
           </Tabs>
         </div>
 
-        {/* Footer */}
+        {/* Password recovery dialog */}
+        <ResetPasswordDialog open={showRecovery} onOpenChange={setShowRecovery} />
+
         <div className="text-center mt-6 sm:mt-8 text-primary-foreground/60 px-4">
           <p className="text-xs sm:text-sm">
             Ao continuar, você concorda com nossos{" "}

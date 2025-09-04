@@ -11,6 +11,7 @@ import { useLocalStorage } from "@/hooks/use-local-storage";
 import { Eye, EyeOff, Mail, Phone, CreditCard, Chrome } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { logger } from "@/lib/logger";
+import { supabase } from "@/integrations/supabase/client";
 
 const AdvancedSigninForm = () => {
   const { signIn, signInWithGoogle } = useAuth();
@@ -273,6 +274,25 @@ const AdvancedSigninForm = () => {
                 variant="link"
                 size="sm"
                 className="p-0 h-auto text-sm"
+                onClick={async () => {
+                  const type = getIdentifierType(identifier);
+                  if (type !== 'email' || !identifier) {
+                    toast({
+                      title: 'Informe seu email',
+                      description: 'Para recuperar a senha, digite seu email no campo acima.',
+                      variant: 'destructive',
+                    });
+                    return;
+                  }
+                  try {
+                    const redirectTo = `${window.location.origin}/auth?type=recovery`;
+                    const { error } = await supabase.auth.resetPasswordForEmail(identifier, { redirectTo });
+                    if (error) throw error;
+                    toast({ title: 'Email enviado', description: 'Verifique sua caixa de entrada para redefinir a senha.' });
+                  } catch (err: any) {
+                    toast({ title: 'Erro ao enviar email', description: err?.message || 'Tente novamente', variant: 'destructive' });
+                  }
+                }}
               >
                 Esqueci minha senha
               </Button>
