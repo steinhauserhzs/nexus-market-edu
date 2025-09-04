@@ -26,16 +26,19 @@ interface License {
 }
 
 const Library = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const [licenses, setLicenses] = useState<License[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
+    if (authLoading) return;
     if (user) {
       fetchLicenses();
+    } else {
+      setLoading(false);
     }
-  }, [user]);
+  }, [user, authLoading]);
 
   const fetchLicenses = async () => {
     try {
