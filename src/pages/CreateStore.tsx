@@ -247,10 +247,19 @@ const CreateStore = () => {
 
         <form onSubmit={handleSubmit} className="space-y-8">
           <Tabs defaultValue="basic" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-muted/50 p-2 rounded-2xl">
-              <TabsTrigger value="basic" className="rounded-xl font-medium">Informações</TabsTrigger>
-              <TabsTrigger value="design" className="rounded-xl font-medium">Design</TabsTrigger>
-              <TabsTrigger value="preview" className="rounded-xl font-medium">Visualizar</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-3 bg-muted/50 p-1 sm:p-2 rounded-2xl">
+              <TabsTrigger value="basic" className="rounded-xl font-medium text-xs sm:text-sm px-2 sm:px-4">
+                <span className="hidden xs:inline">Informações</span>
+                <span className="xs:hidden">Info</span>
+              </TabsTrigger>
+              <TabsTrigger value="design" className="rounded-xl font-medium text-xs sm:text-sm px-2 sm:px-4">
+                <span className="hidden xs:inline">Design</span>
+                <span className="xs:hidden">Visual</span>
+              </TabsTrigger>
+              <TabsTrigger value="preview" className="rounded-xl font-medium text-xs sm:text-sm px-2 sm:px-4">
+                <span className="hidden sm:inline">Visualizar</span>
+                <span className="sm:hidden">Ver</span>
+              </TabsTrigger>
             </TabsList>
             
             <TabsContent value="basic" className="space-y-6">
@@ -275,13 +284,14 @@ const CreateStore = () => {
 
                   <div>
                     <Label htmlFor="slug">URL da Loja</Label>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">nexus.app/loja/</span>
+                    <div className="flex flex-col xs:flex-row items-start xs:items-center gap-2">
+                      <span className="text-xs sm:text-sm text-muted-foreground whitespace-nowrap">nexus.app/loja/</span>
                       <Input
                         id="slug"
                         value={formData.slug}
                         onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
                         placeholder="minha-loja"
+                        className="flex-1"
                       />
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
@@ -304,7 +314,7 @@ const CreateStore = () => {
             </TabsContent>
 
             <TabsContent value="design" className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -342,9 +352,13 @@ const CreateStore = () => {
                               <Button
                                 type="button"
                                 variant="outline"
+                                size="sm"
                                 onClick={() => document.getElementById('logo-upload')?.click()}
+                                className="text-xs sm:text-sm"
                               >
-                                Escolher Logo
+                                <Upload className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                                <span className="hidden xs:inline">Escolher Logo</span>
+                                <span className="xs:hidden">Logo</span>
                               </Button>
                               <p className="text-xs text-muted-foreground mt-1">
                                 PNG, JPG até 5MB
@@ -394,9 +408,13 @@ const CreateStore = () => {
                               <Button
                                 type="button"
                                 variant="outline"
+                                size="sm"
                                 onClick={() => document.getElementById('banner-upload')?.click()}
+                                className="text-xs sm:text-sm"
                               >
-                                Escolher Banner
+                                <Upload className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                                <span className="hidden xs:inline">Escolher Banner</span>
+                                <span className="xs:hidden">Banner</span>
                               </Button>
                               <p className="text-xs text-muted-foreground mt-1">
                                 PNG, JPG até 5MB (formato landscape)

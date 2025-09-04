@@ -169,10 +169,10 @@ const StoresSection = () => {
             {stores.map((store) => (
               <div
                 key={store.id}
-                className="flex items-center gap-4 p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                className="flex flex-col xs:flex-row items-start xs:items-center gap-3 sm:gap-4 p-3 sm:p-4 border rounded-lg hover:bg-muted/50 transition-colors"
               >
                 {/* Logo */}
-                <div className="w-16 h-16 rounded-lg border flex items-center justify-center bg-background flex-shrink-0">
+                <div className="w-12 h-12 xs:w-16 xs:h-16 rounded-lg border flex items-center justify-center bg-background flex-shrink-0">
                   {store.logo_url ? (
                     <img
                       src={store.logo_url}
@@ -184,71 +184,103 @@ const StoresSection = () => {
                   )}
                 </div>
 
-                {/* Store Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-semibold truncate">{store.name}</h3>
-                    <Badge 
-                      variant={store.is_active ? "default" : "secondary"}
-                      className="text-xs"
-                    >
-                      {store.is_active ? "Ativa" : "Inativa"}
-                    </Badge>
-                  </div>
-                  
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Globe className="w-4 h-4" />
-                      <span className="truncate">/{store.slug}</span>
+                {/* Store Info and Actions Container */}
+                <div className="flex-1 min-w-0 flex flex-col xs:flex-row xs:items-center gap-3 xs:gap-4">
+                  {/* Store Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-semibold truncate text-sm sm:text-base">{store.name}</h3>
+                      <Badge 
+                        variant={store.is_active ? "default" : "secondary"}
+                        className="text-xs flex-shrink-0"
+                      >
+                        {store.is_active ? "Ativa" : "Inativa"}
+                      </Badge>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Package className="w-4 h-4" />
-                      <span>{store._count?.products || 0} produtos</span>
+                    
+                    <div className="flex flex-col xs:flex-row xs:items-center gap-1 xs:gap-4 text-xs sm:text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Globe className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span className="truncate">/{store.slug}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Package className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span>{store._count?.products || 0} produtos</span>
+                      </div>
                     </div>
+                    
+                    {store.description && (
+                      <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-1">
+                        {store.description}
+                      </p>
+                    )}
                   </div>
-                  
-                  {store.description && (
-                    <p className="text-sm text-muted-foreground mt-1 line-clamp-1">
-                      {store.description}
-                    </p>
-                  )}
-                </div>
 
-                {/* Actions */}
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => navigate(`/loja/${store.slug}/customizar`)}
-                  >
-                    <Palette className="w-4 h-4 mr-1" />
-                    Personalizar
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => navigate(`/loja/${store.slug}`)}
-                  >
-                    <Eye className="w-4 h-4 mr-1" />
-                    Ver
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => navigate(`/loja/${store.slug}/configuracoes`)}
-                  >
-                    <Settings className="w-4 h-4" />
-                  </Button>
-                  
-                  <Button
-                    variant={store.is_active ? "destructive" : "default"}
-                    size="sm"
-                    onClick={() => handleToggleStatus(store.id, store.is_active)}
-                  >
-                    {store.is_active ? "Desativar" : "Ativar"}
-                  </Button>
+                  {/* Actions */}
+                  <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/loja/${store.slug}/customizar`)}
+                      className="hidden sm:flex"
+                    >
+                      <Palette className="w-4 h-4 mr-1" />
+                      Personalizar
+                    </Button>
+                    
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/loja/${store.slug}/customizar`)}
+                      className="sm:hidden"
+                      title="Personalizar"
+                    >
+                      <Palette className="w-4 h-4" />
+                    </Button>
+                    
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/loja/${store.slug}`)}
+                      className="hidden xs:flex"
+                    >
+                      <Eye className="w-4 h-4 mr-1" />
+                      <span className="hidden sm:inline">Ver</span>
+                    </Button>
+                    
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/loja/${store.slug}`)}
+                      className="xs:hidden"
+                      title="Ver loja"
+                    >
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                    
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/loja/${store.slug}/configuracoes`)}
+                      title="Configurações"
+                    >
+                      <Settings className="w-4 h-4" />
+                    </Button>
+                    
+                    <Button
+                      variant={store.is_active ? "destructive" : "default"}
+                      size="sm"
+                      onClick={() => handleToggleStatus(store.id, store.is_active)}
+                      className="text-xs px-2 sm:px-3"
+                    >
+                      <span className="hidden xs:inline">
+                        {store.is_active ? "Desativar" : "Ativar"}
+                      </span>
+                      <span className="xs:hidden">
+                        {store.is_active ? "Off" : "On"}
+                      </span>
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}

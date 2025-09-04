@@ -174,9 +174,9 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6">
       {/* Form */}
-      <div className="lg:col-span-2">
+      <div className="xl:col-span-2">
         <Card>
           <CardHeader>
             <CardTitle>Novo Produto</CardTitle>
@@ -218,7 +218,7 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Informações Básicas</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="title">Título *</Label>
                 <Input
@@ -231,15 +231,23 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
               
               <div className="space-y-2">
                 <Label htmlFor="slug">Slug</Label>
-                <div className="flex gap-2">
+                <div className="flex flex-col xs:flex-row gap-2">
                   <Input
                     id="slug"
                     value={formData.slug}
                     onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
                     placeholder="produto-exemplo"
+                    className="flex-1"
                   />
-                  <Button type="button" variant="outline" onClick={generateSlug}>
-                    Gerar
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={generateSlug}
+                    size="sm"
+                    className="shrink-0"
+                  >
+                    <span className="hidden sm:inline">Gerar</span>
+                    <span className="sm:hidden">Auto</span>
                   </Button>
                 </div>
               </div>
@@ -280,7 +288,7 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Preços</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="price">Preço (R$) *</Label>
                 <Input
@@ -326,7 +334,7 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Detalhes do Produto</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="type">Tipo</Label>
                 <Select
@@ -476,12 +484,21 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
           </div>
 
           {/* Actions */}
-          <div className="flex gap-2 pt-4">
-            <Button type="submit" disabled={loading || (!selectedStoreId && stores.length === 0)}>
+          <div className="flex flex-col xs:flex-row gap-2 pt-4">
+            <Button 
+              type="submit" 
+              disabled={loading || (!selectedStoreId && stores.length === 0)}
+              className="flex-1 xs:flex-none"
+            >
               {loading ? 'Criando...' : 'Criar Produto'}
             </Button>
             {onCancel && (
-              <Button type="button" variant="outline" onClick={onCancel}>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={onCancel}
+                className="flex-1 xs:flex-none"
+              >
                 Cancelar
               </Button>
             )}
@@ -489,24 +506,24 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
           </form>
         </CardContent>
       </Card>
-    </div>
+      </div>
 
-    {/* Preview */}
-    <div className="lg:col-span-1">
-      <div className="sticky top-4">
-        <ProductPreview
-          title={formData.title}
-          description={formData.description}
-          price_cents={formData.price_cents}
-          compare_price_cents={formData.compare_price_cents || undefined}
-          images={formData.images}
-          type={formData.type}
-          difficulty_level={formData.difficulty_level}
-          featured={formData.featured}
-        />
+      {/* Preview */}
+      <div className="xl:col-span-1">
+        <div className="sticky top-4">
+          <ProductPreview
+            title={formData.title}
+            description={formData.description}
+            price_cents={formData.price_cents}
+            compare_price_cents={formData.compare_price_cents || undefined}
+            images={formData.images}
+            type={formData.type}
+            difficulty_level={formData.difficulty_level}
+            featured={formData.featured}
+          />
+        </div>
       </div>
     </div>
-  </div>
   );
 };
 
