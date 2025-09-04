@@ -1,14 +1,11 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
-import { useCart } from "@/contexts/CartContext";
 import { 
   Home, 
   BookOpen, 
   Store, 
   User, 
-  ShoppingCart,
   Search
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -17,13 +14,11 @@ const MobileNavigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, profile } = useAuth();
-  const { items } = useCart();
 
   const navItems = [
     { icon: Home, label: "Início", path: "/" },
     { icon: Search, label: "Explorar", path: "/?search=true" },
     { icon: BookOpen, label: "Biblioteca", path: "/biblioteca", requireAuth: true },
-    { icon: ShoppingCart, label: "Carrinho", path: "/checkout", badge: items.length },
     ...(profile?.role === 'seller' ? [
       { icon: Store, label: "Dashboard", path: "/dashboard", requireAuth: true }
     ] : []),
@@ -74,14 +69,6 @@ const MobileNavigation = () => {
                   "w-5 h-5 transition-transform duration-200",
                   isActive && "scale-110"
                 )} />
-                {item.badge && item.badge > 0 && (
-                  <Badge 
-                    variant="destructive" 
-                    className="absolute -top-2 -right-2 w-5 h-5 p-0 text-xs flex items-center justify-center animate-bounce-in"
-                  >
-                    {item.badge > 99 ? '99+' : item.badge}
-                  </Badge>
-                )}
               </div>
               <span className={cn(
                 "text-xs font-medium transition-all duration-200",
