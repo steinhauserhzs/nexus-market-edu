@@ -66,8 +66,8 @@ serve(async (req) => {
   }
 });
 
-async function handleRateLimit(supabase: any, request: RateLimitRequest) {
-  const { action, identifier, limit = 5, window = 300 } = request; // 5 attempts per 5 minutes default
+async function handleRateLimit(supabase: any, request: any) {
+  const { rateLimitAction, identifier, limit = 5, window = 300 } = request; // 5 attempts per 5 minutes default
   
   try {
     // Create rate limiting table if it doesn't exist
@@ -77,7 +77,7 @@ async function handleRateLimit(supabase: any, request: RateLimitRequest) {
     const { data: attempts, error } = await supabase
       .from('rate_limits')
       .select('count(*)')
-      .eq('action', action)
+      .eq('action', rateLimitAction)
       .eq('identifier', identifier)
       .gte('created_at', windowStart.toISOString());
 
@@ -97,7 +97,7 @@ async function handleRateLimit(supabase: any, request: RateLimitRequest) {
       await supabase.from('security_logs').insert({
         action: 'rate_limit_exceeded',
         details: { 
-          rate_limit_action: action,
+          rate_limit_action: rateLimitAction,
           identifier,
           attempts: currentAttempts,
           limit,
@@ -121,7 +121,7 @@ async function handleRateLimit(supabase: any, request: RateLimitRequest) {
 
     // Record this attempt
     await supabase.from('rate_limits').insert({
-      action,
+      action: rateLimitAction,
       identifier,
       created_at: new Date().toISOString()
     });
@@ -144,12 +144,12 @@ async function handleRateLimit(supabase: any, request: RateLimitRequest) {
   }
 }
 
-async function handleSecurityLog(supabase: any, request: SecurityLogRequest) {
-  const { action, details = {}, severity = 'low', ip_address, user_agent } = request;
+async function handleSecurityLog(supabase: any, request: any) {
+  const { logAction, details = {}, severity = 'low', ip_address, user_agent } = request;
   
   try {
     const { error } = await supabase.from('security_logs').insert({
-      action,
+      action: logAction,
       details,
       severity,
       ip_address,

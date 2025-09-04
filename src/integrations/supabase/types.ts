@@ -1092,6 +1092,27 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          identifier: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          identifier: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          identifier?: string
+        }
+        Relationships: []
+      }
       security_logs: {
         Row: {
           action: string
@@ -1099,6 +1120,8 @@ export type Database = {
           details: Json | null
           id: string
           ip_address: unknown | null
+          session_id: string | null
+          severity: string | null
           user_agent: string | null
           user_id: string | null
         }
@@ -1108,6 +1131,8 @@ export type Database = {
           details?: Json | null
           id?: string
           ip_address?: unknown | null
+          session_id?: string | null
+          severity?: string | null
           user_agent?: string | null
           user_id?: string | null
         }
@@ -1117,6 +1142,8 @@ export type Database = {
           details?: Json | null
           id?: string
           ip_address?: unknown | null
+          session_id?: string | null
+          severity?: string | null
           user_agent?: string | null
           user_id?: string | null
         }
@@ -1532,6 +1559,10 @@ export type Database = {
         Args: { target_user_id: string }
         Returns: boolean
       }
+      cleanup_old_rate_limits: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       cleanup_old_upload_sessions: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -1647,6 +1678,15 @@ export type Database = {
           title: string
           updated_at: string
           venue_id: string
+        }[]
+      }
+      get_security_analytics: {
+        Args: { end_date?: string; start_date?: string }
+        Returns: {
+          action: string
+          count: number
+          latest_occurrence: string
+          severity: string
         }[]
       }
       handle_successful_payment: {

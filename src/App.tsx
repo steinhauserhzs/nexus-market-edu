@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
+import { SecurityProvider } from "@/components/security/SecurityProvider";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Index from "./pages/Index";
@@ -35,17 +36,18 @@ const queryClient = new QueryClient({
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <CartProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter 
-              future={{ 
-                v7_startTransition: true,
-                v7_relativeSplatPath: true 
-              }}
-            >
+      <SecurityProvider>
+        <AuthProvider>
+          <CartProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter 
+                future={{ 
+                  v7_startTransition: true,
+                  v7_relativeSplatPath: true 
+                }}
+              >
               <MobileGestures>
                 <div className="pb-16 md:pb-0">
                   <Routes>
@@ -68,9 +70,10 @@ const App = () => (
                 </div>
               </MobileGestures>
             </BrowserRouter>
-          </TooltipProvider>
-        </CartProvider>
-      </AuthProvider>
+            </TooltipProvider>
+          </CartProvider>
+        </AuthProvider>
+      </SecurityProvider>
     </QueryClientProvider>
   </ErrorBoundary>
 );

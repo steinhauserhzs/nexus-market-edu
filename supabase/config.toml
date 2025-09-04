@@ -1,1 +1,45 @@
 project_id = "phprhrwiuhalxdifdzgn"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+
+[realtime]
+enabled = true
+port = 54323
+
+[studio]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+port = 54327
+file_size_limit = "50MiB"
+
+[auth]
+enabled = true
+port = 54329
+site_url = "http://127.0.0.1:3000"
+additional_redirect_urls = ["https://127.0.0.1:3000"]
+jwt_expiry = 3600
+refresh_token_rotation_enabled = true
+security_update_password_require_reauthentication = true
+
+[functions.create-stripe-checkout]
+verify_jwt = true
+
+[functions.upload-file]
+verify_jwt = true
+
+[functions.security-utils]
+verify_jwt = false
+
+[edge_runtime]
+enabled = true

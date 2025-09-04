@@ -8,7 +8,8 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalStorage } from "@/hooks/use-local-storage";
-import { Eye, EyeOff, Mail, Phone, CreditCard, Chrome } from "lucide-react";
+import { useSecurity } from "@/hooks/use-security";
+import { Eye, EyeOff, Mail, Phone, CreditCard, Chrome, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { logger } from "@/lib/logger";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,6 +25,16 @@ const AdvancedSigninForm = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [rememberedIdentifier, setRememberedIdentifier] = useLocalStorage('rememberedIdentifier', '');
   const { toast } = useToast();
+  
+  // Enhanced security hooks
+  const { 
+    checkLimit, 
+    isAllowed, 
+    getRemaining, 
+    validateField,
+    logAuthAttempt,
+    logSuspiciousActivity 
+  } = useSecurity();
 
   // Load remembered identifier on component mount
   useEffect(() => {
@@ -91,6 +102,34 @@ const AdvancedSigninForm = () => {
     e.preventDefault();
     console.info('[Auth] Submitting login form', { hasIdentifier: !!identifier, hasPassword: !!password });
     
+    // Check rate limit first
+    const rateLimitResult = await checkLimit('login_attempt', undefined, 5, 300); // 5 attempts per 5 minutes
+    if (!rateLimitResult.allowed) {
+      toast({
+        title: "Muitas tentativas",
+        description: `Limite de tentativas excedido. Tente novamente em alguns minutos.`,
+        variant: "destructive",
+      });
+      await logSuspiciousActivity('excessive_login_attempts', {
+        identifier: identifier.substring(0, 3) + '...',
+        remaining: rateLimitResult.remaining
+      });
+      return;
+    }
+    
+    // Validate inputs
+    const identifierValidation = await validateField('identifier', identifier, 'text');
+    const passwordValidation = await validateField('password', password, 'text');
+    
+    if (!identifierValidation.isValid || !passwordValidation.isValid) {
+      toast({
+        title: "Dados inválidos",
+        description: "Verifique os dados informados",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (!identifier || !password) {
       toast({
         title: "Campos obrigatórios",
@@ -98,6 +137,14 @@ const AdvancedSigninForm = () => {
         variant: "destructive",
       });
       return;
+    }
+
+    // Log suspicious patterns
+    if (identifier.includes('<script') || password.includes('<script') ||
+        identifier.includes('javascript:') || password.includes('javascript:')) {
+      await logSuspiciousActivity('xss_attempt_login', {
+        identifier: identifier.substring(0, 3) + '...'
+      });
     }
 
     setLoading(true);
@@ -110,12 +157,17 @@ const AdvancedSigninForm = () => {
 
     try {
       console.info('[Auth] Calling signIn...');
-      const { error } = await signIn(identifier, password);
+      const { error } = await signIn(identifierValidation.sanitized, passwordValidation.sanitized);
       console.info('[Auth] signIn returned', { error });
       
       if (error) {
         throw error;
       }
+
+      // Log successful authentication
+      await logAuthAttempt(true, 'email_password', {
+        identifierType: getIdentifierType(identifier)
+      });
 
       // Save identifier if remember me is checked (no password storage)
       if (rememberMe) {
@@ -132,15 +184,29 @@ const AdvancedSigninForm = () => {
         description: "Bem-vindo de volta!",
       });
 
-      // Não navegar aqui para evitar condições de corrida; a página /auth redireciona automaticamente quando o usuário é detectado
       console.info('[Auth] Login success, aguardando redirecionamento automático pelo AuthContext/Auth page');
     } catch (error: any) {
       if (timeoutId) window.clearTimeout(timeoutId);
+
+      // Log failed authentication
+      await logAuthAttempt(false, 'email_password', {
+        identifierType: getIdentifierType(identifier),
+        error: error?.message || 'Unknown error'
+      });
 
       let errorMessage = "Erro no login. Tente novamente.";
       
       if (error?.message?.includes('Invalid login credentials')) {
         errorMessage = "Email/CPF/telefone ou senha incorretos";
+        
+        // Log potential brute force attempt
+        const remaining = rateLimitResult.remaining - 1;
+        if (remaining <= 1) {
+          await logSuspiciousActivity('potential_brute_force', {
+            identifier: identifier.substring(0, 3) + '...',
+            remaining
+          });
+        }
       } else if (error?.message?.includes('not found')) {
         errorMessage = "Usuário não encontrado";
       } else if (error?.message) {
