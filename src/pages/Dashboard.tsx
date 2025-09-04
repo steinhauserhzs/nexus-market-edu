@@ -12,6 +12,7 @@ import MessagesSection from "@/components/dashboard/messages-section";
 import SalesDashboard from "@/components/analytics/sales-dashboard";
 import ModuleManager from "@/components/modules/module-manager";
 import ProductForm from "@/components/products/product-form";
+import { useProducts } from "@/hooks/use-products";
 import { 
   TrendingUp, 
   Package, 
@@ -27,6 +28,7 @@ const Dashboard = () => {
   const { user, profile, loading } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { products: userProducts, loading: productsLoading } = useProducts();
 
   if (loading) {
     return (
@@ -182,24 +184,7 @@ const Dashboard = () => {
           </TabsContent>
 
           <TabsContent value="products" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Criar Novo Produto</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Adicione um novo produto à sua loja
-                </p>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-4">
-                    Funcionalidade de criação de produtos em desenvolvimento.
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Em breve você poderá criar produtos diretamente pelo dashboard.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            <ProductForm />
           </TabsContent>
 
           <TabsContent value="analytics" className="space-y-6">
@@ -207,24 +192,56 @@ const Dashboard = () => {
           </TabsContent>
 
           <TabsContent value="content" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Gestão de Conteúdo</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Gerencie os módulos e aulas dos seus cursos
-                </p>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8">
+            {productsLoading ? (
+              <div className="flex justify-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent" />
+              </div>
+            ) : userProducts.length === 0 ? (
+              <Card>
+                <CardContent className="pt-6 text-center py-12">
+                  <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">Nenhum Produto Encontrado</h3>
                   <p className="text-muted-foreground mb-4">
-                    Funcionalidade de gestão de conteúdo em desenvolvimento.
+                    Crie seu primeiro produto para começar a gerenciar conteúdo.
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    Em breve você poderá gerenciar módulos e aulas dos seus cursos.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+                  <Button onClick={() => navigate('#products')}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Criar Produto
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-6">
+                {userProducts.filter(p => p.type === 'curso').map((product) => (
+                  <Card key={product.id}>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle>{product.title}</CardTitle>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {product.description}
+                          </p>
+                        </div>
+                        <Badge variant="outline">{product.type}</Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <ModuleManager productId={product.id} editable={true} />
+                    </CardContent>
+                  </Card>
+                ))}
+                {userProducts.filter(p => p.type === 'curso').length === 0 && (
+                  <Card>
+                    <CardContent className="pt-6 text-center py-12">
+                      <h3 className="text-lg font-semibold mb-2">Nenhum Curso Encontrado</h3>
+                      <p className="text-muted-foreground">
+                        Apenas produtos do tipo "curso" podem ter módulos e aulas.
+                      </p>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="messages" className="space-y-6">

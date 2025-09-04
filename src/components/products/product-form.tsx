@@ -19,7 +19,7 @@ interface Category {
 }
 
 interface ProductFormProps {
-  storeId: string;
+  storeId?: string;
   onSuccess?: () => void;
   onCancel?: () => void;
 }
@@ -27,6 +27,8 @@ interface ProductFormProps {
 const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
   const { user } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [stores, setStores] = useState<{ id: string; name: string }[]>([]);
+  const [selectedStoreId, setSelectedStoreId] = useState(storeId || '');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
@@ -50,6 +52,7 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
 
   useEffect(() => {
     fetchCategories();
+    fetchStores();
   }, []);
 
   const fetchCategories = async () => {
@@ -64,6 +67,29 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
       setCategories(data || []);
     } catch (error: any) {
       console.error('Error fetching categories:', error);
+    }
+  };
+
+  const fetchStores = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('stores')
+        .select('id, name')
+        .eq('owner_id', user.id)
+        .eq('is_active', true)
+        .order('name');
+
+      if (error) throw error;
+      setStores(data || []);
+      
+      // Auto-select first store if no storeId provided
+      if (!selectedStoreId && data && data.length > 0) {
+        setSelectedStoreId(data[0].id);
+      }
+    } catch (error: any) {
+      console.error('Error fetching stores:', error);
     }
   };
 
@@ -84,12 +110,19 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !storeId) return;
+    if (!user || !selectedStoreId) {
+      toast({
+        title: "Erro",
+        description: "Selecione uma loja antes de criar o produto.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setLoading(true);
     try {
       const productData = {
-        store_id: storeId,
+        store_id: selectedStoreId,
         title: formData.title,
         slug: formData.slug,
         description: formData.description,
@@ -150,6 +183,37 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
           </CardHeader>
           <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Store Selection */}
+          {!storeId && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Loja</h3>
+              <div className="space-y-2">
+                <Label htmlFor="store">Selecione a Loja *</Label>
+                <Select
+                  value={selectedStoreId}
+                  onValueChange={setSelectedStoreId}
+                  required
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione uma loja" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {stores.map((store) => (
+                      <SelectItem key={store.id} value={store.id}>
+                        {store.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {stores.length === 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    Você precisa criar uma loja primeiro para adicionar produtos.
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Basic Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Informações Básicas</h3>
@@ -413,7 +477,7 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
 
           {/* Actions */}
           <div className="flex gap-2 pt-4">
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading || (!selectedStoreId && stores.length === 0)}>
               {loading ? 'Criando...' : 'Criar Produto'}
             </Button>
             {onCancel && (

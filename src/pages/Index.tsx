@@ -10,172 +10,17 @@ import SEOHead from "@/components/ui/seo-head";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import { useCategories } from "@/hooks/use-products";
 
-
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  thumbnail?: string;
-  price: number;
-  comparePrice?: number;
-  type: 'digital' | 'curso' | 'fisico' | 'servico' | 'bundle' | 'assinatura';
-  rating?: number;
-  totalLessons?: number;
-  totalDuration?: number;
-  studentCount?: number;
-  instructor: string;
-  featured?: boolean;
-}
 
 const Index = () => {
-  const { user, profile, loading: authLoading } = useAuth();
+  const { user, profile } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { categories, loading: categoriesLoading } = useCategories();
 
-  // Remove artificial loading - will use real data loading
-  const productsLoading = false;
-  const productsError = null;
-
-  // Only show loading spinner if we're actually loading something important
-  // Home page should be accessible without waiting for auth
-  if (productsLoading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <MainHeader />
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <LoadingSpinner size="lg" text="Carregando produtos..." />
-        </div>
-      </div>
-    );
-  }
-
-  if (productsError) {
-    return (
-      <div className="min-h-screen bg-background">
-        <MainHeader />
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center space-y-4">
-            <h2 className="text-xl font-semibold text-destructive">Erro ao carregar</h2>
-            <p className="text-muted-foreground">Tente novamente mais tarde</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Mock data - Replace with real data from Supabase
-  const categories = [
-    { id: '1', name: 'Desenvolvimento', slug: 'desenvolvimento', icon: '💻' },
-    { id: '2', name: 'Design', slug: 'design', icon: '🎨' },
-    { id: '3', name: 'Marketing', slug: 'marketing', icon: '📈' },
-    { id: '4', name: 'Negócios', slug: 'negocios', icon: '💼' },
-    { id: '5', name: 'Idiomas', slug: 'idiomas', icon: '🗣️' },
-    { id: '6', name: 'Saúde', slug: 'saude', icon: '💪' },
-  ];
-
-  const featuredProducts: Product[] = [
-    {
-      id: '1',
-      title: 'Desenvolvimento Web Completo',
-      description: 'Aprenda React, Node.js, e muito mais para se tornar um desenvolvedor full-stack completo.',
-      price: 19900, // R$ 199.00
-      comparePrice: 29900,
-      type: 'curso',
-      rating: 4.9,
-      totalLessons: 180,
-      totalDuration: 2400, // 40 hours
-      studentCount: 15420,
-      instructor: 'João Silva',
-      featured: true,
-    },
-    {
-      id: '2',
-      title: 'Design UX/UI Profissional',
-      description: 'Domine as ferramentas e metodologias para criar interfaces incríveis e experiências únicas.',
-      price: 14900,
-      comparePrice: 19900,
-      type: 'curso',
-      rating: 4.8,
-      totalLessons: 120,
-      totalDuration: 1800,
-      studentCount: 8930,
-      instructor: 'Maria Santos',
-      featured: true,
-    },
-    {
-      id: '3',
-      title: 'Marketing Digital Avançado',
-      description: 'Estratégias comprovadas para aumentar vendas e engajamento nas redes sociais e Google Ads.',
-      price: 12900,
-      type: 'curso',
-      rating: 4.7,
-      totalLessons: 95,
-      totalDuration: 1440,
-      studentCount: 12500,
-      instructor: 'Carlos Oliveira',
-    },
-    {
-      id: '4',
-      title: 'E-book: Empreendedorismo Digital',
-      description: 'Guia completo para começar seu negócio digital do zero e alcançar a liberdade financeira.',
-      price: 4900,
-      comparePrice: 7900,
-      type: 'digital',
-      studentCount: 3200,
-      instructor: 'Ana Costa',
-    },
-  ];
-
-  const popularProducts: Product[] = [
-    {
-      id: '5',
-      title: 'Python para Ciência de Dados',
-      description: 'Análise de dados, machine learning e visualização com Python, pandas e scikit-learn.',
-      price: 16900,
-      type: 'curso',
-      rating: 4.8,
-      totalLessons: 140,
-      totalDuration: 2100,
-      studentCount: 9800,
-      instructor: 'Dr. Roberto Lima',
-    },
-    {
-      id: '6',
-      title: 'Fotografia Profissional',
-      description: 'Técnicas avançadas de fotografia, edição e composição para profissionais e entusiastas.',
-      price: 11900,
-      type: 'curso',
-      rating: 4.9,
-      totalLessons: 85,
-      totalDuration: 1320,
-      studentCount: 5670,
-      instructor: 'Lucia Fernandes',
-    },
-    {
-      id: '7',
-      title: 'Inglês Fluente em 6 Meses',
-      description: 'Método revolucionário para dominar o inglês rapidamente com foco na conversação.',
-      price: 13900,
-      type: 'curso',
-      rating: 4.7,
-      totalLessons: 200,
-      totalDuration: 1800,
-      studentCount: 18600,
-      instructor: 'Michael Johnson',
-    },
-    {
-      id: '8',
-      title: 'Kit Músico Iniciante',
-      description: 'Bundle completo com curso de violão, teoria musical e aplicativo de afinação.',
-      price: 8900,
-      comparePrice: 15900,
-      type: 'bundle',
-      studentCount: 4200,
-      instructor: 'Pedro Música',
-    },
-  ];
+  // Categories will be loaded from useCategories hook
 
 
   const handleCategoryChange = (slug: string | undefined) => {
@@ -225,33 +70,41 @@ const Index = () => {
               </p>
             </div>
             
-            <CategoryFilter
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onCategoryChange={handleCategoryChange}
-              className="justify-center"
-            />
+            {categoriesLoading ? (
+              <div className="flex justify-center">
+                <LoadingSpinner text="Carregando categorias..." />
+              </div>
+            ) : (
+              <CategoryFilter
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onCategoryChange={handleCategoryChange}
+                className="justify-center"
+              />
+            )}
           </div>
         </section>
         
-        {/* Featured Courses com dados reais */}
+        {/* Featured Courses */}
         <FeaturedSection
           title="Cursos em Destaque"
           description="Os melhores cursos selecionados pela nossa equipe"
           featured={true}
           showMore={true}
+          categoryId={selectedCategory}
           onShowMore={() => {
             navigate('/biblioteca');
           }}
         />
         
-        {/* Popular Courses com dados reais */}
+        {/* Popular Courses */}
         <div className="bg-muted/20">
           <FeaturedSection
             title="Mais Populares"
             description="Os cursos mais procurados pelos nossos alunos"
             showMore={true}
             limit={4}
+            categoryId={selectedCategory}
             onShowMore={() => {
               navigate('/biblioteca');
             }}
