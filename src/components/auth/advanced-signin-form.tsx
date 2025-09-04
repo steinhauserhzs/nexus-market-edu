@@ -193,7 +193,8 @@ const AdvancedSigninForm = () => {
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {/* Google Login */}
+        {/* Google Login - Temporarily disabled until OAuth is configured in Supabase */}
+        {/* 
         <Button
           type="button"
           variant="outline"
@@ -204,15 +205,9 @@ const AdvancedSigninForm = () => {
           <Chrome className="w-4 h-4 mr-2" />
           {googleLoading ? "Entrando..." : "Entrar com Google"}
         </Button>
+        */}
 
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <Separator className="w-full" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">ou</span>
-          </div>
-        </div>
+        {/* Separator removed since Google login is disabled */}
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
