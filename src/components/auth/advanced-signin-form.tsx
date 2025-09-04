@@ -9,9 +9,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { Eye, EyeOff, Mail, Phone, CreditCard, Chrome } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const AdvancedSigninForm = () => {
   const { signIn, signInWithGoogle } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -115,8 +117,8 @@ const AdvancedSigninForm = () => {
         title: "Login realizado!",
         description: "Bem-vindo de volta!",
       });
-      
-      // Redirect será tratado pelo AuthContext
+      // Redireciona após sucesso
+      navigate('/biblioteca');
     } catch (error: any) {
       let errorMessage = "Erro no login. Tente novamente.";
       
