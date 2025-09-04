@@ -143,19 +143,10 @@ const StoresSection = () => {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <StoreIcon className="w-5 h-5" />
-            Minhas Lojas
-          </CardTitle>
-          <Button 
-            onClick={() => navigate('/criar-loja')}
-            size="sm"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Nova Loja
-          </Button>
-        </div>
+        <CardTitle className="flex items-center gap-2">
+          <StoreIcon className="w-5 h-5" />
+          Minhas Lojas
+        </CardTitle>
       </CardHeader>
       <CardContent>
         {stores.length === 0 ? (
