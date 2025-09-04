@@ -1280,6 +1280,10 @@ export type Database = {
         Args: { store_name: string }
         Returns: string
       }
+      get_email_by_identifier: {
+        Args: { p_identifier: string }
+        Returns: string
+      }
       get_my_payment_audit_logs: {
         Args: { end_date?: string; start_date?: string }
         Returns: {

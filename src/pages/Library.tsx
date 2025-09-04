@@ -43,6 +43,12 @@ const Library = () => {
   }, [user, authLoading]);
 
   const fetchLicenses = async () => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      console.warn('[Library] Request timeout - aborting');
+      controller.abort();
+    }, 10000); // 10 second timeout
+
     try {
       console.log('[Library] Fetching licenses...');
       // 1) Buscar apenas dados da licença (sem join, pois não há FK configurada)
@@ -50,9 +56,21 @@ const Library = () => {
         .from('licenses')
         .select('id, product_id, expires_at, created_at')
         .eq('user_id', user?.id)
-        .eq('is_active', true);
+        .eq('is_active', true)
+        .abortSignal(controller.signal);
 
-      if (licError) throw licError;
+      if (licError) {
+        if (licError.name === 'AbortError') {
+          console.warn('[Library] Request was aborted');
+          toast({
+            title: 'Tempo esgotado',
+            description: 'A solicitação demorou muito. Tente novamente.',
+            variant: 'destructive',
+          });
+          return;
+        }
+        throw licError;
+      }
 
       if (!licenseRows || licenseRows.length === 0) {
         console.log('[Library] No licenses');
@@ -73,9 +91,16 @@ const Library = () => {
       const { data: products, error: prodError } = await supabase
         .from('products')
         .select('id, title, description, thumbnail_url, type, total_lessons, total_duration_minutes, status')
-        .in('id', productIds);
+        .in('id', productIds)
+        .abortSignal(controller.signal);
 
-      if (prodError) throw prodError;
+      if (prodError) {
+        if (prodError.name === 'AbortError') {
+          console.warn('[Library] Products request was aborted');
+          return;
+        }
+        throw prodError;
+      }
 
       const productMap = new Map(products?.map((p: any) => [p.id, p]));
 
@@ -95,14 +120,18 @@ const Library = () => {
       }));
 
       setLicenses(merged);
+      console.log('[Library] Successfully loaded', merged.length, 'licenses');
     } catch (error: any) {
-      console.error('Error fetching licenses:', error);
-      toast({
-        title: 'Erro ao carregar biblioteca',
-        description: 'Tente novamente mais tarde.',
-        variant: 'destructive',
-      });
+      console.error('[Library] Error fetching licenses:', error);
+      if (error.name !== 'AbortError') {
+        toast({
+          title: 'Erro ao carregar biblioteca',
+          description: 'Tente novamente mais tarde.',
+          variant: 'destructive',
+        });
+      }
     } finally {
+      clearTimeout(timeoutId);
       setLoading(false);
       console.log('[Library] Loading finished');
     }

@@ -75,13 +75,13 @@ const Auth = () => {
         <div className="text-center mt-8 text-primary-foreground/60">
           <p className="text-sm">
             Ao continuar, você concorda com nossos{" "}
-            <a href="#" className="underline hover:text-primary-foreground">
+            <button className="underline hover:text-primary-foreground" onClick={(e) => e.preventDefault()}>
               Termos de Uso
-            </a>{" "}
+            </button>{" "}
             e{" "}
-            <a href="#" className="underline hover:text-primary-foreground">
+            <button className="underline hover:text-primary-foreground" onClick={(e) => e.preventDefault()}>
               Política de Privacidade
-            </a>
+            </button>
           </p>
         </div>
       </div>

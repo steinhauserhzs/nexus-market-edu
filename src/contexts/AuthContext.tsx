@@ -102,31 +102,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Função para buscar usuário por CPF, telefone ou email
+  // Função para buscar usuário por CPF, telefone ou email usando RPC segura
   const findUserByIdentifier = async (identifier: string) => {
     try {
-      // Remove caracteres especiais
-      const cleanIdentifier = identifier.replace(/[^\w@.-]/g, '');
+      console.info('[AuthContext] findUserByIdentifier', { identifier: identifier.substring(0, 3) + '...' });
       
-      let query = supabase.from('profiles').select('*');
+      const { data: email, error } = await supabase.rpc('get_email_by_identifier', {
+        p_identifier: identifier
+      });
       
-      // Determina o tipo de identificador
-      if (cleanIdentifier.includes('@')) {
-        // Email
-        query = query.eq('email', cleanIdentifier);
-      } else if (/^\d{10,11}$/.test(cleanIdentifier)) {
-        // Telefone
-        query = query.eq('phone', cleanIdentifier);
-      } else if (/^\d{11}$/.test(cleanIdentifier)) {
-        // CPF
-        query = query.eq('cpf', cleanIdentifier);
-      } else {
-        return { user: null, error: { message: 'Formato de identificador inválido' } };
+      if (error) {
+        console.error('[AuthContext] RPC error:', error);
+        return { user: null, error };
       }
       
-      const { data, error } = await query.single();
-      return { user: data, error };
+      if (!email) {
+        console.info('[AuthContext] No email found for identifier');
+        return { user: null, error: { message: 'Usuário não encontrado' } };
+      }
+      
+      console.info('[AuthContext] Email resolved:', email.substring(0, 3) + '...');
+      return { user: { email }, error: null };
     } catch (error: any) {
+      console.error('[AuthContext] findUserByIdentifier catch:', error);
       return { user: null, error };
     }
   };
