@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import ProductCard from "@/components/ui/product-card";
 import CustomStoreRenderer from "@/components/store/custom-store-renderer";
+import StorePreviewMode from "@/components/store/store-preview-mode";
 
 interface Store {
   id: string;
@@ -206,9 +207,10 @@ const Store = () => {
   const textColor = theme.textColor || "#1f2937";
 
   return (
-    <CustomStoreRenderer theme={store.theme || {}} storeName={store.name}>
-      <div className="min-h-screen pb-20">
-        <BackNavigation title={store.name} />
+      <StorePreviewMode>
+        <CustomStoreRenderer theme={store.theme || {}} storeName={store.name}>
+          <div className="min-h-screen pb-20">
+            <BackNavigation title={store.name} />
       
       {/* Store Header */}
       <div className="relative">
@@ -406,8 +408,9 @@ const Store = () => {
           </Card>
         )}
       </div>
-    </div>
+      </div>
     </CustomStoreRenderer>
+    </StorePreviewMode>
   );
 };
 

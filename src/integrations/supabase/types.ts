@@ -1210,7 +1210,7 @@ export type Database = {
           is_template: boolean
           name: string
           preview_image: string | null
-          store_id: string
+          store_id: string | null
           type: string
           updated_at: string
         }
@@ -1221,7 +1221,7 @@ export type Database = {
           is_template?: boolean
           name: string
           preview_image?: string | null
-          store_id: string
+          store_id?: string | null
           type: string
           updated_at?: string
         }
@@ -1232,7 +1232,7 @@ export type Database = {
           is_template?: boolean
           name?: string
           preview_image?: string | null
-          store_id?: string
+          store_id?: string | null
           type?: string
           updated_at?: string
         }

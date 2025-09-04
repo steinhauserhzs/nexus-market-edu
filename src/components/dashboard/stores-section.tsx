@@ -14,7 +14,8 @@ import {
   Package,
   Globe,
   Users,
-  TrendingUp
+  TrendingUp,
+  Palette
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -215,6 +216,15 @@ const StoresSection = () => {
 
                 {/* Actions */}
                 <div className="flex items-center gap-2 flex-shrink-0">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate(`/loja/${store.slug}/customizar`)}
+                  >
+                    <Palette className="w-4 h-4 mr-1" />
+                    Personalizar
+                  </Button>
+                  
                   <Button
                     variant="outline"
                     size="sm"
