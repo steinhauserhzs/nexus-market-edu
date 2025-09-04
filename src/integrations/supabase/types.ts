@@ -1092,6 +1092,36 @@ export type Database = {
         }
         Relationships: []
       }
+      security_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       seller_payment_info: {
         Row: {
           bank_account: Json | null
@@ -1348,6 +1378,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      log_security_event: {
+        Args: { p_action: string; p_details?: Json; p_user_id?: string }
+        Returns: string
+      }
       secure_get_payment_info: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -1381,6 +1415,10 @@ export type Database = {
         Returns: boolean
       }
       validate_phone: {
+        Args: { phone_input: string }
+        Returns: boolean
+      }
+      validate_phone_br: {
         Args: { phone_input: string }
         Returns: boolean
       }
