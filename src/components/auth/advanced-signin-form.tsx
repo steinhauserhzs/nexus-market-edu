@@ -99,11 +99,13 @@ const AdvancedSigninForm = () => {
     }
 
     setLoading(true);
-    const timeout = window.setTimeout(() => {
+    let timeoutId: number | undefined;
+    timeoutId = window.setTimeout(() => {
       console.warn('[Auth] Login timeout - resetting state');
       setLoading(false);
       toast({ title: 'Tempo esgotado', description: 'A conexão demorou muito. Tente novamente.', variant: 'destructive' });
     }, 15000);
+
     try {
       console.info('[Auth] Calling signIn...');
       const { error } = await signIn(identifier, password);
@@ -120,14 +122,19 @@ const AdvancedSigninForm = () => {
         setRememberedIdentifier('');
       }
 
+      // Clear timeout on success
+      if (timeoutId) window.clearTimeout(timeoutId);
+
       toast({
         title: "Login realizado!",
         description: "Bem-vindo de volta!",
       });
-      // Redireciona após sucesso
-      console.info('[Auth] Navigating to /biblioteca');
-      navigate('/biblioteca');
+
+      // Não navegar aqui para evitar condições de corrida; a página /auth redireciona automaticamente quando o usuário é detectado
+      console.info('[Auth] Login success, aguardando redirecionamento automático pelo AuthContext/Auth page');
     } catch (error: any) {
+      if (timeoutId) window.clearTimeout(timeoutId);
+
       let errorMessage = "Erro no login. Tente novamente.";
       
       if (error?.message?.includes('Invalid login credentials')) {
@@ -145,6 +152,7 @@ const AdvancedSigninForm = () => {
         variant: "destructive",
       });
     } finally {
+      if (timeoutId) window.clearTimeout(timeoutId);
       console.info('[Auth] Resetting loading state');
       setLoading(false);
     }
