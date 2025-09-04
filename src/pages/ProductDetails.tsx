@@ -255,9 +255,9 @@ export default function ProductDetails() {
     <div className="min-h-screen bg-background pb-20">
       <BackNavigation title={product.title} />
       
-      <div className="container mx-auto px-4 py-6 max-w-6xl">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 max-w-6xl">
         {/* Product Header */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-8">
+        <div className="grid lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8">
           {/* Product Image */}
           <div className="space-y-4">
             <ProductGallery 
@@ -270,19 +270,19 @@ export default function ProductDetails() {
           <div className="space-y-6">
             <div>
               {/* Badges */}
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex flex-wrap items-center gap-2 mb-4">
                 {product.featured && (
-                  <Badge className="bg-gradient-to-r from-accent to-accent/80">
+                  <Badge className="bg-gradient-to-r from-accent to-accent/80 text-xs">
                     ⭐ Destaque
                   </Badge>
                 )}
-                <Badge variant="secondary">{product.type}</Badge>
+                <Badge variant="secondary" className="text-xs">{product.type}</Badge>
                 {category && (
-                  <Badge variant="outline">{category.name}</Badge>
+                  <Badge variant="outline" className="text-xs">{category.name}</Badge>
                 )}
               </div>
 
-              <h1 className="text-3xl font-bold leading-tight mb-4">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight mb-4 break-words">
                 {product.title}
               </h1>
 
@@ -299,38 +299,38 @@ export default function ProductDetails() {
                 </div>
               )}
 
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6">
                 <div className="flex items-center gap-1">
-                  <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  <span className="font-medium">4.8</span>
-                  <span className="text-muted-foreground">(234 avaliações)</span>
+                  <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
+                  <span className="font-medium text-sm sm:text-base">4.8</span>
+                  <span className="text-muted-foreground text-xs sm:text-sm">(234 avaliações)</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Users className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">1.547 alunos</span>
+                  <Users className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                  <span className="text-muted-foreground text-xs sm:text-sm">1.547 alunos</span>
                 </div>
               </div>
             </div>
 
             {/* Price Section */}
             <Card>
-              <CardContent className="p-6">
+              <CardContent className="p-3 sm:p-6">
                 <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    {hasDiscount && (
-                      <span className="text-lg text-muted-foreground line-through">
-                        {formatPrice(product.compare_price_cents!)}
-                      </span>
-                    )}
-                    <span className="text-3xl font-bold text-accent">
-                      {formatPrice(product.price_cents)}
-                    </span>
-                    {hasDiscount && (
-                      <Badge className="bg-red-500 text-white">
-                        -{discountPercent}%
-                      </Badge>
-                    )}
-                  </div>
+                   <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                     {hasDiscount && (
+                       <span className="text-base sm:text-lg text-muted-foreground line-through">
+                         {formatPrice(product.compare_price_cents!)}
+                       </span>
+                     )}
+                     <span className="text-2xl sm:text-3xl font-bold text-accent">
+                       {formatPrice(product.price_cents)}
+                     </span>
+                     {hasDiscount && (
+                       <Badge className="bg-red-500 text-white text-xs">
+                         -{discountPercent}%
+                       </Badge>
+                     )}
+                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-3">
                     <Button 
@@ -341,13 +341,13 @@ export default function ProductDetails() {
                     >
                       {inCart ? (
                         <>
-                          <Check className="w-5 h-5 mr-2" />
-                          No Carrinho
+                          <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                          <span className="text-sm sm:text-base">No Carrinho</span>
                         </>
                       ) : (
                         <>
-                          <ShoppingCart className="w-5 h-5 mr-2" />
-                          Adicionar ao Carrinho
+                          <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                          <span className="text-sm sm:text-base">Adicionar</span>
                         </>
                       )}
                     </Button>
@@ -358,7 +358,7 @@ export default function ProductDetails() {
                       onClick={toggleWishlist}
                     >
                       <Heart 
-                        className={`w-5 h-5 ${isWishlisted ? 'fill-red-500 text-red-500' : ''}`} 
+                        className={`w-4 h-4 sm:w-5 sm:h-5 ${isWishlisted ? 'fill-red-500 text-red-500' : ''}`} 
                       />
                     </Button>
                     
@@ -367,7 +367,7 @@ export default function ProductDetails() {
                       size="lg"
                       onClick={handleShare}
                     >
-                      <Share2 className="w-5 h-5" />
+                      <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     </Button>
                   </div>
                 </div>
@@ -377,26 +377,26 @@ export default function ProductDetails() {
             {/* Quick Stats */}
             {(product.total_lessons || product.total_duration_minutes || product.difficulty_level) && (
               <Card>
-                <CardContent className="p-4">
-                  <div className="grid grid-cols-3 gap-4 text-center">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
                     {product.total_lessons && (
                       <div>
-                        <BookOpen className="w-5 h-5 mx-auto mb-1 text-muted-foreground" />
-                        <div className="font-medium">{product.total_lessons}</div>
+                        <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 mx-auto mb-1 text-muted-foreground" />
+                        <div className="font-medium text-sm sm:text-base">{product.total_lessons}</div>
                         <div className="text-xs text-muted-foreground">Aulas</div>
                       </div>
                     )}
                     {product.total_duration_minutes && (
                       <div>
-                        <Clock className="w-5 h-5 mx-auto mb-1 text-muted-foreground" />
-                        <div className="font-medium">{formatDuration(product.total_duration_minutes)}</div>
+                        <Clock className="w-4 h-4 sm:w-5 sm:h-5 mx-auto mb-1 text-muted-foreground" />
+                        <div className="font-medium text-sm sm:text-base">{formatDuration(product.total_duration_minutes)}</div>
                         <div className="text-xs text-muted-foreground">Duração</div>
                       </div>
                     )}
                     {product.difficulty_level && (
                       <div>
-                        <Award className="w-5 h-5 mx-auto mb-1 text-muted-foreground" />
-                        <div className="font-medium capitalize">{product.difficulty_level}</div>
+                        <Award className="w-4 h-4 sm:w-5 sm:h-5 mx-auto mb-1 text-muted-foreground" />
+                        <div className="font-medium text-sm sm:text-base capitalize">{product.difficulty_level}</div>
                         <div className="text-xs text-muted-foreground">Nível</div>
                       </div>
                     )}
@@ -409,11 +409,11 @@ export default function ProductDetails() {
 
         {/* Product Details Tabs */}
         <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-            <TabsTrigger value="content">Conteúdo</TabsTrigger>
-            <TabsTrigger value="reviews">Avaliações</TabsTrigger>
-            <TabsTrigger value="instructor">Instrutor</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 gap-1">
+            <TabsTrigger value="overview" className="text-xs sm:text-sm">Visão Geral</TabsTrigger>
+            <TabsTrigger value="content" className="text-xs sm:text-sm">Conteúdo</TabsTrigger>
+            <TabsTrigger value="reviews" className="text-xs sm:text-sm">Avaliações</TabsTrigger>
+            <TabsTrigger value="instructor" className="text-xs sm:text-sm">Instrutor</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
