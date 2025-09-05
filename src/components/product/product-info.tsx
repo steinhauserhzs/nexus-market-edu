@@ -70,19 +70,19 @@ export default function ProductInfo({
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Description */}
       <Card>
-        <CardHeader>
-          <CardTitle>Sobre este produto</CardTitle>
+        <CardHeader className="pb-3 sm:pb-4">
+          <CardTitle className="text-base sm:text-lg">Sobre este produto</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-muted-foreground leading-relaxed">
+        <CardContent className="space-y-3 sm:space-y-4 pt-0">
+          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
             {description || "Produto incrível com conteúdo de alta qualidade para transformar sua carreira e conhecimento."}
           </p>
           
           {metaDescription && metaDescription !== description && (
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               {metaDescription}
             </p>
           )}
@@ -91,15 +91,15 @@ export default function ProductInfo({
 
       {/* What You'll Get */}
       <Card>
-        <CardHeader>
-          <CardTitle>O que você vai receber</CardTitle>
+        <CardHeader className="pb-3 sm:pb-4">
+          <CardTitle className="text-base sm:text-lg">O que você vai receber</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid gap-3">
+        <CardContent className="pt-0">
+          <div className="grid gap-2 sm:gap-3">
             {features.map((feature, index) => (
-              <div key={index} className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                <span className="text-sm">{feature}</span>
+              <div key={index} className="flex items-center gap-2 sm:gap-3">
+                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 flex-shrink-0" />
+                <span className="text-xs sm:text-sm">{feature}</span>
               </div>
             ))}
           </div>
@@ -107,19 +107,19 @@ export default function ProductInfo({
       </Card>
 
       {/* Benefits Grid */}
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
         {benefits.map((benefit, index) => {
           const IconComponent = benefit.icon;
           return (
             <Card key={index}>
-              <CardContent className="p-4">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-accent/10">
-                    <IconComponent className="w-5 h-5 text-accent" />
+              <CardContent className="p-3 sm:p-4">
+                <div className="flex items-start gap-2 sm:gap-3">
+                  <div className="p-1.5 sm:p-2 rounded-lg bg-accent/10 flex-shrink-0">
+                    <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                   </div>
-                  <div>
-                    <h4 className="font-medium mb-1">{benefit.title}</h4>
-                    <p className="text-sm text-muted-foreground">
+                  <div className="min-w-0">
+                    <h4 className="font-medium mb-1 text-sm sm:text-base">{benefit.title}</h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                       {benefit.description}
                     </p>
                   </div>
@@ -132,22 +132,22 @@ export default function ProductInfo({
 
       {/* Prerequisites */}
       <Card>
-        <CardHeader>
-          <CardTitle>Pré-requisitos</CardTitle>
+        <CardHeader className="pb-3 sm:pb-4">
+          <CardTitle className="text-base sm:text-lg">Pré-requisitos</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <CheckCircle className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm">Acesso à internet</span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground flex-shrink-0" />
+              <span className="text-xs sm:text-sm">Acesso à internet</span>
             </div>
-            <div className="flex items-center gap-3">
-              <CheckCircle className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm">Computador, tablet ou smartphone</span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground flex-shrink-0" />
+              <span className="text-xs sm:text-sm">Computador, tablet ou smartphone</span>
             </div>
-            <div className="flex items-center gap-3">
-              <CheckCircle className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm">Vontade de aprender</span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground flex-shrink-0" />
+              <span className="text-xs sm:text-sm">Vontade de aprender</span>
             </div>
           </div>
         </CardContent>

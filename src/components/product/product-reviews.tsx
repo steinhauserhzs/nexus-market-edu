@@ -118,21 +118,21 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Rating Overview */}
       <Card>
-        <CardHeader>
-          <CardTitle>Avaliações dos Alunos</CardTitle>
+        <CardHeader className="pb-3 sm:pb-4">
+          <CardTitle className="text-base sm:text-lg">Avaliações dos Alunos</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-8">
+        <CardContent className="pt-0">
+          <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
             {/* Average Rating */}
             <div className="text-center">
-              <div className="text-4xl font-bold mb-2">{averageRating}</div>
+              <div className="text-3xl sm:text-4xl font-bold mb-2">{averageRating}</div>
               <div className="flex items-center justify-center mb-2">
                 {renderStars(Math.floor(averageRating))}
               </div>
-              <div className="text-muted-foreground">
+              <div className="text-sm text-muted-foreground">
                 {totalReviews} avaliações
               </div>
             </div>
@@ -140,13 +140,13 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
             {/* Rating Distribution */}
             <div className="space-y-2">
               {ratingDistribution.map((item) => (
-                <div key={item.stars} className="flex items-center gap-3">
-                  <div className="flex items-center gap-1 w-12">
-                    <span className="text-sm">{item.stars}</span>
+                <div key={item.stars} className="flex items-center gap-2 sm:gap-3">
+                  <div className="flex items-center gap-1 w-10 sm:w-12">
+                    <span className="text-xs sm:text-sm">{item.stars}</span>
                     <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                   </div>
                   <Progress value={item.percentage} className="flex-1" />
-                  <div className="text-sm text-muted-foreground w-8">
+                  <div className="text-xs sm:text-sm text-muted-foreground w-6 sm:w-8">
                     {item.count}
                   </div>
                 </div>
@@ -158,31 +158,32 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
 
       {/* Add Review */}
       <Card>
-        <CardHeader>
-          <CardTitle>Deixe sua Avaliação</CardTitle>
+        <CardHeader className="pb-3 sm:pb-4">
+          <CardTitle className="text-base sm:text-lg">Deixe sua Avaliação</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-3 sm:space-y-4 pt-0">
           <div>
-            <label className="text-sm font-medium">Sua nota:</label>
+            <label className="text-xs sm:text-sm font-medium">Sua nota:</label>
             <div className="mt-1">
               {renderStars(newRating, true, setNewRating)}
             </div>
           </div>
           
           <div>
-            <label className="text-sm font-medium">Seu comentário:</label>
+            <label className="text-xs sm:text-sm font-medium">Seu comentário:</label>
             <Textarea
               placeholder="Compartilhe sua experiência com este curso..."
               value={newReview}
               onChange={(e) => setNewReview(e.target.value)}
-              className="mt-1"
-              rows={4}
+              className="mt-1 text-sm"
+              rows={3}
             />
           </div>
           
           <Button 
             onClick={handleSubmitReview}
             disabled={!newReview.trim() || newRating === 0}
+            className="w-full sm:w-auto"
           >
             Enviar Avaliação
           </Button>
@@ -191,15 +192,15 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
 
       {/* Reviews List */}
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Comentários dos Alunos</CardTitle>
+        <CardHeader className="pb-3 sm:pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <CardTitle className="text-base sm:text-lg">Comentários dos Alunos</CardTitle>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Ordenar por:</span>
+              <span className="text-xs sm:text-sm text-muted-foreground">Ordenar por:</span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="text-sm border rounded px-2 py-1"
+                className="text-xs sm:text-sm border rounded px-2 py-1 bg-background"
               >
                 <option value="recent">Mais recentes</option>
                 <option value="rating">Maior nota</option>
@@ -208,45 +209,47 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
             </div>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
+        <CardContent className="pt-0">
+          <div className="space-y-4 sm:space-y-6">
             {reviews.map((review) => (
-              <div key={review.id} className="border-b pb-6 last:border-b-0 last:pb-0">
-                <div className="flex items-start gap-4">
-                  <Avatar>
+              <div key={review.id} className="border-b pb-4 sm:pb-6 last:border-b-0 last:pb-0">
+                <div className="flex items-start gap-3">
+                  <Avatar className="w-8 h-8 sm:w-10 sm:h-10">
                     <AvatarImage src={review.userAvatar} alt={review.userName} />
-                    <AvatarFallback>
+                    <AvatarFallback className="text-xs sm:text-sm">
                       {review.userName.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
                   
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center gap-3">
-                      <span className="font-medium">{review.userName}</span>
-                      {review.verified && (
-                        <Badge variant="secondary" className="text-xs">
-                          ✓ Compra verificada
-                        </Badge>
-                      )}
-                      <span className="text-sm text-muted-foreground">
-                        {formatDate(review.date)}
-                      </span>
+                  <div className="flex-1 space-y-2 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                      <span className="font-medium text-sm sm:text-base truncate">{review.userName}</span>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {review.verified && (
+                          <Badge variant="secondary" className="text-xs">
+                            ✓ Verificado
+                          </Badge>
+                        )}
+                        <span className="text-xs sm:text-sm text-muted-foreground">
+                          {formatDate(review.date)}
+                        </span>
+                      </div>
                     </div>
                     
                     <div className="flex items-center gap-2">
                       {renderStars(review.rating)}
                     </div>
                     
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                       {review.comment}
                     </p>
                     
-                    <div className="flex items-center gap-4 text-sm">
-                      <button className="flex items-center gap-1 text-muted-foreground hover:text-foreground">
+                    <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm">
+                      <button className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors">
                         <ThumbsUp className="w-3 h-3" />
                         Útil ({review.helpful})
                       </button>
-                      <button className="flex items-center gap-1 text-muted-foreground hover:text-foreground">
+                      <button className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors">
                         <ThumbsDown className="w-3 h-3" />
                         Não útil
                       </button>
@@ -257,8 +260,8 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
             ))}
           </div>
           
-          <div className="text-center mt-6">
-            <Button variant="outline">
+          <div className="text-center mt-4 sm:mt-6">
+            <Button variant="outline" className="w-full sm:w-auto">
               Ver mais avaliações
             </Button>
           </div>

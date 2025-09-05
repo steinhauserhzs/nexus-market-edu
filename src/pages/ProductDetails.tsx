@@ -192,21 +192,35 @@ export default function ProductDetails() {
 
   const handleShare = async () => {
     try {
-      if (navigator.share) {
+      if (navigator.share && navigator.canShare) {
         await navigator.share({
           title: product?.title,
-          text: product?.meta_description,
+          text: product?.meta_description || product?.description,
           url: window.location.href,
         });
       } else {
+        // Fallback para dispositivos que não suportam Web Share API
         await navigator.clipboard.writeText(window.location.href);
         toast({
           title: "Link copiado!",
           description: "O link do produto foi copiado para sua área de transferência.",
         });
       }
-    } catch (error) {
-      console.error('Error sharing:', error);
+    } catch (error: any) {
+      // Se o compartilhamento falhar, copia o link
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast({
+          title: "Link copiado!",
+          description: "O link do produto foi copiado para sua área de transferência.",
+        });
+      } catch (clipboardError) {
+        toast({
+          title: "Erro ao compartilhar",
+          description: "Não foi possível compartilhar o produto.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -252,14 +266,14 @@ export default function ProductDetails() {
     Math.round(((product.compare_price_cents! - product.price_cents) / product.compare_price_cents!) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-16 sm:pb-20">
       <BackNavigation title={product.title} />
       
-      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 max-w-6xl">
+      <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-6 max-w-6xl">
         {/* Product Header */}
-        <div className="grid lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8">
+        <div className="grid lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-4 sm:mb-8">
           {/* Product Image */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <ProductGallery 
               images={product.thumbnail_url ? [product.thumbnail_url] : []}
               productTitle={product.title}
@@ -267,10 +281,10 @@ export default function ProductDetails() {
           </div>
 
           {/* Product Info */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div>
               {/* Badges */}
-              <div className="flex flex-wrap items-center gap-2 mb-4">
+              <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4">
                 {product.featured && (
                   <Badge className="bg-gradient-to-r from-accent to-accent/80 text-xs">
                     ⭐ Destaque
@@ -282,27 +296,27 @@ export default function ProductDetails() {
                 )}
               </div>
 
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight mb-4 break-words">
+              <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold leading-tight mb-3 sm:mb-4 break-words">
                 {product.title}
               </h1>
 
               {store && (
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
                   {store.logo_url && (
                     <img 
                       src={store.logo_url} 
                       alt={store.name}
-                      className="w-8 h-8 rounded-full object-cover"
+                      className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover"
                     />
                   )}
-                  <span className="text-muted-foreground">Por {store.name}</span>
+                  <span className="text-sm text-muted-foreground">Por {store.name}</span>
                 </div>
               )}
 
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
                 <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
-                  <span className="font-medium text-sm sm:text-base">4.8</span>
+                  <Star className="w-3 h-3 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
+                  <span className="font-medium text-xs sm:text-base">4.8</span>
                   <span className="text-muted-foreground text-xs sm:text-sm">(234 avaliações)</span>
                 </div>
                 <div className="flex items-center gap-1">
@@ -315,14 +329,14 @@ export default function ProductDetails() {
             {/* Price Section */}
             <Card>
               <CardContent className="p-3 sm:p-6">
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                      {hasDiscount && (
-                       <span className="text-base sm:text-lg text-muted-foreground line-through">
+                       <span className="text-sm sm:text-lg text-muted-foreground line-through">
                          {formatPrice(product.compare_price_cents!)}
                        </span>
                      )}
-                     <span className="text-2xl sm:text-3xl font-bold text-accent">
+                     <span className="text-xl sm:text-3xl font-bold text-accent">
                        {formatPrice(product.price_cents)}
                      </span>
                      {hasDiscount && (
@@ -332,10 +346,10 @@ export default function ProductDetails() {
                      )}
                    </div>
 
-                  <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                     <Button 
                       size="lg"
-                      className="flex-1"
+                      className="flex-1 h-11 sm:h-12"
                       onClick={handleAddToCart}
                       disabled={inCart}
                     >
@@ -355,6 +369,7 @@ export default function ProductDetails() {
                     <Button 
                       variant="outline" 
                       size="lg"
+                      className="h-11 sm:h-12 px-3"
                       onClick={toggleWishlist}
                     >
                       <Heart 
@@ -365,6 +380,7 @@ export default function ProductDetails() {
                     <Button 
                       variant="outline" 
                       size="lg"
+                      className="h-11 sm:h-12 px-3"
                       onClick={handleShare}
                     >
                       <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -408,15 +424,35 @@ export default function ProductDetails() {
         </div>
 
         {/* Product Details Tabs */}
-        <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 gap-1">
-            <TabsTrigger value="overview" className="text-xs sm:text-sm">Visão Geral</TabsTrigger>
-            <TabsTrigger value="content" className="text-xs sm:text-sm">Conteúdo</TabsTrigger>
-            <TabsTrigger value="reviews" className="text-xs sm:text-sm">Avaliações</TabsTrigger>
-            <TabsTrigger value="instructor" className="text-xs sm:text-sm">Instrutor</TabsTrigger>
+        <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-4 sm:space-y-6">
+          <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-muted/50">
+            <TabsTrigger 
+              value="overview" 
+              className="text-xs sm:text-sm py-2 px-1 sm:px-3 data-[state=active]:bg-background data-[state=active]:text-foreground"
+            >
+              Visão Geral
+            </TabsTrigger>
+            <TabsTrigger 
+              value="content" 
+              className="text-xs sm:text-sm py-2 px-1 sm:px-3 data-[state=active]:bg-background data-[state=active]:text-foreground"
+            >
+              Conteúdo
+            </TabsTrigger>
+            <TabsTrigger 
+              value="reviews" 
+              className="text-xs sm:text-sm py-2 px-1 sm:px-3 data-[state=active]:bg-background data-[state=active]:text-foreground"
+            >
+              Avaliações
+            </TabsTrigger>
+            <TabsTrigger 
+              value="instructor" 
+              className="text-xs sm:text-sm py-2 px-1 sm:px-3 data-[state=active]:bg-background data-[state=active]:text-foreground"
+            >
+              Instrutor
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="space-y-6">
+          <TabsContent value="overview" className="space-y-4 sm:space-y-6 mt-4">
             <ProductInfo 
               description={product.description}
               metaDescription={product.meta_description}
@@ -424,74 +460,100 @@ export default function ProductDetails() {
             />
           </TabsContent>
 
-          <TabsContent value="content" className="space-y-6">
+          <TabsContent value="content" className="space-y-4 sm:space-y-6 mt-4">
             <Card>
-              <CardHeader>
-                <CardTitle>Conteúdo do Curso</CardTitle>
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg sm:text-xl">Conteúdo do Curso</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {/* Mock curriculum - In real app, this would come from modules/lessons */}
-                  <div className="border rounded-lg p-4">
-                    <h4 className="font-medium mb-2">Módulo 1: Introdução</h4>
-                    <ul className="space-y-2 text-sm text-muted-foreground">
-                      <li className="flex items-center gap-2">
-                        <Play className="w-3 h-3" />
-                        Apresentação do curso (5min)
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Download className="w-3 h-3" />
-                        Material complementar
-                      </li>
-                    </ul>
-                  </div>
-                  
-                  <div className="border rounded-lg p-4">
-                    <h4 className="font-medium mb-2">Módulo 2: Fundamentos</h4>
-                    <ul className="space-y-2 text-sm text-muted-foreground">
-                      <li className="flex items-center gap-2">
-                        <Play className="w-3 h-3" />
-                        Conceitos básicos (15min)
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Play className="w-3 h-3" />
-                        Primeira prática (20min)
-                      </li>
-                    </ul>
-                  </div>
+              <CardContent className="space-y-3 sm:space-y-4">
+                {/* Mock curriculum - In real app, this would come from modules/lessons */}
+                <div className="border rounded-lg p-3 sm:p-4 bg-muted/30">
+                  <h4 className="font-medium mb-3 text-sm sm:text-base">Módulo 1: Introdução</h4>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <Play className="w-3 h-3 text-accent" />
+                      <span>Apresentação do curso (5min)</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Download className="w-3 h-3 text-accent" />
+                      <span>Material complementar</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div className="border rounded-lg p-3 sm:p-4 bg-muted/30">
+                  <h4 className="font-medium mb-3 text-sm sm:text-base">Módulo 2: Fundamentos</h4>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <Play className="w-3 h-3 text-accent" />
+                      <span>Conceitos básicos (15min)</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Play className="w-3 h-3 text-accent" />
+                      <span>Primeira prática (20min)</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="border rounded-lg p-3 sm:p-4 bg-muted/30">
+                  <h4 className="font-medium mb-3 text-sm sm:text-base">Módulo 3: Avançado</h4>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <Play className="w-3 h-3 text-accent" />
+                      <span>Recursos avançados (25min)</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Download className="w-3 h-3 text-accent" />
+                      <span>Projeto final</span>
+                    </li>
+                  </ul>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="reviews" className="space-y-6">
+          <TabsContent value="reviews" className="space-y-4 sm:space-y-6 mt-4">
             <ProductReviews productId={product.id} />
           </TabsContent>
 
-          <TabsContent value="instructor" className="space-y-6">
+          <TabsContent value="instructor" className="space-y-4 sm:space-y-6 mt-4">
             <Card>
-              <CardHeader>
-                <CardTitle>Sobre o Instrutor</CardTitle>
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg sm:text-xl">Sobre o Instrutor</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 {store && (
-                  <div className="flex items-start gap-4">
-                    {store.logo_url && (
-                      <img 
-                        src={store.logo_url}
-                        alt={store.name}
-                        className="w-16 h-16 rounded-full object-cover"
-                      />
-                    )}
-                    <div>
-                      <h3 className="text-xl font-bold mb-2">{store.name}</h3>
-                      <p className="text-muted-foreground mb-4">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden bg-muted flex-shrink-0">
+                      {store.logo_url ? (
+                        <img 
+                          src={store.logo_url} 
+                          alt={store.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-accent flex items-center justify-center">
+                          <span className="text-accent-foreground font-bold text-sm sm:text-lg">
+                            {store.name.charAt(0)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 space-y-2 min-w-0">
+                      <h3 className="font-semibold text-base sm:text-lg truncate">{store.name}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
                         Especialista com anos de experiência na área. Já ajudou milhares de alunos a alcançarem seus objetivos.
                       </p>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span>⭐ 4.9 (567 avaliações)</span>
-                        <span>👥 2.340 alunos</span>
-                        <span>📚 12 cursos</span>
+                      <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground pt-2">
+                        <span className="flex items-center gap-1">
+                          ⭐ 4.9 (567 avaliações)
+                        </span>
+                        <span className="flex items-center gap-1">
+                          👥 2.340 alunos
+                        </span>
+                        <span className="flex items-center gap-1">
+                          📚 12 cursos
+                        </span>
                       </div>
                     </div>
                   </div>
