@@ -26,7 +26,6 @@ const LazyNotFound = lazy(() => import('./pages/NotFound'));
 import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
 import PWAInstallPrompt from "./components/ui/pwa-install-prompt";
-import PanelModeFab from "./components/ui/panel-mode-fab";
 import PerformanceMonitor from "./components/ui/performance-monitor";
 
 // Create a client instance
@@ -79,7 +78,6 @@ const App = () => (
                 </Routes>
                 <MobileNavigation />
                 <PWAInstallPrompt />
-                <PanelModeFab />
                 <PerformanceMonitor />
               </div>
             </MobileGestures>
