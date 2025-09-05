@@ -21,6 +21,7 @@ const LazyMemberArea = lazy(() => import('./pages/MemberArea'));
 const LazyMemberAreaConfig = lazy(() => import('./pages/MemberAreaConfig'));
 const LazyMemberAreaAdvanced = lazy(() => import('./pages/MemberAreaAdvanced'));
 const LazyNetflixDashboard = lazy(() => import('./pages/NetflixDashboard'));
+const LazyAdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const LazyNotFound = lazy(() => import('./pages/NotFound'));
 import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
@@ -71,6 +72,7 @@ const App = () => (
                    <Route path="/produto/:slug" element={<LazyRoute Component={LazyProductDetails} />} />
                    <Route path="/member-area-advanced/:storeId" element={<LazyRoute Component={LazyMemberAreaAdvanced} />} />
                    <Route path="/netflix" element={<LazyRoute Component={LazyNetflixDashboard} />} />
+                   <Route path="/admin" element={<LazyRoute Component={LazyAdminDashboard} />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
                 </Routes>

@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAdmin } from "@/hooks/use-admin";
 import CartSheet from "@/components/cart/cart-sheet";
 import NotificationBadge from "@/components/ui/notification-badge";
 import { BookOpen, Store, User, LogOut, Settings, Bell, Plus, Menu, Home, Search } from "lucide-react";
@@ -13,6 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function MainHeader() {
   const { user, profile, signOut } = useAuth();
+  const { isAdmin } = useAdmin();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
