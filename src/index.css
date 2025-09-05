@@ -379,6 +379,35 @@
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   }
 
+  /* Fix for dropdown and menu z-index hierarchy */
+  .dropdown-fix {
+    z-index: 100 !important;
+    background: hsl(var(--popover)) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid hsl(var(--border) / 0.5) !important;
+  }
+
+  /* Navigation menu improvements */
+  .nav-menu-content {
+    background: hsl(var(--popover) / 0.95) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid hsl(var(--border) / 0.5) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  /* Mobile menu improvements */
+  .mobile-menu-backdrop {
+    backdrop-filter: blur(8px) !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+  }
+
+  /* Better mobile sheet styling */
+  .mobile-sheet {
+    background: hsl(var(--background) / 0.95) !important;
+    backdrop-filter: blur(12px) !important;
+    border-left: 1px solid hsl(var(--border) / 0.5) !important;
+  }
+
   /* Professional Icon Centering System */
   .icon-center {
     @apply flex items-center justify-center;
@@ -433,7 +462,7 @@
     @apply flex items-center justify-center text-center leading-none;
   }
 
-  /* Mobile navigation spacing */
+  /* Mobile navigation spacing with improved z-index */
   .mobile-nav-space {
     padding-bottom: 80px;
   }
@@ -442,5 +471,21 @@
     .mobile-nav-space {
       padding-bottom: 0;
     }
+  }
+
+  /* Global z-index hierarchy fixes */
+  .z-dropdown { z-index: 100 !important; }
+  .z-sheet { z-index: 95 !important; }
+  .z-overlay { z-index: 90 !important; }
+  .z-nav { z-index: 80 !important; }
+  .z-header { z-index: 60 !important; }
+
+  /* Ensure all menus have proper backgrounds */
+  [data-radix-dropdown-content],
+  [data-radix-navigation-menu-content],
+  [data-radix-sheet-content] {
+    background: hsl(var(--popover) / 0.95) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid hsl(var(--border) / 0.5) !important;
   }
 }

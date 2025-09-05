@@ -66,7 +66,7 @@ export default function MainHeader() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 safe-area-top">
+    <header className="sticky top-0 z-[60] w-full border-b bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 safe-area-top">
       <div className="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between max-w-7xl">
         {/* Left side - Mobile Menu + Logo */}
         <div className="flex items-center gap-3">
@@ -76,7 +76,7 @@ export default function MainHeader() {
                 <Menu className="icon-md" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-80 modal-content safe-area-top">
+            <SheetContent side="left" className="w-80 modal-content mobile-sheet safe-area-top">
               <SheetHeader className="text-left pb-4">
                 <SheetTitle className="flex items-center gap-3 px-1">
                   <div className="w-8 h-8 bg-gradient-accent rounded-lg logo-center">
@@ -235,7 +235,7 @@ export default function MainHeader() {
                   </span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuContent align="end" className="w-56 dropdown-fix">
                 <div className="flex items-center gap-2 p-2">
                   <Avatar className="w-8 h-8">
                     <AvatarImage src={profile.avatar_url || ''} />

@@ -78,7 +78,7 @@ export default function Header({
         <NavigationMenuTrigger className="bg-transparent hover:bg-accent/10">
           Categorias
         </NavigationMenuTrigger>
-        <NavigationMenuContent>
+        <NavigationMenuContent className="nav-menu-content">
           <div className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
             {categories.map((category) => (
               <NavigationMenuLink
@@ -125,7 +125,7 @@ export default function Header({
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-[60] w-full border-b bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-2">
@@ -192,7 +192,7 @@ export default function Header({
                     <span className="hidden sm:inline">{user.name}</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-56 dropdown-fix">
                   <DropdownMenuItem onClick={() => navigate('/perfil')}>
                     <User className="mr-2 h-4 w-4" />
                     Meu Perfil
@@ -251,7 +251,7 @@ export default function Header({
                 <Menu className="w-5 h-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80">
+            <SheetContent side="right" className="w-80 dropdown-fix">
               <div className="flex flex-col gap-4 mt-8">
                 {/* Mobile search */}
                 <form onSubmit={handleSearch} className="relative">

@@ -50,7 +50,7 @@ const MobileNavigation = () => {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-t border-border/50 md:hidden safe-area-bottom mobile-nav">
+    <nav className="fixed bottom-0 left-0 right-0 z-[80] bg-background/95 backdrop-blur-md border-t border-border/50 md:hidden safe-area-bottom mobile-nav">
       <div className="flex items-center justify-around px-2 sm:px-4 py-3 max-w-md mx-auto">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path || 
