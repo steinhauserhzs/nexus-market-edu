@@ -535,6 +535,115 @@ export type Database = {
           },
         ]
       }
+      member_area_configs: {
+        Row: {
+          created_at: string
+          custom_logo_url: string | null
+          exclusive_content: Json | null
+          id: string
+          is_active: boolean | null
+          member_resources: Json | null
+          primary_color: string | null
+          secondary_color: string | null
+          show_other_products: boolean | null
+          show_progress_tracking: boolean | null
+          store_id: string
+          updated_at: string
+          welcome_message: string | null
+          welcome_video_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          custom_logo_url?: string | null
+          exclusive_content?: Json | null
+          id?: string
+          is_active?: boolean | null
+          member_resources?: Json | null
+          primary_color?: string | null
+          secondary_color?: string | null
+          show_other_products?: boolean | null
+          show_progress_tracking?: boolean | null
+          store_id: string
+          updated_at?: string
+          welcome_message?: string | null
+          welcome_video_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          custom_logo_url?: string | null
+          exclusive_content?: Json | null
+          id?: string
+          is_active?: boolean | null
+          member_resources?: Json | null
+          primary_color?: string | null
+          secondary_color?: string | null
+          show_other_products?: boolean | null
+          show_progress_tracking?: boolean | null
+          store_id?: string
+          updated_at?: string
+          welcome_message?: string | null
+          welcome_video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_area_configs_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: true
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      member_exclusive_content: {
+        Row: {
+          content: string
+          content_type: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean | null
+          requires_product_ids: string[] | null
+          sort_order: number | null
+          store_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          content_type: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          requires_product_ids?: string[] | null
+          sort_order?: number | null
+          store_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          content_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          requires_product_ids?: string[] | null
+          sort_order?: number | null
+          store_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_exclusive_content_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           content: string
