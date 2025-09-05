@@ -41,12 +41,12 @@ export const NetflixCard = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
 
-  // Use badge rotation hook
+  // Use badge rotation hook - simplified to show only 1 badge
   const visibleBadges = useBadgeRotation({
     itemId: id,
     badges,
     position,
-    maxBadges: 3
+    maxBadges: 1
   });
 
   const formatPrice = (cents: number) => {
@@ -56,12 +56,12 @@ export const NetflixCard = ({
     }).format(cents / 100);
   };
 
-  const getTypeColor = (type: string) => {
+  const getTypeLabel = (type: string) => {
     switch (type) {
-      case 'course': return 'bg-blue-600 border-blue-400';
-      case 'pack': return 'bg-purple-600 border-purple-400';
-      case 'template': return 'bg-green-600 border-green-400';
-      default: return 'bg-gray-600 border-gray-400';
+      case 'course': return 'Curso';
+      case 'pack': return 'Pack';
+      case 'template': return 'Template';
+      default: return type;
     }
   };
 
@@ -104,89 +104,76 @@ export const NetflixCard = ({
             loading="lazy"
           />
           
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          {/* Clean Overlay */}
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
-          {/* Dynamic Badges Stack */}
+          {/* Single Badge - Only Most Important */}
           {visibleBadges.length > 0 && (
-            <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
-              {visibleBadges.map((badge, index) => (
-                <Badge
-                  key={`${badge}-${index}`}
-                  variant="secondary"
-                  className={cn(
-                    "text-xs px-1.5 py-0.5 border-none animate-fade-in font-medium",
-                    badges.functional.includes(badge)
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-black/80 text-white"
-                  )}
-                >
-                  {badge}
-                </Badge>
-              ))}
+            <div className="absolute top-2 left-2 z-10">
+              <Badge
+                variant="secondary"
+                className="text-xs px-2 py-1 bg-accent text-accent-foreground font-medium rounded-md"
+              >
+                {visibleBadges[0]}
+              </Badge>
             </div>
           )}
           
-          {/* Type Badge */}
-          <div className="absolute top-2 right-2">
-            <div className={cn(
-              "w-3 h-3 rounded-full border-2 shadow-sm",
-              getTypeColor(type)
-            )} />
-          </div>
+          {/* Simple Type Label */}
+          {!owned && (
+            <div className="absolute top-2 right-2 z-10">
+              <Badge
+                variant="outline"
+                className="text-xs px-2 py-1 bg-background/90 backdrop-blur-sm border-border/50 rounded-md"
+              >
+                {getTypeLabel(type)}
+              </Badge>
+            </div>
+          )}
           
-          {/* Hover/Touch Controls */}
+          {/* Clean Hover Content */}
           {(isHovered || isTouched) && (
             <div className="absolute inset-0 flex flex-col justify-end p-3 z-10">
               {/* Title */}
-              <h3 className="text-white text-sm font-semibold mb-2 line-clamp-2">
+              <h3 className="text-white text-sm font-bold mb-2 line-clamp-2 drop-shadow-md">
                 {title}
               </h3>
               
-              {/* Action Buttons */}
-              <div className="flex gap-1">
+              {/* Price */}
+              {!owned && price && (
+                <div className="text-white text-lg font-bold mb-2 drop-shadow-md">
+                  {formatPrice(price)}
+                </div>
+              )}
+              
+              {/* Single Action Button */}
+              <div className="flex justify-center">
                 {owned ? (
                   <Button
                     size="sm"
-                    className="h-6 w-6 p-0 rounded-full bg-white hover:bg-gray-200 text-black"
+                    className="h-8 px-4 rounded-full bg-white hover:bg-gray-200 text-black font-medium"
                     onClick={(e) => {
                       e.stopPropagation();
                       onPlayClick?.();
                     }}
                   >
-                    <Play className="w-3 h-3 fill-current" />
+                    <Play className="w-3 h-3 mr-1 fill-current" />
+                    Assistir
                   </Button>
                 ) : (
                   <Button
                     size="sm"
-                    className="h-6 w-6 p-0 rounded-full bg-white/20 hover:bg-white/30 text-white border border-white/40"
+                    className="h-8 px-4 rounded-full bg-accent hover:bg-accent/90 text-accent-foreground font-medium"
                     onClick={(e) => {
                       e.stopPropagation();
                       onAddClick?.();
                     }}
                   >
-                    <Plus className="w-3 h-3" />
+                    <Plus className="w-3 h-3 mr-1" />
+                    Adicionar
                   </Button>
                 )}
-                
-                <Button
-                  size="sm"
-                  className="h-6 w-6 p-0 rounded-full bg-white/20 hover:bg-white/30 text-white border border-white/40"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onInfoClick?.();
-                  }}
-                >
-                  <Info className="w-3 h-3" />
-                </Button>
               </div>
-              
-              {/* Price */}
-              {!owned && price && (
-                <div className="text-white text-xs font-bold mt-1">
-                  {formatPrice(price)}
-                </div>
-              )}
             </div>
           )}
         </div>
