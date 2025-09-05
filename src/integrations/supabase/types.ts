@@ -180,6 +180,33 @@ export type Database = {
         }
         Relationships: []
       }
+      data_retention_policies: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          id: string
+          retention_days: number
+          retention_field: string
+          table_name: string
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          id?: string
+          retention_days: number
+          retention_field?: string
+          table_name: string
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          id?: string
+          retention_days?: number
+          retention_field?: string
+          table_name?: string
+        }
+        Relationships: []
+      }
       event_images: {
         Row: {
           alt_text: string | null
@@ -986,6 +1013,9 @@ export type Database = {
           cpf: string | null
           cpf_verified: boolean | null
           created_at: string | null
+          data_consent_date: string | null
+          data_consent_given: boolean | null
+          data_processing_consent: boolean | null
           email: string
           email_notifications: boolean | null
           email_verified: boolean | null
@@ -996,6 +1026,7 @@ export type Database = {
           last_login_at: string | null
           linkedin_url: string | null
           login_method: string | null
+          marketing_consent: boolean | null
           marketing_emails: boolean | null
           phone: string | null
           phone_verified: boolean | null
@@ -1003,6 +1034,7 @@ export type Database = {
           postal_code: string | null
           preferred_language: string | null
           profession: string | null
+          profile_visibility: string | null
           role: string | null
           seller_slug: string | null
           sms_notifications: boolean | null
@@ -1025,6 +1057,9 @@ export type Database = {
           cpf?: string | null
           cpf_verified?: boolean | null
           created_at?: string | null
+          data_consent_date?: string | null
+          data_consent_given?: boolean | null
+          data_processing_consent?: boolean | null
           email: string
           email_notifications?: boolean | null
           email_verified?: boolean | null
@@ -1035,6 +1070,7 @@ export type Database = {
           last_login_at?: string | null
           linkedin_url?: string | null
           login_method?: string | null
+          marketing_consent?: boolean | null
           marketing_emails?: boolean | null
           phone?: string | null
           phone_verified?: boolean | null
@@ -1042,6 +1078,7 @@ export type Database = {
           postal_code?: string | null
           preferred_language?: string | null
           profession?: string | null
+          profile_visibility?: string | null
           role?: string | null
           seller_slug?: string | null
           sms_notifications?: boolean | null
@@ -1064,6 +1101,9 @@ export type Database = {
           cpf?: string | null
           cpf_verified?: boolean | null
           created_at?: string | null
+          data_consent_date?: string | null
+          data_consent_given?: boolean | null
+          data_processing_consent?: boolean | null
           email?: string
           email_notifications?: boolean | null
           email_verified?: boolean | null
@@ -1074,6 +1114,7 @@ export type Database = {
           last_login_at?: string | null
           linkedin_url?: string | null
           login_method?: string | null
+          marketing_consent?: boolean | null
           marketing_emails?: boolean | null
           phone?: string | null
           phone_verified?: boolean | null
@@ -1081,6 +1122,7 @@ export type Database = {
           postal_code?: string | null
           preferred_language?: string | null
           profession?: string | null
+          profile_visibility?: string | null
           role?: string | null
           seller_slug?: string | null
           sms_notifications?: boolean | null
@@ -1110,6 +1152,48 @@ export type Database = {
           created_at?: string
           id?: string
           identifier?: string
+        }
+        Relationships: []
+      }
+      security_audit: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          record_id: string | null
+          risk_level: string | null
+          session_id: string | null
+          table_name: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          record_id?: string | null
+          risk_level?: string | null
+          session_id?: string | null
+          table_name?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          record_id?: string | null
+          risk_level?: string | null
+          session_id?: string | null
+          table_name?: string | null
+          user_agent?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -1576,6 +1660,10 @@ export type Database = {
         }
         Returns: Json
       }
+      export_user_data: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       generate_store_slug: {
         Args: { store_name: string }
         Returns: string
@@ -1715,6 +1803,15 @@ export type Database = {
         }
         Returns: undefined
       }
+      log_sensitive_data_access: {
+        Args: {
+          p_action: string
+          p_record_id?: string
+          p_risk_level?: string
+          p_table_name: string
+        }
+        Returns: undefined
+      }
       secure_get_payment_info: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -1740,6 +1837,14 @@ export type Database = {
           p_bank_account?: Json
           p_pix_key?: string
           p_stripe_account_id?: string
+        }
+        Returns: boolean
+      }
+      update_user_consent: {
+        Args: {
+          p_data_consent?: boolean
+          p_marketing_consent?: boolean
+          p_processing_consent?: boolean
         }
         Returns: boolean
       }
