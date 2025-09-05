@@ -38,12 +38,12 @@ export const NetflixHeader = ({
   const navigationItems = [
     { label: "Início", href: "/" },
     { label: "Biblioteca", href: "/biblioteca" },
-    { label: "Minha Área", href: "/area-membros" },
+    { label: "Dashboard", href: "/dashboard" },
   ];
 
   return (
     <header className={cn(
-      "fixed top-0 left-0 right-0 z-50 transition-all duration-300 fixed-header",
+      "fixed top-0 left-0 right-0 z-[60] transition-all duration-300 fixed-header relative",
       transparent 
         ? "bg-transparent backdrop-blur-sm" 
         : "bg-background/95 backdrop-blur-md border-b border-border/50",
@@ -169,19 +169,21 @@ export const NetflixHeader = ({
 
         {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-border/50 py-4">
-            <nav className="flex flex-col gap-2">
-              {navigationItems.map((item) => (
-                <Link
-                  key={item.href}
-                  to={item.href}
-                  className="text-foreground/80 hover:text-foreground transition-colors py-2 text-sm"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+          <div className="md:hidden absolute top-full left-0 right-0 bg-card/98 backdrop-blur-md border-b-2 border-border shadow-2xl py-4 z-[70]">
+            <div className="container mx-auto px-4">
+              <nav className="flex flex-col gap-3">
+                {navigationItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className="menu-item-enhanced text-foreground/80 hover:text-foreground transition-all duration-200 py-3 px-4 text-sm font-medium rounded-lg border border-transparent hover:border-accent/30 hover:bg-accent/10"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
           </div>
         )}
       </div>

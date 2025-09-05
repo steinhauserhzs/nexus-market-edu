@@ -23,40 +23,40 @@ export default function MainHeader() {
   };
 
   const NavLinks = ({ mobile = false }: { mobile?: boolean }) => (
-    <div className={cn("flex gap-1", mobile ? "flex-col space-y-1" : "hidden md:flex items-center")}>
+    <div className={cn("flex gap-1", mobile ? "flex-col space-y-2" : "hidden md:flex items-center")}>
       <Button 
         variant="ghost" 
-        size="sm"
+        size={mobile ? "default" : "sm"}
         onClick={() => {
           navigate('/');
           if (mobile) setMobileMenuOpen(false);
         }}
-        className={cn("btn-icon-left", mobile && "justify-start")}
+        className={cn("btn-icon-left", mobile && "justify-start w-full")}
       >
         <Home className="icon-sm" />
         Início
       </Button>
       <Button 
         variant="ghost" 
-        size="sm"
+        size={mobile ? "default" : "sm"}
         onClick={() => {
           navigate('/biblioteca');
           if (mobile) setMobileMenuOpen(false);
         }}
-        className={cn("btn-icon-left", mobile && "justify-start")}
+        className={cn("btn-icon-left", mobile && "justify-start w-full")}
       >
         <BookOpen className="icon-sm" />
-        Cursos
+        Biblioteca
       </Button>
       {user && (
         <Button 
           variant="ghost" 
-          size="sm"
+          size={mobile ? "default" : "sm"}
           onClick={() => {
             navigate('/dashboard');
             if (mobile) setMobileMenuOpen(false);
           }}
-          className={cn("btn-icon-left", mobile && "justify-start")}
+          className={cn("btn-icon-left", mobile && "justify-start w-full")}
         >
           <Store className="icon-sm" />
           Dashboard
