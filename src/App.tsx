@@ -2,9 +2,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
+import { SecurityHeaders } from "@/components/security/SecurityHeaders";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Index from "./pages/Index";
@@ -36,18 +38,20 @@ const queryClient = new QueryClient({
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
-      <SecurityProvider>
-        <AuthProvider>
-          <CartProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter 
-                future={{ 
-                  v7_startTransition: true,
-                  v7_relativeSplatPath: true 
-                }}
-              >
+      <HelmetProvider>
+        <SecurityHeaders />
+        <SecurityProvider>
+          <AuthProvider>
+            <CartProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter 
+                  future={{ 
+                    v7_startTransition: true,
+                    v7_relativeSplatPath: true 
+                  }}
+                >
               <MobileGestures>
                 <div className="pb-16 md:pb-0">
                   <Routes>
@@ -69,13 +73,14 @@ const App = () => (
                   <PerformanceMonitor />
                 </div>
               </MobileGestures>
-            </BrowserRouter>
+              </BrowserRouter>
             </TooltipProvider>
           </CartProvider>
         </AuthProvider>
       </SecurityProvider>
-    </QueryClientProvider>
-  </ErrorBoundary>
+    </HelmetProvider>
+  </QueryClientProvider>
+</ErrorBoundary>
 );
 
 export default App;

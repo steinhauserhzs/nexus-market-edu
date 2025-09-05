@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
+import { validateAndSanitizeInput } from "@/utils/enhanced-validation";
+import { useSecurity } from "@/hooks/use-security";
 import ImageUpload from "./image-upload";
 import ProductPreview from "./product-preview";
 
@@ -49,6 +51,7 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
     weight_grams: 0,
   });
   const { toast } = useToast();
+  const { logEvent } = useSecurity();
 
   useEffect(() => {
     fetchCategories();

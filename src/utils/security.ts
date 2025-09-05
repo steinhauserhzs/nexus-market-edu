@@ -13,7 +13,8 @@ export interface RateLimitResult {
 }
 
 /**
- * Validates and sanitizes user input on the client side
+ * Enhanced input validation with comprehensive security checks
+ * Note: This is the legacy function - use validateAndSanitizeInput from enhanced-validation.ts for new code
  */
 export function validateInput(input: string, type: 'text' | 'email' | 'search' | 'html' = 'text'): ValidationResult {
   const result: ValidationResult = {
@@ -30,19 +31,49 @@ export function validateInput(input: string, type: 'text' | 'email' | 'search' |
 
   let sanitized = input.trim();
 
-  // Basic XSS protection
-  if (type === 'html' || sanitized.includes('<') || sanitized.includes('javascript:')) {
-    // Remove script tags
-    sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-    
-    // Remove javascript: protocols
-    sanitized = sanitized.replace(/javascript:/gi, '');
-    
-    // Remove on* event handlers
-    sanitized = sanitized.replace(/\son\w+\s*=\s*["'][^"']*["']/gi, '');
-    
-    if (sanitized !== input.trim()) {
-      result.warnings.push('Potentially dangerous content removed');
+  // Enhanced XSS protection
+  const xssPatterns = [
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    /javascript:/gi,
+    /vbscript:/gi,
+    /data:text\/html/gi,
+    /on\w+\s*=\s*["'][^"']*["']/gi,
+    /<iframe\b[^>]*>/gi,
+    /<object\b[^>]*>/gi,
+    /<embed\b[^>]*>/gi
+  ];
+
+  let hasXss = false;
+  xssPatterns.forEach(pattern => {
+    if (pattern.test(sanitized)) {
+      hasXss = true;
+      sanitized = sanitized.replace(pattern, '');
+    }
+  });
+
+  if (hasXss) {
+    result.warnings.push('Potentially dangerous XSS content removed');
+  }
+
+  // Enhanced SQL injection protection
+  if (type === 'search' || type === 'text') {
+    const sqlPatterns = [
+      /(union|select|insert|update|delete|drop|create|alter|exec|execute)\s+/gi,
+      /--\s/g,
+      /\/\*[\s\S]*?\*\//g,
+      /;\s*(drop|delete|truncate|update|insert)/gi
+    ];
+
+    let hasSql = false;
+    sqlPatterns.forEach(pattern => {
+      if (pattern.test(sanitized)) {
+        hasSql = true;
+        sanitized = sanitized.replace(pattern, '');
+      }
+    });
+
+    if (hasSql) {
+      result.warnings.push('SQL injection patterns detected and removed');
     }
   }
 
@@ -55,22 +86,12 @@ export function validateInput(input: string, type: 'text' | 'email' | 'search' |
     }
   }
 
-  // Search input validation
-  if (type === 'search') {
-    // Check for SQL injection patterns
-    const sqlPatterns = /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|UNION|SCRIPT)\b|--|\/\*|\*\/)/gi;
-    if (sqlPatterns.test(sanitized)) {
-      result.warnings.push('Invalid search characters removed');
-      sanitized = sanitized.replace(sqlPatterns, '');
-    }
-  }
-
-  // Length validation
+  // Length validation with stricter limits
   const maxLengths = {
     text: 1000,
     email: 254,
     search: 200,
-    html: 10000
+    html: 5000 // Reduced from 10000 for security
   };
 
   if (sanitized.length > maxLengths[type]) {
@@ -78,6 +99,9 @@ export function validateInput(input: string, type: 'text' | 'email' | 'search' |
     result.warnings.push(`Text too long (max ${maxLengths[type]} characters)`);
     sanitized = sanitized.substring(0, maxLengths[type]);
   }
+
+  // Remove null bytes and control characters
+  sanitized = sanitized.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
 
   result.sanitized = sanitized;
   return result;
