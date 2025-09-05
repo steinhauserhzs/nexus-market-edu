@@ -27,10 +27,10 @@ export default function CartSheet() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="relative">
-          <ShoppingCart className="w-4 h-4" />
+        <Button variant="outline" size="icon-sm" className="relative">
+          <ShoppingCart className="icon-sm" />
           {totalItems > 0 && (
-            <Badge className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs leading-none min-w-fit">
+            <Badge className="badge-position-tr h-6 w-6 rounded-full p-0 icon-center text-xs leading-none min-w-fit">
               {totalItems}
             </Badge>
           )}
@@ -46,7 +46,7 @@ export default function CartSheet() {
         <div className="flex-1 overflow-y-auto">
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
-              <ShoppingCart className="w-16 h-16 text-muted-foreground" />
+              <ShoppingCart className="w-16 h-16 text-muted-foreground icon-center" />
               <h3 className="text-lg font-semibold">Carrinho vazio</h3>
               <p className="text-muted-foreground">
                 Adicione produtos ao seu carrinho para continuar
@@ -64,8 +64,8 @@ export default function CartSheet() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-accent flex items-center justify-center">
-                        <ShoppingCart className="w-6 h-6 text-accent-foreground/80" />
+                      <div className="w-full h-full bg-gradient-accent icon-center">
+                        <ShoppingCart className="icon-lg text-accent-foreground/80" />
                       </div>
                     )}
                   </div>
@@ -82,16 +82,16 @@ export default function CartSheet() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-8 w-8 p-0 flex items-center justify-center"
+                          className="h-8 w-8 p-0 icon-center"
                           onClick={() => updateQuantity(item.product_id, item.quantity - 1)}
                         >
                           <Minus className="w-3 h-3" />
                         </Button>
-                        <span className="px-3 text-sm font-medium flex items-center justify-center min-w-[40px]">{item.quantity}</span>
+                        <span className="px-3 text-sm font-medium icon-center min-w-[40px]">{item.quantity}</span>
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-8 w-8 p-0 flex items-center justify-center"
+                          className="h-8 w-8 p-0 icon-center"
                           onClick={() => updateQuantity(item.product_id, item.quantity + 1)}
                         >
                           <Plus className="w-3 h-3" />
@@ -101,7 +101,7 @@ export default function CartSheet() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 w-8 p-0 text-destructive hover:text-destructive flex items-center justify-center"
+                        className="h-8 w-8 p-0 text-destructive hover:text-destructive icon-center"
                         onClick={() => removeFromCart(item.product_id)}
                       >
                         <Trash2 className="w-3 h-3" />

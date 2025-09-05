@@ -133,26 +133,26 @@ export const NetflixCard = ({
               {owned ? (
                 <Button
                   size="sm"
-                  className="w-full h-9 bg-primary text-primary-foreground hover:bg-primary-hover font-medium rounded-lg transition-all duration-200"
+                  className="w-full h-9 bg-primary text-primary-foreground hover:bg-primary-hover font-medium rounded-lg transition-all duration-200 btn-icon-left"
                   onClick={(e) => {
                     e.stopPropagation();
                     onPlayClick?.();
                   }}
                 >
-                  <Play className="w-4 h-4 mr-2 fill-current" />
+                  <Play className="icon-sm fill-current" />
                   Continuar
                 </Button>
               ) : (
                 <Button
                   size="sm"
                   variant="secondary"
-                  className="w-full h-9 bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium rounded-lg transition-all duration-200"
+                  className="w-full h-9 bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium rounded-lg transition-all duration-200 btn-icon-left"
                   onClick={(e) => {
                     e.stopPropagation();
                     onAddClick?.();
                   }}
                 >
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="icon-sm" />
                   Adicionar
                 </Button>
               )}

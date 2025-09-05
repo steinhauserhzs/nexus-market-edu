@@ -64,14 +64,14 @@ const MobileNavigation = () => {
               size="sm"
               onClick={() => handleNavigation(item.path)}
               className={cn(
-                "flex flex-col items-center justify-center gap-1 p-2 h-auto min-w-[48px] min-h-[48px] transition-colors duration-200 rounded-lg btn-mobile",
+                "flex flex-col items-center justify-center gap-1 p-2 h-auto touch-target-lg transition-colors duration-200 rounded-lg",
                 isActive && "text-accent bg-accent/10"
               )}
               disabled={!canAccess}
             >
-              <div className="flex items-center justify-center">
+              <div className="icon-center">
                 <item.icon className={cn(
-                  "w-5 h-5 transition-transform duration-200 flex-shrink-0",
+                  "icon-md transition-transform duration-200",
                   isActive && "scale-110"
                 )} />
               </div>

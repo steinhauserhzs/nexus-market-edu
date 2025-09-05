@@ -29,9 +29,9 @@ export default function MainHeader() {
           navigate('/');
           if (mobile) setMobileMenuOpen(false);
         }}
-        className={cn(mobile && "justify-start")}
+        className={cn("btn-icon-left", mobile && "justify-start")}
       >
-        <Home className="w-4 h-4 mr-2" />
+        <Home className="icon-sm" />
         Início
       </Button>
       <Button 
@@ -41,22 +41,22 @@ export default function MainHeader() {
           navigate('/biblioteca');
           if (mobile) setMobileMenuOpen(false);
         }}
-        className={cn(mobile && "justify-start")}
+        className={cn("btn-icon-left", mobile && "justify-start")}
       >
-        <BookOpen className="w-4 h-4 mr-2" />
+        <BookOpen className="icon-sm" />
         Cursos
       </Button>
       {user && (
         <Button 
           variant="ghost" 
           size="sm"
-            onClick={() => {
-              navigate('/dashboard');
-              if (mobile) setMobileMenuOpen(false);
-            }}
-          className={cn(mobile && "justify-start")}
+          onClick={() => {
+            navigate('/dashboard');
+            if (mobile) setMobileMenuOpen(false);
+          }}
+          className={cn("btn-icon-left", mobile && "justify-start")}
         >
-          <Store className="w-4 h-4 mr-2" />
+          <Store className="icon-sm" />
           Dashboard
         </Button>
       )}
@@ -70,14 +70,14 @@ export default function MainHeader() {
         <div className="flex items-center gap-3">
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="sm" className="md:hidden p-2">
-                <Menu className="w-5 h-5" />
+              <Button variant="ghost" size="icon-sm" className="md:hidden">
+                <Menu className="icon-md" />
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-80 modal-content safe-area-top">
               <SheetHeader className="text-left pb-4">
                 <SheetTitle className="flex items-center gap-3 px-1">
-                  <div className="w-8 h-8 bg-gradient-accent rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-accent rounded-lg logo-center">
                     <span className="text-accent-foreground font-bold text-sm">N</span>
                   </div>
                   <span className="font-bold text-lg">Nexus Market</span>
@@ -110,36 +110,36 @@ export default function MainHeader() {
                     </div>
                     
                     <div className="space-y-1">
-                      <Button variant="ghost" className="w-full justify-start" onClick={() => {
+                      <Button variant="ghost" className="w-full btn-icon-left justify-start" onClick={() => {
                         navigate('/perfil');
                         setMobileMenuOpen(false);
                       }}>
-                        <User className="w-4 h-4 mr-3" />
+                        <User className="icon-sm" />
                         Meu Perfil
                       </Button>
                       
-                      <Button variant="ghost" className="w-full justify-start" onClick={() => {
+                      <Button variant="ghost" className="w-full btn-icon-left justify-start" onClick={() => {
                         navigate('/criar-loja');
                         setMobileMenuOpen(false);
                       }}>
-                        <Plus className="w-4 h-4 mr-3" />
+                        <Plus className="icon-sm" />
                         Criar Loja
                       </Button>
                       
-                      <Button variant="ghost" className="w-full justify-start">
-                        <Settings className="w-4 h-4 mr-3" />
+                      <Button variant="ghost" className="w-full btn-icon-left justify-start">
+                        <Settings className="icon-sm" />
                         Configurações
                       </Button>
                       
                       <Button 
                         variant="ghost" 
-                        className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
+                        className="w-full btn-icon-left justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
                         onClick={() => {
                           signOut();
                           setMobileMenuOpen(false);
                         }}
                       >
-                        <LogOut className="w-4 h-4 mr-3" />
+                        <LogOut className="icon-sm" />
                         Sair
                       </Button>
                     </div>
@@ -173,9 +173,9 @@ export default function MainHeader() {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-accent rounded-lg flex items-center justify-center">
-            <span className="text-accent-foreground font-bold text-sm leading-none">N</span>
-          </div>
+            <div className="w-8 h-8 bg-gradient-accent rounded-lg logo-center">
+              <span className="text-accent-foreground font-bold text-sm">N</span>
+            </div>
             <span className="font-bold text-lg md:text-xl">Nexus Market</span>
           </Link>
         </div>
@@ -188,15 +188,15 @@ export default function MainHeader() {
         {/* Right side - Actions */}
         <div className="flex items-center gap-2">
           {/* Search - Hidden on mobile, can be added to mobile menu */}
-          <Button variant="ghost" size="sm" className="hidden lg:flex p-2 items-center justify-center">
-            <Search className="w-4 h-4" />
+          <Button variant="ghost" size="icon-sm" className="hidden lg:flex">
+            <Search className="icon-sm" />
           </Button>
 
           {/* Notifications */}
           {user && profile && (
             <NotificationBadge count={0} size="sm" className="hidden sm:flex">
-              <Button variant="ghost" size="sm" className="p-2 items-center justify-center">
-                <Bell className="w-4 h-4" />
+              <Button variant="ghost" size="icon-sm">
+                <Bell className="icon-sm" />
               </Button>
             </NotificationBadge>
           )}

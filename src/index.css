@@ -379,6 +379,60 @@
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   }
 
+  /* Professional Icon Centering System */
+  .icon-center {
+    @apply flex items-center justify-center;
+  }
+  
+  .icon-center-inline {
+    @apply inline-flex items-center justify-center;
+  }
+  
+  /* Precise Icon Sizes */
+  .icon-xs { @apply w-3 h-3; }
+  .icon-sm { @apply w-4 h-4; }
+  .icon-md { @apply w-5 h-5; }
+  .icon-lg { @apply w-6 h-6; }
+  .icon-xl { @apply w-8 h-8; }
+  
+  /* Perfect Button Icon Alignment */
+  .btn-icon-center {
+    @apply flex items-center justify-center gap-0;
+  }
+  
+  .btn-icon-left {
+    @apply flex items-center gap-2;
+  }
+  
+  /* Professional Touch Targets */
+  .touch-target-sm { @apply min-h-[40px] min-w-[40px]; }
+  .touch-target-md { @apply min-h-[44px] min-w-[44px]; }
+  .touch-target-lg { @apply min-h-[48px] min-w-[48px]; }
+  
+  /* Precise Spacing System */
+  .space-uniform-xs > * { @apply mx-1; }
+  .space-uniform-sm > * { @apply mx-2; }
+  .space-uniform-md > * { @apply mx-3; }
+  
+  /* Perfect Badge Positioning */
+  .badge-position-tr {
+    @apply absolute -top-1 -right-1;
+  }
+  
+  .badge-position-tl {
+    @apply absolute -top-1 -left-1;
+  }
+  
+  /* Avatar Perfect Centering */
+  .avatar-center {
+    @apply flex items-center justify-center overflow-hidden;
+  }
+  
+  /* Logo Perfect Centering */
+  .logo-center {
+    @apply flex items-center justify-center text-center leading-none;
+  }
+
   /* Mobile navigation spacing */
   .mobile-nav-space {
     padding-bottom: 80px;
