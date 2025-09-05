@@ -136,12 +136,12 @@ const MemberArea = () => {
         type: (license.product.type === 'curso' ? 'course' : 'pack') as "course" | "pack" | "template",
         owned: true,
         badges: { functional: ["Adquirido"], promotional: [] },
-        onClick: () => navigate(`/produto/${license.product.id}`),
+        onClick: () => navigate(`/produto/${license.product.slug}`),
         onPlayClick: () => {
           // Navegar para o player do curso
-          navigate(`/curso/${license.product.id}/aula/1`);
+          navigate(`/curso/${license.product.slug}/aula/1`);
         },
-        onInfoClick: () => navigate(`/produto/${license.product.id}`)
+        onInfoClick: () => navigate(`/produto/${license.product.slug}`)
       }));
 
       setOwnedProducts(ownedCards);
@@ -166,7 +166,7 @@ const MemberArea = () => {
           owned: false,
           price: product.price_cents,
           badges: index < 3 ? { functional: [], promotional: ["Novo"] } : { functional: [], promotional: [] },
-          onClick: () => navigate(`/produto/${product.id}`),
+          onClick: () => navigate(`/produto/${product.slug}`),
           onAddClick: () => {
             addToCart({
               id: product.id,
@@ -181,7 +181,7 @@ const MemberArea = () => {
               description: `${product.title} foi adicionado ao seu carrinho.`,
             });
           },
-          onInfoClick: () => navigate(`/produto/${product.id}`)
+          onInfoClick: () => navigate(`/produto/${product.slug}`)
         }));
 
         setOtherProducts(otherCards);

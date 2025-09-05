@@ -40,10 +40,10 @@ const NetflixDashboard = () => {
         price: product.price_cents,
         badges, // Now using the proper BadgeConfig format
         position: index,
-        onClick: () => navigate(`/produto/${product.id}`),
+        onClick: () => navigate(`/produto/${product.slug}`),
         onPlayClick: () => {
           // TODO: Navigate to course player when owned
-          navigate(`/curso/${product.id}/aula/1`);
+          navigate(`/curso/${product.slug}/aula/1`);
         },
         onAddClick: () => {
           addToCart({
@@ -59,7 +59,7 @@ const NetflixDashboard = () => {
             description: `${product.title} foi adicionado ao seu carrinho.`,
           });
         },
-        onInfoClick: () => navigate(`/produto/${product.id}`)
+        onInfoClick: () => navigate(`/produto/${product.slug}`)
       };
     });
   };
@@ -136,7 +136,7 @@ const NetflixDashboard = () => {
                     className="h-12 w-full sm:w-auto px-6 sm:px-8 bg-white text-black hover:bg-gray-200 font-semibold mobile-friendly-button"
                     onClick={() => {
                       // TODO: Check if user owns this product
-                      navigate(`/produto/${heroProduct.id}`);
+                      navigate(`/produto/${heroProduct.slug}`);
                     }}
                   >
                     <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2 fill-current" />
@@ -146,7 +146,7 @@ const NetflixDashboard = () => {
                     size="lg"
                     variant="secondary"
                     className="h-12 w-full sm:w-auto px-6 sm:px-8 bg-gray-500/70 text-white hover:bg-gray-500/50 font-semibold border-none mobile-friendly-button"
-                    onClick={() => navigate(`/produto/${heroProduct.id}`)}
+                    onClick={() => navigate(`/produto/${heroProduct.slug}`)}
                   >
                     <Info className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                     Mais Informações
