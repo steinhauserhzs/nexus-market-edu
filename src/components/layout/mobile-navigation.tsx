@@ -64,19 +64,19 @@ const MobileNavigation = () => {
               size="sm"
               onClick={() => handleNavigation(item.path)}
               className={cn(
-                "flex flex-col items-center justify-center p-2 h-auto min-w-[48px] min-h-[48px] transition-colors duration-200 rounded-lg btn-mobile",
+                "flex flex-col items-center justify-center gap-1 p-2 h-auto min-w-[48px] min-h-[48px] transition-colors duration-200 rounded-lg btn-mobile",
                 isActive && "text-accent bg-accent/10"
               )}
               disabled={!canAccess}
             >
-              <div className="relative mb-1">
+              <div className="flex items-center justify-center">
                 <item.icon className={cn(
-                  "w-5 h-5 transition-transform duration-200",
+                  "w-5 h-5 transition-transform duration-200 flex-shrink-0",
                   isActive && "scale-110"
                 )} />
               </div>
               <span className={cn(
-                "text-xs font-medium transition-all duration-200 text-center truncate max-w-[60px]",
+                "text-xs font-medium transition-all duration-200 text-center truncate max-w-[60px] leading-tight",
                 isActive ? "text-accent" : "text-muted-foreground"
               )}>
                 {item.label}

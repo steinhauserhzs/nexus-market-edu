@@ -173,9 +173,9 @@ export default function MainHeader() {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-accent rounded-lg flex items-center justify-center">
-              <span className="text-accent-foreground font-bold text-sm">N</span>
-            </div>
+          <div className="w-8 h-8 bg-gradient-accent rounded-lg flex items-center justify-center">
+            <span className="text-accent-foreground font-bold text-sm leading-none">N</span>
+          </div>
             <span className="font-bold text-lg md:text-xl">Nexus Market</span>
           </Link>
         </div>
@@ -188,14 +188,14 @@ export default function MainHeader() {
         {/* Right side - Actions */}
         <div className="flex items-center gap-2">
           {/* Search - Hidden on mobile, can be added to mobile menu */}
-          <Button variant="ghost" size="sm" className="hidden lg:flex p-2">
+          <Button variant="ghost" size="sm" className="hidden lg:flex p-2 items-center justify-center">
             <Search className="w-4 h-4" />
           </Button>
 
           {/* Notifications */}
           {user && profile && (
             <NotificationBadge count={0} size="sm" className="hidden sm:flex">
-              <Button variant="ghost" size="sm" className="p-2">
+              <Button variant="ghost" size="sm" className="p-2 items-center justify-center">
                 <Bell className="w-4 h-4" />
               </Button>
             </NotificationBadge>

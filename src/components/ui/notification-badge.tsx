@@ -29,9 +29,9 @@ export default function NotificationBadge({
       {children}
       {shouldShow && (
         <div className={cn(
-          "absolute -top-1 -right-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground font-medium",
+          "absolute -top-1 -right-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground font-medium leading-none",
           sizeClasses[size],
-          count > 9 && "px-1"
+          count > 9 && "px-1 min-w-fit"
         )}>
           {displayCount}
         </div>

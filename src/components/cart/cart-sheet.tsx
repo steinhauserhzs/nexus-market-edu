@@ -30,7 +30,7 @@ export default function CartSheet() {
         <Button variant="outline" size="sm" className="relative">
           <ShoppingCart className="w-4 h-4" />
           {totalItems > 0 && (
-            <Badge className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs">
+            <Badge className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs leading-none min-w-fit">
               {totalItems}
             </Badge>
           )}
@@ -82,16 +82,16 @@ export default function CartSheet() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-8 w-8 p-0"
+                          className="h-8 w-8 p-0 flex items-center justify-center"
                           onClick={() => updateQuantity(item.product_id, item.quantity - 1)}
                         >
                           <Minus className="w-3 h-3" />
                         </Button>
-                        <span className="px-2 text-sm">{item.quantity}</span>
+                        <span className="px-3 text-sm font-medium flex items-center justify-center min-w-[40px]">{item.quantity}</span>
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-8 w-8 p-0"
+                          className="h-8 w-8 p-0 flex items-center justify-center"
                           onClick={() => updateQuantity(item.product_id, item.quantity + 1)}
                         >
                           <Plus className="w-3 h-3" />
@@ -101,7 +101,7 @@ export default function CartSheet() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                        className="h-8 w-8 p-0 text-destructive hover:text-destructive flex items-center justify-center"
                         onClick={() => removeFromCart(item.product_id)}
                       >
                         <Trash2 className="w-3 h-3" />
