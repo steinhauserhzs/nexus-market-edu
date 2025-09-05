@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Play, Plus, Info } from "lucide-react";
+import { Play, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useBadgeRotation, BadgeConfig } from "@/hooks/useBadgeRotation";
+import { Badge } from "@/components/ui/badge";
 
 export interface NetflixCardProps {
   id: string;
@@ -13,7 +12,7 @@ export interface NetflixCardProps {
   type: "course" | "pack" | "template";
   owned?: boolean;
   price?: number;
-  badges?: BadgeConfig;
+  badges?: { functional: string[]; promotional: string[] };
   position?: number;
   onClick?: () => void;
   onPlayClick?: () => void;
@@ -29,25 +28,15 @@ export const NetflixCard = ({
   type,
   owned = false,
   price,
-  badges = { functional: [], promotional: [] },
+  badges,
   position = 0,
   onClick,
   onPlayClick,
   onAddClick,
-  onInfoClick,
   className
 }: NetflixCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [isTouched, setIsTouched] = useState(false);
-
-  // Use badge rotation hook - simplified to show only 1 badge
-  const visibleBadges = useBadgeRotation({
-    itemId: id,
-    badges,
-    position,
-    maxBadges: 1
-  });
 
   const formatPrice = (cents: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -65,119 +54,132 @@ export const NetflixCard = ({
     }
   };
 
-  const handleInteraction = () => {
-    setIsHovered(true);
-    setIsTouched(true);
-  };
-
-  const handleInteractionEnd = () => {
-    setIsHovered(false);
-    setTimeout(() => setIsTouched(false), 2000); // Keep mobile state for 2 seconds
-  };
+  // Get the most important badge (functional badges have priority)
+  const mostImportantBadge = badges?.functional?.[0] || badges?.promotional?.[0];
 
   return (
-    <div 
+    <article 
       className={cn(
-        "group relative cursor-pointer transition-all duration-300 ease-in-out netflix-card",
-        "w-[110px] sm:w-[140px] md:w-[160px] lg:w-[180px] flex-shrink-0",
-        "hover:scale-105 md:hover:scale-110 hover:z-20 active:scale-95",
-        "touch-manipulation select-none",
+        "group relative cursor-pointer transition-all duration-300 ease-out apple-card",
+        "w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px] flex-shrink-0",
+        "hover:scale-[1.02] hover:shadow-lg hover:z-20",
+        "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background",
+        "active:scale-[0.98] touch-manipulation",
         className
       )}
-      onMouseEnter={handleInteraction}
-      onMouseLeave={handleInteractionEnd}
-      onTouchStart={handleInteraction}
-      onTouchEnd={handleInteractionEnd}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
+      role="button"
+      tabIndex={0}
+      aria-label={`${title} - ${getTypeLabel(type)}`}
     >
-      <AspectRatio ratio={2/3} className="overflow-hidden rounded-md">
-        {/* Image Container */}
-        <div className="relative w-full h-full bg-muted animate-pulse">
+      <div className="space-y-3">
+        {/* Image Container - Apple style with subtle rounded corners */}
+        <AspectRatio ratio={2/3} className="overflow-hidden rounded-xl bg-muted/50 relative">
+          {/* Loading Skeleton */}
+          {!imageLoaded && (
+            <div className="absolute inset-0 bg-gradient-to-br from-muted via-muted/80 to-muted animate-pulse" />
+          )}
+          
+          {/* Main Image */}
           <img
             src={thumbnail}
             alt={title}
             className={cn(
-              "w-full h-full object-cover transition-opacity duration-300",
-              imageLoaded ? "opacity-100" : "opacity-0"
+              "w-full h-full object-cover transition-all duration-500 ease-out",
+              imageLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105"
             )}
             onLoad={() => setImageLoaded(true)}
             loading="lazy"
           />
           
-          {/* Clean Overlay */}
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
-          {/* Single Badge - Only Most Important */}
-          {visibleBadges.length > 0 && (
-            <div className="absolute top-2 left-2 z-10">
-              <Badge
+          {/* Subtle Overlay on Hover - Very Apple-like */}
+          <div 
+            className={cn(
+              "absolute inset-0 bg-black/0 transition-all duration-300 ease-out",
+              isHovered && "bg-black/10"
+            )} 
+          />
+
+          {/* Minimal Badge - Only Show Most Important */}
+          {mostImportantBadge && (
+            <div className="absolute top-3 left-3">
+              <Badge 
                 variant="secondary"
-                className="text-xs px-2 py-1 bg-accent text-accent-foreground font-medium rounded-md"
+                className="text-xs px-2 py-1 bg-background/95 text-foreground border-0 shadow-sm backdrop-blur-sm"
               >
-                {visibleBadges[0]}
+                {mostImportantBadge}
               </Badge>
             </div>
           )}
+
+          {/* Type Indicator - Minimalist */}
+          <div className="absolute top-3 right-3">
+            <div className="w-2 h-2 rounded-full bg-foreground/30" />
+          </div>
           
-          {/* Simple Type Label */}
-          {!owned && (
-            <div className="absolute top-2 right-2 z-10">
-              <Badge
-                variant="outline"
-                className="text-xs px-2 py-1 bg-background/90 backdrop-blur-sm border-border/50 rounded-md"
-              >
-                {getTypeLabel(type)}
-              </Badge>
-            </div>
-          )}
-          
-          {/* Clean Hover Content */}
-          {(isHovered || isTouched) && (
-            <div className="absolute inset-0 flex flex-col justify-end p-3 z-10">
-              {/* Title */}
-              <h3 className="text-white text-sm font-bold mb-2 line-clamp-2 drop-shadow-md">
-                {title}
-              </h3>
-              
-              {/* Price */}
-              {!owned && price && (
-                <div className="text-white text-lg font-bold mb-2 drop-shadow-md">
-                  {formatPrice(price)}
-                </div>
+          {/* Apple-style Hover Content */}
+          <div 
+            className={cn(
+              "absolute inset-x-0 bottom-0 p-4 transition-all duration-300 ease-out transform",
+              isHovered 
+                ? "translate-y-0 opacity-100" 
+                : "translate-y-2 opacity-0 pointer-events-none"
+            )}
+          >
+            <div className="bg-background/95 backdrop-blur-md rounded-lg p-3 shadow-lg border border-border/50">
+              {/* Action Button - Single, Clear */}
+              {owned ? (
+                <Button
+                  size="sm"
+                  className="w-full h-9 bg-primary text-primary-foreground hover:bg-primary-hover font-medium rounded-lg transition-all duration-200"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPlayClick?.();
+                  }}
+                >
+                  <Play className="w-4 h-4 mr-2 fill-current" />
+                  Continuar
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="w-full h-9 bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium rounded-lg transition-all duration-200"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onAddClick?.();
+                  }}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Adicionar
+                </Button>
               )}
-              
-              {/* Single Action Button */}
-              <div className="flex justify-center">
-                {owned ? (
-                  <Button
-                    size="sm"
-                    className="h-8 px-4 rounded-full bg-white hover:bg-gray-200 text-black font-medium"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onPlayClick?.();
-                    }}
-                  >
-                    <Play className="w-3 h-3 mr-1 fill-current" />
-                    Assistir
-                  </Button>
-                ) : (
-                  <Button
-                    size="sm"
-                    className="h-8 px-4 rounded-full bg-accent hover:bg-accent/90 text-accent-foreground font-medium"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onAddClick?.();
-                    }}
-                  >
-                    <Plus className="w-3 h-3 mr-1" />
-                    Adicionar
-                  </Button>
-                )}
-              </div>
             </div>
-          )}
+          </div>
+        </AspectRatio>
+
+        {/* Clean Content Below Image */}
+        <div className="space-y-2 px-1">
+          {/* Title - Clean Typography */}
+          <h3 className="text-sm font-semibold text-foreground line-clamp-2 leading-tight">
+            {title}
+          </h3>
+          
+          {/* Metadata Row */}
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-muted-foreground font-medium">
+              {getTypeLabel(type)}
+            </span>
+            {!owned && price && (
+              <span className="font-semibold text-foreground">
+                {formatPrice(price)}
+              </span>
+            )}
+          </div>
         </div>
-      </AspectRatio>
-    </div>
+      </div>
+    </article>
   );
 };
