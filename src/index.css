@@ -382,30 +382,51 @@
   /* Fix for dropdown and menu z-index hierarchy */
   .dropdown-fix {
     z-index: 100 !important;
-    background: hsl(var(--popover)) !important;
-    backdrop-filter: blur(12px) !important;
-    border: 1px solid hsl(var(--border) / 0.5) !important;
+    background: hsl(var(--card)) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
   }
 
   /* Navigation menu improvements */
   .nav-menu-content {
-    background: hsl(var(--popover) / 0.95) !important;
-    backdrop-filter: blur(12px) !important;
-    border: 1px solid hsl(var(--border) / 0.5) !important;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3) !important;
+    background: hsl(var(--card)) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
   }
 
   /* Mobile menu improvements */
   .mobile-menu-backdrop {
-    backdrop-filter: blur(8px) !important;
-    background: rgba(0, 0, 0, 0.8) !important;
+    backdrop-filter: blur(12px) !important;
+    background: rgba(0, 0, 0, 0.9) !important;
   }
 
   /* Better mobile sheet styling */
   .mobile-sheet {
-    background: hsl(var(--background) / 0.95) !important;
-    backdrop-filter: blur(12px) !important;
-    border-left: 1px solid hsl(var(--border) / 0.5) !important;
+    background: hsl(var(--card)) !important;
+    backdrop-filter: blur(16px) !important;
+    border-left: 2px solid hsl(var(--accent)) !important;
+    box-shadow: -10px 0 50px -12px rgba(0, 0, 0, 0.8) !important;
+  }
+
+  /* Enhanced menu item visibility */
+  .menu-item-enhanced {
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .menu-item-enhanced:hover {
+    background: hsl(var(--accent) / 0.1) !important;
+    border-color: hsl(var(--accent) / 0.3) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  .menu-item-enhanced:focus {
+    background: hsl(var(--accent) / 0.2) !important;
+    border-color: hsl(var(--accent)) !important;
+    outline: none !important;
   }
 
   /* Professional Icon Centering System */

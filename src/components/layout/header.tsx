@@ -78,14 +78,14 @@ export default function Header({
         <NavigationMenuTrigger className="bg-transparent hover:bg-accent/10">
           Categorias
         </NavigationMenuTrigger>
-        <NavigationMenuContent className="nav-menu-content">
-          <div className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+        <NavigationMenuContent className="bg-card/98 border-2 border-border shadow-2xl">
+          <div className="grid w-[450px] gap-4 p-6 md:w-[550px] md:grid-cols-2 lg:w-[650px]">
             {categories.map((category) => (
               <NavigationMenuLink
                 key={category.name}
                 href={category.href}
                 className={cn(
-                  "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                  "menu-item-enhanced block select-none space-y-2 rounded-lg p-4 leading-none no-underline outline-none transition-all duration-200 hover:bg-accent/10 focus:bg-accent/20 focus:text-accent-foreground border border-transparent hover:border-accent/30"
                 )}
               >
                 <div className="flex items-center gap-2">
@@ -192,7 +192,7 @@ export default function Header({
                     <span className="hidden sm:inline">{user.name}</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 dropdown-fix">
+                <DropdownMenuContent align="end" className="w-64 bg-card/98 border-2 border-border shadow-2xl">
                   <DropdownMenuItem onClick={() => navigate('/perfil')}>
                     <User className="mr-2 h-4 w-4" />
                     Meu Perfil
@@ -251,7 +251,7 @@ export default function Header({
                 <Menu className="w-5 h-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80 dropdown-fix">
+            <SheetContent side="right" className="w-80 bg-card/98 border-l-2 border-accent shadow-2xl">
               <div className="flex flex-col gap-4 mt-8">
                 {/* Mobile search */}
                 <form onSubmit={handleSearch} className="relative">
@@ -273,10 +273,10 @@ export default function Header({
                       key={category.name}
                       href="#"
                       onClick={(e) => { e.preventDefault(); navigate(category.href); }}
-                      className="flex items-center gap-2 p-2 rounded-md hover:bg-accent/10 transition-colors"
+                      className="menu-item-enhanced flex items-center gap-3 p-3 rounded-lg hover:bg-accent/10 transition-all duration-200 border border-transparent hover:border-accent/30"
                     >
-                      <span>{category.icon}</span>
-                      <span>{category.name}</span>
+                      <span className="text-xl">{category.icon}</span>
+                      <span className="font-medium">{category.name}</span>
                     </a>
                   ))}
                 </div>

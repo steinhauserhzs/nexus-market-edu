@@ -76,7 +76,7 @@ export default function MainHeader() {
                 <Menu className="icon-md" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-80 modal-content mobile-sheet safe-area-top">
+            <SheetContent side="left" className="w-80 modal-content mobile-sheet bg-card/98 border-r-2 border-accent shadow-2xl safe-area-top">
               <SheetHeader className="text-left pb-4">
                 <SheetTitle className="flex items-center gap-3 px-1">
                   <div className="w-8 h-8 bg-gradient-accent rounded-lg logo-center">
@@ -235,7 +235,7 @@ export default function MainHeader() {
                   </span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 dropdown-fix">
+              <DropdownMenuContent align="end" className="w-64 bg-card/98 border-2 border-border shadow-2xl">
                 <div className="flex items-center gap-2 p-2">
                   <Avatar className="w-8 h-8">
                     <AvatarImage src={profile.avatar_url || ''} />
