@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useAdmin } from "@/hooks/use-admin";
 import CartSheet from "@/components/cart/cart-sheet";
 import NotificationBadge from "@/components/ui/notification-badge";
+import PanelSwitch from "@/components/ui/panel-switch";
 import { BookOpen, Store, User, LogOut, Settings, Bell, Plus, Menu, Home, Search } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -92,6 +93,14 @@ export default function MainHeader() {
                   <h3 className="font-medium text-sm text-muted-foreground mb-4 px-1">Navegação</h3>
                   <NavLinks mobile />
                 </div>
+
+                {/* Panel Switch */}
+                {user && (
+                  <div>
+                    <h3 className="font-medium text-sm text-muted-foreground mb-4 px-1">Modo de Acesso</h3>
+                    <PanelSwitch compact={false} showLabels={true} />
+                  </div>
+                )}
 
                 {/* User Section */}
                 {user && profile ? (

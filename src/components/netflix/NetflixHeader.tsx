@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, ShoppingCart, Menu, X, User } from "lucide-react";
+import { Search, ShoppingCart, Menu, X, User, ArrowLeftRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
+import PanelSwitch from "@/components/ui/panel-switch";
 
 interface NetflixHeaderProps {
   transparent?: boolean;
@@ -130,6 +131,13 @@ export const NetflixHeader = ({
               )}
             </Button>
 
+            {/* Panel Switch - Desktop */}
+            {user && (
+              <div className="hidden md:block">
+                <PanelSwitch compact={true} showLabels={false} />
+              </div>
+            )}
+
             {/* User Menu */}
             {user ? (
               <Button
@@ -170,7 +178,14 @@ export const NetflixHeader = ({
         {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden absolute top-full left-0 right-0 bg-card/98 backdrop-blur-md border-b-2 border-border shadow-2xl py-4 z-[70]">
-            <div className="container mx-auto px-4">
+            <div className="container mx-auto px-4 space-y-4">
+              {/* Panel Switch - Mobile */}
+              {user && (
+                <div className="pb-2 border-b border-border/30">
+                  <PanelSwitch compact={false} showLabels={true} />
+                </div>
+              )}
+              
               <nav className="flex flex-col gap-3">
                 {navigationItems.map((item) => (
                   <Link
