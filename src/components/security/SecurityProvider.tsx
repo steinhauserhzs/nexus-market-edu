@@ -86,9 +86,17 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
     // Detect potential clickjacking
     const detectClickjacking = () => {
       if (window.top !== window.self) {
+        // Avoid cross-origin access to parent.location
+        let parentHost = 'unknown';
+        try {
+          parentHost = document.referrer ? new URL(document.referrer).hostname : 'unknown';
+        } catch (e) {
+          parentHost = 'unknown';
+        }
         logEvent('potential_clickjacking', {
           url: window.location.pathname,
-          parent: window.parent.location.hostname
+          parent: parentHost,
+          inIframe: true,
         }, 'high');
       }
     };
