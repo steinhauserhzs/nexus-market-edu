@@ -177,7 +177,7 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="diagnostics" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-8">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 gap-1">
             <TabsTrigger value="diagnostics">Diagnósticos</TabsTrigger>
             <TabsTrigger value="ai-reviewer">IA Revisor</TabsTrigger>
             <TabsTrigger value="users">Usuários</TabsTrigger>
