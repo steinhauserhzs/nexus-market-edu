@@ -14,7 +14,7 @@ interface BeforeInstallPromptEvent extends Event {
 
 const PWAInstallPrompt = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [showPrompt, setShowPrompt] = useState(false);
+  const [showPrompt, setShowPrompt] = useState(true);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
@@ -23,12 +23,6 @@ const PWAInstallPrompt = () => {
       
       // Stash the event so it can be triggered later
       setDeferredPrompt(e);
-      
-      // Check if user has already dismissed this before
-      const hasSeenPrompt = localStorage.getItem('pwa-install-prompt-dismissed');
-      if (!hasSeenPrompt) {
-        setShowPrompt(true);
-      }
     };
 
     const handleAppInstalled = () => {
@@ -47,31 +41,33 @@ const PWAInstallPrompt = () => {
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
+    if (deferredPrompt) {
+      // Show the install prompt
+      deferredPrompt.prompt();
 
-    // Show the install prompt
-    deferredPrompt.prompt();
+      // Wait for the user to respond to the prompt
+      const { outcome } = await deferredPrompt.userChoice;
 
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+      } else {
+        console.log('User dismissed the install prompt');
+      }
 
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
+      // Clear the deferredPrompt
+      setDeferredPrompt(null);
+      setShowPrompt(false);
     } else {
-      console.log('User dismissed the install prompt');
+      // Show manual installation instructions
+      alert('Para instalar o app:\n\niOS Safari: Toque no ícone de compartilhar e selecione "Adicionar à Tela de Início"\n\nAndroid Chrome: Toque no menu (⋮) e selecione "Adicionar à tela inicial"\n\nDesktop: Procure pelo ícone de instalação na barra de endereços');
     }
-
-    // Clear the deferredPrompt
-    setDeferredPrompt(null);
-    setShowPrompt(false);
   };
 
   const handleDismiss = () => {
     setShowPrompt(false);
-    localStorage.setItem('pwa-install-prompt-dismissed', 'true');
   };
 
-  if (!showPrompt || !deferredPrompt) {
+  if (!showPrompt) {
     return null;
   }
 
