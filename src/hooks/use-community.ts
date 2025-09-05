@@ -312,13 +312,21 @@ export const useCommunity = (storeId?: string) => {
             .eq('id', existingLike.id);
           
           // Update likes count manually
-          await supabase
+          const { data: currentComment } = await supabase
             .from('community_comments')
-            .update({ 
-              likes_count: supabase.sql`likes_count - 1`,
-              updated_at: new Date().toISOString()
-            })
-            .eq('id', commentId);
+            .select('likes_count')
+            .eq('id', commentId)
+            .single();
+
+          if (currentComment) {
+            await supabase
+              .from('community_comments')
+              .update({ 
+                likes_count: Math.max(0, currentComment.likes_count - 1),
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', commentId);
+          }
         } else {
           await supabase
             .from('community_likes')
@@ -328,13 +336,21 @@ export const useCommunity = (storeId?: string) => {
             });
           
           // Update likes count manually
-          await supabase
+          const { data: currentComment } = await supabase
             .from('community_comments')
-            .update({ 
-              likes_count: supabase.sql`likes_count + 1`,
-              updated_at: new Date().toISOString()
-            })
-            .eq('id', commentId);
+            .select('likes_count')
+            .eq('id', commentId)
+            .single();
+
+          if (currentComment) {
+            await supabase
+              .from('community_comments')
+              .update({ 
+                likes_count: currentComment.likes_count + 1,
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', commentId);
+          }
         }
       }
     } catch (error) {

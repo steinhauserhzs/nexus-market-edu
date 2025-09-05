@@ -69,13 +69,22 @@ export default function MemberAreaEditor({ storeId }: MemberAreaEditorProps) {
         throw error;
       }
 
-        if (data) {
-          setConfig({
-            ...data,
-            member_resources: Array.isArray(data.member_resources) ? data.member_resources : [],
-            exclusive_content: Array.isArray(data.exclusive_content) ? data.exclusive_content : [],
-          });
-        }
+      if (data) {
+        setConfig({
+          id: data.id,
+          store_id: data.store_id,
+          welcome_message: data.welcome_message || '',
+          welcome_video_url: data.welcome_video_url || '',
+          primary_color: data.primary_color || '#dc2626',
+          secondary_color: data.secondary_color || '#1f2937',
+          custom_logo_url: data.custom_logo_url || '',
+          show_progress_tracking: data.show_progress_tracking ?? true,
+          show_other_products: data.show_other_products ?? true,
+          member_resources: Array.isArray(data.member_resources) ? data.member_resources : [],
+          exclusive_content: Array.isArray(data.exclusive_content) ? data.exclusive_content : [],
+          is_active: data.is_active ?? true,
+        });
+      }
     } catch (error) {
       console.error('Error loading config:', error);
     } finally {
@@ -115,7 +124,10 @@ export default function MemberAreaEditor({ storeId }: MemberAreaEditorProps) {
           .single();
 
         if (error) throw error;
-        setConfig(data);
+        setConfig({
+          ...config,
+          id: data.id,
+        });
       }
 
       toast({
