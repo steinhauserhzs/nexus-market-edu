@@ -138,6 +138,90 @@ export type Database = {
           },
         ]
       }
+      chat_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          message_type: string
+          metadata: Json | null
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          message_type?: string
+          metadata?: Json | null
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          message_type?: string
+          metadata?: Json | null
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      chat_participants: {
+        Row: {
+          id: string
+          joined_at: string
+          last_seen: string | null
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string
+          last_seen?: string | null
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string
+          last_seen?: string | null
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      chat_rooms: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          is_private: boolean
+          name: string
+          store_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          id?: string
+          is_private?: boolean
+          name: string
+          store_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          is_private?: boolean
+          name?: string
+          store_id?: string
+        }
+        Relationships: []
+      }
       checkout_sessions: {
         Row: {
           cancel_url: string | null
@@ -177,6 +261,105 @@ export type Database = {
           total_amount_cents?: number
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      community_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          likes_count: number
+          parent_id: string | null
+          post_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          likes_count?: number
+          parent_id?: string | null
+          post_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          likes_count?: number
+          parent_id?: string | null
+          post_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_likes: {
+        Row: {
+          comment_id: string | null
+          created_at: string
+          id: string
+          post_id: string | null
+          user_id: string
+        }
+        Insert: {
+          comment_id?: string | null
+          created_at?: string
+          id?: string
+          post_id?: string | null
+          user_id: string
+        }
+        Update: {
+          comment_id?: string | null
+          created_at?: string
+          id?: string
+          post_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_posts: {
+        Row: {
+          comments_count: number
+          content: string
+          content_id: string | null
+          created_at: string
+          id: string
+          is_pinned: boolean
+          likes_count: number
+          store_id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comments_count?: number
+          content: string
+          content_id?: string | null
+          created_at?: string
+          id?: string
+          is_pinned?: boolean
+          likes_count?: number
+          store_id: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comments_count?: number
+          content?: string
+          content_id?: string | null
+          created_at?: string
+          id?: string
+          is_pinned?: boolean
+          likes_count?: number
+          store_id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -384,6 +567,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      leaderboards: {
+        Row: {
+          created_at: string
+          id: string
+          period: string
+          points: number
+          rank: number
+          store_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          period?: string
+          points?: number
+          rank?: number
+          store_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          period?: string
+          points?: number
+          rank?: number
+          store_id?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       lesson_progress: {
         Row: {
@@ -594,6 +807,36 @@ export type Database = {
           },
         ]
       }
+      member_area_templates: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_default: boolean
+          layout_config: Json
+          name: string
+          preview_image: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_default?: boolean
+          layout_config?: Json
+          name: string
+          preview_image?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_default?: boolean
+          layout_config?: Json
+          name?: string
+          preview_image?: string | null
+        }
+        Relationships: []
+      }
       member_exclusive_content: {
         Row: {
           content: string
@@ -732,6 +975,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          data: Json | null
+          id: string
+          message: string
+          read: boolean
+          store_id: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json | null
+          id?: string
+          message: string
+          read?: boolean
+          store_id?: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json | null
+          id?: string
+          message?: string
+          read?: boolean
+          store_id?: string | null
+          title?: string
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id?: string
+        }
+        Relationships: []
       }
       order_items: {
         Row: {
@@ -1685,6 +1964,75 @@ export type Database = {
           },
         ]
       }
+      user_achievements: {
+        Row: {
+          achievement_type: Database["public"]["Enums"]["achievement_type"]
+          badge_icon: string | null
+          description: string | null
+          earned_at: string
+          id: string
+          points_awarded: number
+          store_id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          achievement_type: Database["public"]["Enums"]["achievement_type"]
+          badge_icon?: string | null
+          description?: string | null
+          earned_at?: string
+          id?: string
+          points_awarded?: number
+          store_id: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          achievement_type?: Database["public"]["Enums"]["achievement_type"]
+          badge_icon?: string | null
+          description?: string | null
+          earned_at?: string
+          id?: string
+          points_awarded?: number
+          store_id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_points: {
+        Row: {
+          created_at: string
+          experience: number
+          id: string
+          level: number
+          store_id: string
+          total_points: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          experience?: number
+          id?: string
+          level?: number
+          store_id: string
+          total_points?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          experience?: number
+          id?: string
+          level?: number
+          store_id?: string
+          total_points?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       venues: {
         Row: {
           accessibility_features: string[] | null
@@ -1971,7 +2319,19 @@ export type Database = {
       }
     }
     Enums: {
+      achievement_type:
+        | "video_completion"
+        | "course_completion"
+        | "login_streak"
+        | "community_participation"
+        | "content_creation"
       event_status: "draft" | "published" | "cancelled" | "completed"
+      notification_type:
+        | "new_content"
+        | "achievement"
+        | "course_update"
+        | "community_message"
+        | "system_announcement"
       user_role: "client" | "organizer" | "promoter" | "admin"
     }
     CompositeTypes: {
@@ -2100,7 +2460,21 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      achievement_type: [
+        "video_completion",
+        "course_completion",
+        "login_streak",
+        "community_participation",
+        "content_creation",
+      ],
       event_status: ["draft", "published", "cancelled", "completed"],
+      notification_type: [
+        "new_content",
+        "achievement",
+        "course_update",
+        "community_message",
+        "system_announcement",
+      ],
       user_role: ["client", "organizer", "promoter", "admin"],
     },
   },
