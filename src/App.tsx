@@ -5,8 +5,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
-import { SecurityProvider } from "@/components/security/SecurityProvider";
-import { SecurityHeaders } from "@/components/security/SecurityHeaders";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Index from "./pages/Index";
@@ -20,6 +18,8 @@ const LazyStore = lazy(() => import("./pages/Store"));
 const LazyStoreCustomizer = lazy(() => import("./pages/StoreCustomizer"));
 const LazyProductDetails = lazy(() => import("./pages/ProductDetails"));
 const LazyNotFound = lazy(() => import("./pages/NotFound"));
+const LazyMemberArea = lazy(() => import("./pages/MemberArea"));
+const LazyMemberAreaConfig = lazy(() => import("./pages/MemberAreaConfig"));
 import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
 import PWAInstallPrompt from "./components/ui/pwa-install-prompt";
@@ -39,45 +39,45 @@ const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <SecurityHeaders />
-        <SecurityProvider>
-          <AuthProvider>
-            <CartProvider>
-              <TooltipProvider>
-                <Toaster />
-                <Sonner />
-                <BrowserRouter 
-                  future={{ 
-                    v7_startTransition: true,
-                    v7_relativeSplatPath: true 
-                  }}
-                >
-              <MobileGestures>
-                <div className="pb-16 md:pb-0">
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/auth" element={<Auth />} />
-                    <Route path="/biblioteca" element={<LazyRoute Component={LazyLibrary} />} />
-                    <Route path="/dashboard" element={<LazyRoute Component={LazyDashboard} />} />
-                    <Route path="/perfil" element={<LazyRoute Component={LazyProfile} />} />
-                    <Route path="/checkout" element={<LazyRoute Component={LazyCheckout} />} />
-                    <Route path="/criar-loja" element={<LazyRoute Component={LazyCreateStore} />} />
-                     <Route path="/loja/:slug" element={<LazyRoute Component={LazyStore} />} />
-                     <Route path="/loja/:slug/customizar" element={<LazyRoute Component={LazyStoreCustomizer} />} />
-                     <Route path="/produto/:slug" element={<LazyRoute Component={LazyProductDetails} />} />
-                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                    <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
-                  </Routes>
-                  <MobileNavigation />
-                  <PWAInstallPrompt />
-                  <PerformanceMonitor />
-                </div>
-              </MobileGestures>
-              </BrowserRouter>
-            </TooltipProvider>
-          </CartProvider>
-        </AuthProvider>
-      </SecurityProvider>
+        <AuthProvider>
+          <CartProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter 
+                future={{ 
+                  v7_startTransition: true,
+                  v7_relativeSplatPath: true 
+                }}
+              >
+            <MobileGestures>
+              <div className="pb-16 md:pb-0">
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/biblioteca" element={<LazyRoute Component={LazyLibrary} />} />
+                  <Route path="/area-membros" element={<LazyRoute Component={LazyDashboard} />} />
+                  <Route path="/dashboard" element={<LazyRoute Component={LazyDashboard} />} />
+                  <Route path="/perfil" element={<LazyRoute Component={LazyProfile} />} />
+                  <Route path="/checkout" element={<LazyRoute Component={LazyCheckout} />} />
+                  <Route path="/criar-loja" element={<LazyRoute Component={LazyCreateStore} />} />
+                   <Route path="/loja/:slug" element={<LazyRoute Component={LazyStore} />} />
+                   <Route path="/loja/:slug/membros" element={<LazyRoute Component={LazyMemberArea} />} />
+                   <Route path="/loja/:slug/configurar-membros" element={<LazyRoute Component={LazyMemberAreaConfig} />} />
+                   <Route path="/loja/:slug/customizar" element={<LazyRoute Component={LazyStoreCustomizer} />} />
+                   <Route path="/produto/:slug" element={<LazyRoute Component={LazyProductDetails} />} />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
+                </Routes>
+                <MobileNavigation />
+                <PWAInstallPrompt />
+                <PerformanceMonitor />
+              </div>
+            </MobileGestures>
+            </BrowserRouter>
+          </TooltipProvider>
+        </CartProvider>
+      </AuthProvider>
     </HelmetProvider>
   </QueryClientProvider>
 </ErrorBoundary>

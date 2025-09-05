@@ -119,9 +119,9 @@ export const NetflixCarousel = ({
         <div
           ref={scrollRef}
           className={cn(
-            "flex gap-[var(--netflix-carousel-gap)] overflow-x-auto scrollbar-hide",
+            "flex gap-2 md:gap-3 overflow-x-auto scrollbar-hide",
             "px-4 md:px-6 py-2",
-            "scroll-smooth"
+            "scroll-smooth touch-pan-x"
           )}
           style={{
             scrollbarWidth: 'none',

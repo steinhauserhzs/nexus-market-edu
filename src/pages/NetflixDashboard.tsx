@@ -35,7 +35,7 @@ const NetflixDashboard = () => {
         id: product.id,
         title: product.title,
         thumbnail: product.thumbnail_url || "/placeholder.svg",
-        type: product.type || "course",
+        type: (product.type === 'curso' ? 'course' : product.type === 'pack' ? 'pack' : 'template') as "course" | "pack" | "template",
         owned: false, // TODO: Check user licenses for ownership
         price: product.price_cents,
         badges: [],
@@ -104,7 +104,7 @@ const NetflixDashboard = () => {
       
       <NetflixHeader transparent />
       
-      <main className="pt-16">
+      <main className="pt-16 md:pt-16 sm:pt-14 mobile-nav-space">
         {/* Netflix-style Hero Section */}
         {heroProduct && (
           <section className="relative h-[70vh] min-h-[400px] overflow-hidden">
@@ -122,32 +122,32 @@ const NetflixDashboard = () => {
             
             {/* Hero Content */}
             <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
-              <div className="max-w-2xl space-y-4 text-white">
-                <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+              <div className="max-w-2xl space-y-4 text-white w-full">
+                <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold leading-tight">
                   {heroProduct.title}
                 </h1>
-                <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-lg">
+                <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed max-w-lg">
                   {heroProduct.description || "Descubra o melhor conteúdo educacional em uma experiência única de streaming."}
                 </p>
-                <div className="flex gap-4 pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
                   <Button 
                     size="lg"
-                    className="h-12 px-8 bg-white text-black hover:bg-gray-200 font-semibold"
+                    className="h-12 w-full sm:w-auto px-6 sm:px-8 bg-white text-black hover:bg-gray-200 font-semibold mobile-friendly-button"
                     onClick={() => {
                       // TODO: Check if user owns this product
                       navigate(`/produto/${heroProduct.id}`);
                     }}
                   >
-                    <Play className="w-5 h-5 mr-2 fill-current" />
+                    <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2 fill-current" />
                     Começar Agora
                   </Button>
                   <Button 
                     size="lg"
                     variant="secondary"
-                    className="h-12 px-8 bg-gray-500/70 text-white hover:bg-gray-500/50 font-semibold border-none"
+                    className="h-12 w-full sm:w-auto px-6 sm:px-8 bg-gray-500/70 text-white hover:bg-gray-500/50 font-semibold border-none mobile-friendly-button"
                     onClick={() => navigate(`/produto/${heroProduct.id}`)}
                   >
-                    <Info className="w-5 h-5 mr-2" />
+                    <Info className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                     Mais Informações
                   </Button>
                 </div>

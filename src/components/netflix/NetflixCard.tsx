@@ -56,9 +56,9 @@ export const NetflixCard = ({
   return (
     <div 
       className={cn(
-        "group relative cursor-pointer transition-all duration-300 ease-in-out",
-        "w-[var(--netflix-card-width)] flex-shrink-0",
-        "hover:scale-110 hover:z-20",
+        "group relative cursor-pointer transition-all duration-300 ease-in-out netflix-card",
+        "w-[110px] sm:w-[140px] md:w-[160px] lg:w-[180px] flex-shrink-0",
+        "hover:scale-105 md:hover:scale-110 hover:z-20",
         className
       )}
       onMouseEnter={() => setIsHovered(true)}

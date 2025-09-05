@@ -296,13 +296,97 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 
-  /* Netflix Carousel Utilities */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  /* Netflix-style responsive fixes */
+  .netflix-card-container {
+    width: var(--netflix-card-width);
+    min-width: var(--netflix-card-width);
   }
 
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+  /* Better mobile spacing */
+  @media screen and (max-width: 640px) {
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    .netflix-card-container {
+      width: 140px;
+      min-width: 140px;
+    }
+    
+    :root {
+      --netflix-card-width: 140px;
+    }
+  }
+
+  /* Enhanced responsive grid */
+  .responsive-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .responsive-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .responsive-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .responsive-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* Improved button responsiveness */
+  .mobile-friendly-button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 640px) {
+    .mobile-friendly-button {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+    }
+  }
+
+  /* Fixed header heights */
+  .fixed-header {
+    height: 64px;
+  }
+
+  @media (max-width: 768px) {
+    .fixed-header {
+      height: 56px;
+    }
+  }
+
+  /* Netflix card hover improvements */
+  .netflix-card:hover {
+    transform: scale(1.05);
+    z-index: 20;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Mobile navigation spacing */
+  .mobile-nav-space {
+    padding-bottom: 80px;
+  }
+
+  @media (min-width: 768px) {
+    .mobile-nav-space {
+      padding-bottom: 0;
+    }
   }
 }
