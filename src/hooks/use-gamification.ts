@@ -29,7 +29,7 @@ export interface LeaderboardEntry {
   user_id: string;
   points: number;
   rank: number;
-  profile?: {
+  profile: {
     full_name: string;
     avatar_url: string;
   };
@@ -111,29 +111,37 @@ export const useGamification = (storeId?: string) => {
     }
   }, [user, storeId]);
 
-  const loadLeaderboard = useCallback(async (period: 'weekly' | 'monthly' | 'yearly' | 'all_time' = 'monthly') => {
+  const loadLeaderboard = useCallback(async (period: string = 'monthly') => {
     if (!storeId) return;
-
+    
     try {
-      const { data, error } = await supabase
+      const { data: leaderboardData, error } = await supabase
         .from('leaderboards')
-        .select(`
-          *,
-          profile:profiles(full_name, avatar_url)
-        `)
+        .select('*')
         .eq('store_id', storeId)
         .eq('period', period)
         .order('rank', { ascending: true })
         .limit(10);
 
-      if (error) {
-        console.error('Error loading leaderboard:', error);
-        return;
-      }
+      if (error) throw error;
 
-      setLeaderboard(data || []);
+      // Get profiles separately
+      const userIds = [...new Set(leaderboardData?.map(l => l.user_id) || [])];
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, full_name, avatar_url')
+        .in('id', userIds);
+
+      const profilesMap = new Map(profiles?.map(p => [p.id, p]) || []);
+
+      const leaderboardWithProfiles = leaderboardData?.map(entry => ({
+        ...entry,
+        profile: profilesMap.get(entry.user_id) || { full_name: 'Unknown', avatar_url: '' },
+      })) || [];
+
+      setLeaderboard(leaderboardWithProfiles);
     } catch (error) {
-      console.error('Error in loadLeaderboard:', error);
+      console.error('Error loading leaderboard:', error);
     }
   }, [storeId]);
 

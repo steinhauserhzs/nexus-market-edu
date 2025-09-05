@@ -14,11 +14,11 @@ export interface CommunityPost {
   is_pinned: boolean;
   created_at: string;
   updated_at: string;
-  profile?: {
+  profile: {
     full_name: string;
     avatar_url: string;
   };
-  liked_by_user?: boolean;
+  liked_by_user: boolean;
 }
 
 export interface CommunityComment {
@@ -30,135 +30,131 @@ export interface CommunityComment {
   likes_count: number;
   created_at: string;
   updated_at: string;
-  profile?: {
+  profile: {
     full_name: string;
     avatar_url: string;
   };
-  liked_by_user?: boolean;
-  replies?: CommunityComment[];
+  liked_by_user: boolean;
+  replies: CommunityComment[];
 }
 
 export const useCommunity = (storeId?: string) => {
   const { user } = useAuth();
   const [posts, setPosts] = useState<CommunityPost[]>([]);
-  const [comments, setComments] = useState<{ [postId: string]: CommunityComment[] }>({});
+  const [comments, setComments] = useState<CommunityComment[]>([]);
   const [loading, setLoading] = useState(false);
 
   const loadPosts = useCallback(async () => {
     if (!storeId) return;
-
+    
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data: postsData, error } = await supabase
         .from('community_posts')
-        .select(`
-          *,
-          profile:profiles(full_name, avatar_url)
-        `)
+        .select('*')
         .eq('store_id', storeId)
-        .order('is_pinned', { ascending: false })
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error loading posts:', error);
-        return;
-      }
+      if (error) throw error;
 
-      // Check which posts are liked by current user
-      let postsWithLikes = data || [];
-      
-      if (user) {
-        const { data: likes } = await supabase
-          .from('community_likes')
-          .select('post_id')
-          .eq('user_id', user.id)
-          .in('post_id', postsWithLikes.map(p => p.id));
+      // Get profiles separately
+      const userIds = [...new Set(postsData?.map(p => p.user_id) || [])];
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, full_name, avatar_url')
+        .in('id', userIds);
 
-        const likedPostIds = new Set(likes?.map(l => l.post_id) || []);
-        
-        postsWithLikes = postsWithLikes.map(post => ({
-          ...post,
-          liked_by_user: likedPostIds.has(post.id)
-        }));
-      }
+      const profilesMap = new Map(profiles?.map(p => [p.id, p]) || []);
+
+      // Check which posts the current user has liked
+      const currentUser = await supabase.auth.getUser();
+      const { data: userLikes } = await supabase
+        .from('community_likes')
+        .select('post_id')
+        .eq('user_id', currentUser.data.user?.id || '')
+        .in('post_id', postsData?.map(p => p.id) || []);
+
+      const likedPostIds = new Set(userLikes?.map(l => l.post_id) || []);
+
+      const postsWithLikes = postsData?.map(post => ({
+        ...post,
+        profile: profilesMap.get(post.user_id) || { full_name: 'Unknown', avatar_url: '' },
+        liked_by_user: likedPostIds.has(post.id),
+      })) || [];
 
       setPosts(postsWithLikes);
     } catch (error) {
-      console.error('Error in loadPosts:', error);
+      console.error('Error loading posts:', error);
     } finally {
       setLoading(false);
     }
-  }, [storeId, user]);
+  }, [storeId]);
 
   const loadComments = useCallback(async (postId: string) => {
     try {
-      const { data, error } = await supabase
+      const { data: commentsData, error } = await supabase
         .from('community_comments')
-        .select(`
-          *,
-          profile:profiles(full_name, avatar_url)
-        `)
+        .select('*')
         .eq('post_id', postId)
         .order('created_at', { ascending: true });
 
-      if (error) {
-        console.error('Error loading comments:', error);
-        return;
-      }
+      if (error) throw error;
 
-      // Check which comments are liked by current user
-      let commentsWithLikes = data || [];
-      
-      if (user) {
-        const { data: likes } = await supabase
-          .from('community_likes')
-          .select('comment_id')
-          .eq('user_id', user.id)
-          .in('comment_id', commentsWithLikes.map(c => c.id));
+      // Get profiles separately
+      const userIds = [...new Set(commentsData?.map(c => c.user_id) || [])];
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, full_name, avatar_url')
+        .in('id', userIds);
 
-        const likedCommentIds = new Set(likes?.map(l => l.comment_id) || []);
-        
-        commentsWithLikes = commentsWithLikes.map(comment => ({
-          ...comment,
-          liked_by_user: likedCommentIds.has(comment.id)
-        }));
-      }
+      const profilesMap = new Map(profiles?.map(p => [p.id, p]) || []);
+
+      // Check which comments the current user has liked
+      const currentUser = await supabase.auth.getUser();
+      const { data: userLikes } = await supabase
+        .from('community_likes')
+        .select('comment_id')
+        .eq('user_id', currentUser.data.user?.id || '')
+        .in('comment_id', commentsData?.map(c => c.id) || []);
+
+      const likedCommentIds = new Set(userLikes?.map(l => l.comment_id) || []);
 
       // Organize comments in a tree structure
-      const commentMap = new Map<string, CommunityComment>();
+      const commentMap = new Map();
       const rootComments: CommunityComment[] = [];
 
-      // First pass: create map of all comments
-      commentsWithLikes.forEach(comment => {
-        commentMap.set(comment.id, { ...comment, replies: [] });
-      });
-
-      // Second pass: organize into tree
-      commentsWithLikes.forEach(comment => {
-        if (comment.parent_id) {
-          const parent = commentMap.get(comment.parent_id);
-          if (parent) {
-            parent.replies!.push(commentMap.get(comment.id)!);
-          }
-        } else {
-          rootComments.push(commentMap.get(comment.id)!);
+      commentsData?.forEach(comment => {
+        const commentWithLikes = {
+          ...comment,
+          profile: profilesMap.get(comment.user_id) || { full_name: 'Unknown', avatar_url: '' },
+          liked_by_user: likedCommentIds.has(comment.id),
+          replies: [],
+        };
+        
+        commentMap.set(comment.id, commentWithLikes);
+        
+        if (!comment.parent_id) {
+          rootComments.push(commentWithLikes);
         }
       });
 
-      setComments(prev => ({
-        ...prev,
-        [postId]: rootComments
-      }));
-    } catch (error) {
-      console.error('Error in loadComments:', error);
-    }
-  }, [user]);
+      // Add replies to their parents
+      commentsData?.forEach(comment => {
+        if (comment.parent_id) {
+          const parent = commentMap.get(comment.parent_id);
+          if (parent) {
+            parent.replies.push(commentMap.get(comment.id));
+          }
+        }
+      });
 
-  const createPost = useCallback(async (
-    title: string,
-    content: string,
-    contentId?: string
-  ) => {
+      setComments(rootComments);
+    } catch (error) {
+      console.error('Error loading comments:', error);
+    }
+  }, []);
+
+  const createPost = useCallback(async (title: string, content: string, contentId?: string) => {
     if (!user || !storeId) return;
 
     try {
@@ -167,33 +163,22 @@ export const useCommunity = (storeId?: string) => {
         .insert({
           store_id: storeId,
           user_id: user.id,
-          content_id: contentId,
+          content_id: contentId || null,
           title,
           content
         })
-        .select(`
-          *,
-          profile:profiles(full_name, avatar_url)
-        `)
+        .select()
         .single();
 
-      if (error) {
-        console.error('Error creating post:', error);
-        return;
-      }
-
-      setPosts(prev => [{ ...data, liked_by_user: false }, ...prev]);
+      if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error in createPost:', error);
+      console.error('Error creating post:', error);
+      throw error;
     }
   }, [user, storeId]);
 
-  const createComment = useCallback(async (
-    postId: string,
-    content: string,
-    parentId?: string
-  ) => {
+  const createComment = useCallback(async (postId: string, content: string, parentId?: string) => {
     if (!user) return;
 
     try {
@@ -201,137 +186,161 @@ export const useCommunity = (storeId?: string) => {
         .from('community_comments')
         .insert({
           post_id: postId,
+          content,
+          parent_id: parentId || null,
           user_id: user.id,
-          parent_id: parentId,
-          content
         })
-        .select(`
-          *,
-          profile:profiles(full_name, avatar_url)
-        `)
+        .select()
         .single();
 
-      if (error) {
-        console.error('Error creating comment:', error);
-        return;
+      if (error) throw error;
+
+      // Update comments count manually
+      const { data: currentPost } = await supabase
+        .from('community_posts')
+        .select('comments_count')
+        .eq('id', postId)
+        .single();
+
+      if (currentPost) {
+        await supabase
+          .from('community_posts')
+          .update({ 
+            comments_count: currentPost.comments_count + 1,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', postId);
       }
 
-      // Update comments count on post
-      await supabase.rpc('increment_comments_count', { post_id: postId });
-      
-      // Update local state
-      setPosts(prev =>
-        prev.map(post =>
-          post.id === postId
-            ? { ...post, comments_count: post.comments_count + 1 }
-            : post
-        )
-      );
-
-      // Reload comments for this post
-      loadComments(postId);
-      
       return data;
     } catch (error) {
-      console.error('Error in createComment:', error);
+      console.error('Error creating comment:', error);
+      throw error;
     }
-  }, [user, loadComments]);
+  }, [user]);
 
-  const toggleLike = useCallback(async (
-    postId?: string,
-    commentId?: string
-  ) => {
-    if (!user) return;
+  const toggleLike = useCallback(async (postId?: string, commentId?: string) => {
+    const currentUser = await supabase.auth.getUser();
+    if (!currentUser.data.user) return;
 
     try {
       if (postId) {
-        const post = posts.find(p => p.id === postId);
-        if (!post) return;
+        // Check if already liked
+        const { data: existingLike } = await supabase
+          .from('community_likes')
+          .select('id')
+          .eq('post_id', postId)
+          .eq('user_id', currentUser.data.user.id)
+          .single();
 
-        if (post.liked_by_user) {
-          // Unlike
+        if (existingLike) {
+          // Remove like
           await supabase
             .from('community_likes')
             .delete()
-            .eq('user_id', user.id)
-            .eq('post_id', postId);
-
-          await supabase.rpc('decrement_likes_count_post', { post_id: postId });
+            .eq('id', existingLike.id);
           
-          setPosts(prev =>
-            prev.map(p =>
-              p.id === postId
-                ? { ...p, likes_count: p.likes_count - 1, liked_by_user: false }
-                : p
-            )
-          );
+          // Update likes count manually
+          const { data: currentPost } = await supabase
+            .from('community_posts')
+            .select('likes_count')
+            .eq('id', postId)
+            .single();
+
+          if (currentPost) {
+            await supabase
+              .from('community_posts')
+              .update({ 
+                likes_count: Math.max(0, currentPost.likes_count - 1),
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', postId);
+          }
         } else {
-          // Like
+          // Add like
           await supabase
             .from('community_likes')
             .insert({
-              user_id: user.id,
-              post_id: postId
+              post_id: postId,
+              user_id: currentUser.data.user.id,
             });
-
-          await supabase.rpc('increment_likes_count_post', { post_id: postId });
           
-          setPosts(prev =>
-            prev.map(p =>
-              p.id === postId
-                ? { ...p, likes_count: p.likes_count + 1, liked_by_user: true }
-                : p
-            )
-          );
+          // Update likes count manually
+          const { data: currentPost } = await supabase
+            .from('community_posts')
+            .select('likes_count')
+            .eq('id', postId)
+            .single();
+
+          if (currentPost) {
+            await supabase
+              .from('community_posts')
+              .update({ 
+                likes_count: currentPost.likes_count + 1,
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', postId);
+          }
         }
+
+        // Update local state
+        setPosts(prev => prev.map(post => {
+          if (post.id === postId) {
+            return {
+              ...post,
+              likes_count: existingLike ? post.likes_count - 1 : post.likes_count + 1,
+              liked_by_user: !existingLike,
+            };
+          }
+          return post;
+        }));
       }
 
       if (commentId) {
         // Similar logic for comments
-        const allComments = Object.values(comments).flat();
-        const findComment = (comments: CommunityComment[]): CommunityComment | undefined => {
-          for (const comment of comments) {
-            if (comment.id === commentId) return comment;
-            if (comment.replies) {
-              const found = findComment(comment.replies);
-              if (found) return found;
-            }
-          }
-        };
-        
-        const comment = findComment(allComments);
-        if (!comment) return;
+        const { data: existingLike } = await supabase
+          .from('community_likes')
+          .select('id')
+          .eq('comment_id', commentId)
+          .eq('user_id', currentUser.data.user.id)
+          .single();
 
-        if (comment.liked_by_user) {
-          // Unlike comment
+        if (existingLike) {
           await supabase
             .from('community_likes')
             .delete()
-            .eq('user_id', user.id)
-            .eq('comment_id', commentId);
-
-          await supabase.rpc('decrement_likes_count_comment', { comment_id: commentId });
+            .eq('id', existingLike.id);
+          
+          // Update likes count manually
+          await supabase
+            .from('community_comments')
+            .update({ 
+              likes_count: supabase.sql`likes_count - 1`,
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', commentId);
         } else {
-          // Like comment
           await supabase
             .from('community_likes')
             .insert({
-              user_id: user.id,
-              comment_id: commentId
+              comment_id: commentId,
+              user_id: currentUser.data.user.id,
             });
-
-          await supabase.rpc('increment_likes_count_comment', { comment_id: commentId });
-        }
-
-        // Reload comments to update UI
-        if (comment.post_id) {
-          loadComments(comment.post_id);
+          
+          // Update likes count manually
+          await supabase
+            .from('community_comments')
+            .update({ 
+              likes_count: supabase.sql`likes_count + 1`,
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', commentId);
         }
       }
     } catch (error) {
-      console.error('Error in toggleLike:', error);
+      console.error('Error toggling like:', error);
     }
-  }, [user, posts, comments, loadComments]);
+  }, []);
 
   // Real-time subscriptions
   useEffect(() => {
@@ -348,7 +357,7 @@ export const useCommunity = (storeId?: string) => {
           filter: `store_id=eq.${storeId}`
         },
         () => {
-          loadPosts(); // Reload posts when changes occur
+          loadPosts();
         }
       )
       .subscribe();

@@ -9,17 +9,19 @@ import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import { LazyRoute, LazyDashboard, LazyLibrary, LazyProfile, LazyCreateStore } from "./components/layout/lazy-route";
+import { LazyRoute, LazyDashboard, LazyLibrary, LazyProfile } from "./components/layout/lazy-route";
 import { lazy } from "react";
 
-// Lazy load less critical pages
-const LazyCheckout = lazy(() => import("./pages/Checkout"));
-const LazyStore = lazy(() => import("./pages/Store"));
-const LazyStoreCustomizer = lazy(() => import("./pages/StoreCustomizer"));
-const LazyProductDetails = lazy(() => import("./pages/ProductDetails"));
-const LazyNotFound = lazy(() => import("./pages/NotFound"));
-const LazyMemberArea = lazy(() => import("./pages/MemberArea"));
-const LazyMemberAreaConfig = lazy(() => import("./pages/MemberAreaConfig"));
+const LazyCreateStore = lazy(() => import('./pages/CreateStore'));
+const LazyStore = lazy(() => import('./pages/Store'));
+const LazyStoreCustomizer = lazy(() => import('./pages/StoreCustomizer'));
+const LazyProductDetails = lazy(() => import('./pages/ProductDetails'));
+const LazyCheckout = lazy(() => import('./pages/Checkout'));
+const LazyMemberArea = lazy(() => import('./pages/MemberArea'));
+const LazyMemberAreaConfig = lazy(() => import('./pages/MemberAreaConfig'));
+const LazyMemberAreaAdvanced = lazy(() => import('./pages/MemberAreaAdvanced'));
+const LazyNetflixDashboard = lazy(() => import('./pages/NetflixDashboard'));
+const LazyNotFound = lazy(() => import('./pages/NotFound'));
 import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
 import PWAInstallPrompt from "./components/ui/pwa-install-prompt";
@@ -66,6 +68,8 @@ const App = () => (
                    <Route path="/loja/:slug/configurar-membros" element={<LazyRoute Component={LazyMemberAreaConfig} />} />
                    <Route path="/loja/:slug/customizar" element={<LazyRoute Component={LazyStoreCustomizer} />} />
                    <Route path="/produto/:slug" element={<LazyRoute Component={LazyProductDetails} />} />
+                   <Route path="/member-area-advanced/:storeId" element={<LazyRoute Component={LazyMemberAreaAdvanced} />} />
+                   <Route path="/netflix" element={<LazyRoute Component={LazyNetflixDashboard} />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
                 </Routes>

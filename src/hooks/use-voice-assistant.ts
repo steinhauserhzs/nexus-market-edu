@@ -60,8 +60,7 @@ export const useVoiceAssistant = () => {
             style: voiceSettings.style,
             use_speaker_boost: voiceSettings.use_speaker_boost
           }
-        },
-        signal: abortController.current.signal
+        }
       });
 
       if (error) {
