@@ -1,0 +1,166 @@
+import { useState } from "react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Play, Plus, Info } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+export interface NetflixCardProps {
+  id: string;
+  title: string;
+  thumbnail: string;
+  type: "course" | "pack" | "template";
+  owned?: boolean;
+  price?: number;
+  badges?: string[];
+  onClick?: () => void;
+  onPlayClick?: () => void;
+  onAddClick?: () => void;
+  onInfoClick?: () => void;
+  className?: string;
+}
+
+export const NetflixCard = ({
+  id,
+  title,
+  thumbnail,
+  type,
+  owned = false,
+  price,
+  badges = [],
+  onClick,
+  onPlayClick,
+  onAddClick,
+  onInfoClick,
+  className
+}: NetflixCardProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const formatPrice = (cents: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(cents / 100);
+  };
+
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'course': return 'bg-blue-600';
+      case 'pack': return 'bg-purple-600';
+      case 'template': return 'bg-green-600';
+      default: return 'bg-gray-600';
+    }
+  };
+
+  return (
+    <div 
+      className={cn(
+        "group relative cursor-pointer transition-all duration-300 ease-in-out",
+        "w-[var(--netflix-card-width)] flex-shrink-0",
+        "hover:scale-110 hover:z-20",
+        className
+      )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
+    >
+      <AspectRatio ratio={2/3} className="overflow-hidden rounded-md">
+        {/* Image Container */}
+        <div className="relative w-full h-full bg-muted animate-pulse">
+          <img
+            src={thumbnail}
+            alt={title}
+            className={cn(
+              "w-full h-full object-cover transition-opacity duration-300",
+              imageLoaded ? "opacity-100" : "opacity-0"
+            )}
+            onLoad={() => setImageLoaded(true)}
+            loading="lazy"
+          />
+          
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          
+          {/* Badges Stack */}
+          {badges.length > 0 && (
+            <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
+              {badges.slice(0, 3).map((badge, index) => (
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className="text-xs px-1.5 py-0.5 bg-black/80 text-white border-none"
+                >
+                  {badge}
+                </Badge>
+              ))}
+            </div>
+          )}
+          
+          {/* Type Badge */}
+          <div className="absolute top-2 right-2">
+            <div className={cn(
+              "w-2 h-2 rounded-full",
+              getTypeColor(type)
+            )} />
+          </div>
+          
+          {/* Hover Controls */}
+          {isHovered && (
+            <div className="absolute inset-0 flex flex-col justify-end p-3 z-10">
+              {/* Title */}
+              <h3 className="text-white text-sm font-semibold mb-2 line-clamp-2">
+                {title}
+              </h3>
+              
+              {/* Action Buttons */}
+              <div className="flex gap-1">
+                {owned ? (
+                  <Button
+                    size="sm"
+                    className="h-6 w-6 p-0 rounded-full bg-white hover:bg-gray-200 text-black"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onPlayClick?.();
+                    }}
+                  >
+                    <Play className="w-3 h-3 fill-current" />
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    className="h-6 w-6 p-0 rounded-full bg-white/20 hover:bg-white/30 text-white border border-white/40"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onAddClick?.();
+                    }}
+                  >
+                    <Plus className="w-3 h-3" />
+                  </Button>
+                )}
+                
+                <Button
+                  size="sm"
+                  className="h-6 w-6 p-0 rounded-full bg-white/20 hover:bg-white/30 text-white border border-white/40"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onInfoClick?.();
+                  }}
+                >
+                  <Info className="w-3 h-3" />
+                </Button>
+              </div>
+              
+              {/* Price */}
+              {!owned && price && (
+                <div className="text-white text-xs font-bold mt-1">
+                  {formatPrice(price)}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </AspectRatio>
+    </div>
+  );
+};
