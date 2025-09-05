@@ -11,6 +11,8 @@ import { AdminStoresSection } from '@/components/admin/admin-stores-section';
 import { AdminFinancialSection } from '@/components/admin/admin-financial-section';
 import { AdminLogsSection } from '@/components/admin/admin-logs-section';
 import { AdminConfigsSection } from '@/components/admin/admin-configs-section';
+import { AdminSettingsSection } from '@/components/admin/admin-settings-section';
+import { AdminQuickActions } from '@/components/admin/admin-quick-actions';
 import { 
   Users, 
   Store, 
@@ -168,13 +170,18 @@ export default function AdminDashboard() {
         </div>
 
         {/* Admin Sections */}
+        <div className="mb-6">
+          <AdminQuickActions />
+        </div>
+
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="users">Usuários</TabsTrigger>
             <TabsTrigger value="stores">Lojas</TabsTrigger>
             <TabsTrigger value="financial">Financeiro</TabsTrigger>
             <TabsTrigger value="logs">Logs</TabsTrigger>
             <TabsTrigger value="configs">Configurações</TabsTrigger>
+            <TabsTrigger value="settings">Sistema</TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -195,6 +202,10 @@ export default function AdminDashboard() {
 
           <TabsContent value="configs">
             <AdminConfigsSection />
+          </TabsContent>
+
+          <TabsContent value="settings">
+            <AdminSettingsSection />
           </TabsContent>
         </Tabs>
       </div>

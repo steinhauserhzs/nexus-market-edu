@@ -105,9 +105,9 @@ export default function MainHeader() {
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm truncate">{profile.full_name || 'Usuário'}</p>
-                        <Badge variant="outline" className="text-xs mt-1">
-                          {profile.role === 'seller' ? 'Vendedor' : 'Usuário'}
-                        </Badge>
+                         <Badge variant="outline" className={`text-xs mt-1 ${profile.role === 'admin' ? 'bg-red-100 text-red-800 border-red-200' : profile.role === 'seller' ? 'bg-blue-100 text-blue-800 border-blue-200' : ''}`}>
+                           {profile.role === 'admin' ? '👑 Admin' : profile.role === 'seller' ? 'Vendedor' : 'Usuário'}
+                         </Badge>
                       </div>
                     </div>
                     
@@ -128,10 +128,25 @@ export default function MainHeader() {
                         Criar Loja
                       </Button>
                       
-                      <Button variant="ghost" className="w-full btn-icon-left justify-start">
-                        <Settings className="icon-sm" />
-                        Configurações
-                      </Button>
+                       <Button variant="ghost" className="w-full btn-icon-left justify-start">
+                         <Settings className="icon-sm" />
+                         Configurações
+                       </Button>
+                       
+                       {/* Admin Button for Mobile */}
+                       {isAdmin && (
+                         <Button 
+                           variant="ghost" 
+                           className="w-full btn-icon-left justify-start bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800 border border-red-200" 
+                           onClick={() => {
+                             navigate('/admin');
+                             setMobileMenuOpen(false);
+                           }}
+                         >
+                           <Settings className="icon-sm" />
+                           🛡️ Painel Admin
+                         </Button>
+                       )}
                       
                       <Button 
                         variant="ghost" 
@@ -230,9 +245,9 @@ export default function MainHeader() {
                   </Avatar>
                   <div className="flex-1">
                     <p className="text-sm font-medium">{profile.full_name || 'Usuário'}</p>
-                    <Badge variant="outline" className="text-xs">
-                      {profile.role === 'seller' ? 'Vendedor' : 'Usuário'}
-                    </Badge>
+                     <Badge variant="outline" className={`text-xs ${profile.role === 'admin' ? 'bg-red-100 text-red-800 border-red-200' : profile.role === 'seller' ? 'bg-blue-100 text-blue-800 border-blue-200' : ''}`}>
+                       {profile.role === 'admin' ? '👑 Administrador' : profile.role === 'seller' ? 'Vendedor' : 'Usuário'}
+                     </Badge>
                   </div>
                 </div>
                 
@@ -255,19 +270,30 @@ export default function MainHeader() {
                   Criar Loja
                 </DropdownMenuItem>
 
-                {profile.role === 'seller' && (
-                  <DropdownMenuItem onClick={() => navigate('/dashboard')}>
-                    <Store className="mr-2 h-4 w-4" />
-                    Dashboard
-                  </DropdownMenuItem>
-                )}
+                 {profile.role === 'seller' && (
+                   <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                     <Store className="mr-2 h-4 w-4" />
+                     Dashboard
+                   </DropdownMenuItem>
+                 )}
 
-                <DropdownMenuSeparator />
-                
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  Configurações
-                </DropdownMenuItem>
+                 {/* Admin Section */}
+                 {isAdmin && (
+                   <>
+                     <DropdownMenuSeparator />
+                     <DropdownMenuItem onClick={() => navigate('/admin')} className="bg-red-50 text-red-700 focus:bg-red-100 focus:text-red-800">
+                       <Settings className="mr-2 h-4 w-4" />
+                       <span className="font-semibold">🛡️ Painel Admin</span>
+                     </DropdownMenuItem>
+                   </>
+                 )}
+
+                 <DropdownMenuSeparator />
+                 
+                 <DropdownMenuItem>
+                   <Settings className="mr-2 h-4 w-4" />
+                   Configurações
+                 </DropdownMenuItem>
                 
                 <DropdownMenuItem onClick={signOut} className="text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />
