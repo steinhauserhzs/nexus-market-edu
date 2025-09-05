@@ -41,5 +41,17 @@ verify_jwt = true
 [functions.security-utils]
 verify_jwt = false
 
+[functions.ai-code-reviewer]
+verify_jwt = true
+
+[functions.gpt-assistant]
+verify_jwt = true
+
+[functions.text-to-speech]
+verify_jwt = true
+
+[functions.send-notification-email]
+verify_jwt = true
+
 [edge_runtime]
 enabled = true

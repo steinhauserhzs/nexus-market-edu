@@ -13,6 +13,7 @@ import { AdminLogsSection } from '@/components/admin/admin-logs-section';
 import { AdminConfigsSection } from '@/components/admin/admin-configs-section';
 import { AdminSettingsSection } from '@/components/admin/admin-settings-section';
 import { AdminDiagnosticsSection } from '@/components/admin/admin-diagnostics-section';
+import { AISystemReviewer } from '@/components/admin/ai-system-reviewer';
 import { AdminQuickActions } from '@/components/admin/admin-quick-actions';
 import { 
   Users, 
@@ -176,8 +177,9 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="diagnostics" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7">
+          <TabsList className="grid w-full grid-cols-8">
             <TabsTrigger value="diagnostics">Diagnósticos</TabsTrigger>
+            <TabsTrigger value="ai-reviewer">IA Revisor</TabsTrigger>
             <TabsTrigger value="users">Usuários</TabsTrigger>
             <TabsTrigger value="stores">Lojas</TabsTrigger>
             <TabsTrigger value="financial">Financeiro</TabsTrigger>
@@ -186,9 +188,13 @@ export default function AdminDashboard() {
             <TabsTrigger value="settings">Sistema</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="diagnostics">
-            <AdminDiagnosticsSection />
-          </TabsContent>
+        <TabsContent value="diagnostics">
+          <AdminDiagnosticsSection />
+        </TabsContent>
+        
+        <TabsContent value="ai-reviewer">
+          <AISystemReviewer />
+        </TabsContent>
 
           <TabsContent value="users">
             <AdminUsersSection />

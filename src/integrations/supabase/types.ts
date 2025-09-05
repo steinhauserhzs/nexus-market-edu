@@ -355,6 +355,51 @@ export type Database = {
         }
         Relationships: []
       }
+      code_reviews: {
+        Row: {
+          created_at: string
+          critical_issues: number
+          file_name: string
+          high_issues: number
+          id: string
+          issues_found: number
+          low_issues: number
+          medium_issues: number
+          overall_score: number
+          review_data: Json
+          review_type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          critical_issues?: number
+          file_name: string
+          high_issues?: number
+          id?: string
+          issues_found?: number
+          low_issues?: number
+          medium_issues?: number
+          overall_score?: number
+          review_data?: Json
+          review_type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          critical_issues?: number
+          file_name?: string
+          high_issues?: number
+          id?: string
+          issues_found?: number
+          low_issues?: number
+          medium_issues?: number
+          overall_score?: number
+          review_data?: Json
+          review_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       community_comments: {
         Row: {
           content: string
