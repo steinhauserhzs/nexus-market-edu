@@ -2117,6 +2117,14 @@ export type Database = {
         }
         Returns: Json
       }
+      decrement_likes_count_comment: {
+        Args: { comment_id: string }
+        Returns: undefined
+      }
+      decrement_likes_count_post: {
+        Args: { post_id: string }
+        Returns: undefined
+      }
       export_user_data: {
         Args: Record<PropertyKey, never>
         Returns: Json
@@ -2236,6 +2244,18 @@ export type Database = {
       }
       handle_successful_payment: {
         Args: { payment_intent_id?: string; session_id: string }
+        Returns: undefined
+      }
+      increment_comments_count: {
+        Args: { post_id: string }
+        Returns: undefined
+      }
+      increment_likes_count_comment: {
+        Args: { comment_id: string }
+        Returns: undefined
+      }
+      increment_likes_count_post: {
+        Args: { post_id: string }
         Returns: undefined
       }
       log_payment_info_access: {
