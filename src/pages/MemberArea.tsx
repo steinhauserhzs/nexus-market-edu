@@ -135,7 +135,7 @@ const MemberArea = () => {
         thumbnail: license.product.thumbnail_url || "/placeholder.svg",
         type: (license.product.type === 'curso' ? 'course' : 'pack') as "course" | "pack" | "template",
         owned: true,
-        badges: ["Adquirido"],
+        badges: { functional: ["Adquirido"], promotional: [] },
         onClick: () => navigate(`/produto/${license.product.id}`),
         onPlayClick: () => {
           // Navegar para o player do curso
@@ -165,7 +165,7 @@ const MemberArea = () => {
           type: (product.type === 'curso' ? 'course' : 'pack') as "course" | "pack" | "template",
           owned: false,
           price: product.price_cents,
-          badges: index < 3 ? ["Novo"] : [],
+          badges: index < 3 ? { functional: [], promotional: ["Novo"] } : { functional: [], promotional: [] },
           onClick: () => navigate(`/produto/${product.id}`),
           onAddClick: () => {
             addToCart({

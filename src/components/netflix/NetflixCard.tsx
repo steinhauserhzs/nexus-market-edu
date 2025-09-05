@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Play, Plus, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useBadgeRotation, BadgeConfig } from "@/hooks/useBadgeRotation";
 
 export interface NetflixCardProps {
   id: string;
@@ -12,7 +13,8 @@ export interface NetflixCardProps {
   type: "course" | "pack" | "template";
   owned?: boolean;
   price?: number;
-  badges?: string[];
+  badges?: BadgeConfig;
+  position?: number;
   onClick?: () => void;
   onPlayClick?: () => void;
   onAddClick?: () => void;
@@ -27,7 +29,8 @@ export const NetflixCard = ({
   type,
   owned = false,
   price,
-  badges = [],
+  badges = { functional: [], promotional: [] },
+  position = 0,
   onClick,
   onPlayClick,
   onAddClick,
@@ -36,6 +39,15 @@ export const NetflixCard = ({
 }: NetflixCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isTouched, setIsTouched] = useState(false);
+
+  // Use badge rotation hook
+  const visibleBadges = useBadgeRotation({
+    itemId: id,
+    badges,
+    position,
+    maxBadges: 3
+  });
 
   const formatPrice = (cents: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -46,11 +58,21 @@ export const NetflixCard = ({
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'course': return 'bg-blue-600';
-      case 'pack': return 'bg-purple-600';
-      case 'template': return 'bg-green-600';
-      default: return 'bg-gray-600';
+      case 'course': return 'bg-blue-600 border-blue-400';
+      case 'pack': return 'bg-purple-600 border-purple-400';
+      case 'template': return 'bg-green-600 border-green-400';
+      default: return 'bg-gray-600 border-gray-400';
     }
+  };
+
+  const handleInteraction = () => {
+    setIsHovered(true);
+    setIsTouched(true);
+  };
+
+  const handleInteractionEnd = () => {
+    setIsHovered(false);
+    setTimeout(() => setIsTouched(false), 2000); // Keep mobile state for 2 seconds
   };
 
   return (
@@ -58,11 +80,14 @@ export const NetflixCard = ({
       className={cn(
         "group relative cursor-pointer transition-all duration-300 ease-in-out netflix-card",
         "w-[110px] sm:w-[140px] md:w-[160px] lg:w-[180px] flex-shrink-0",
-        "hover:scale-105 md:hover:scale-110 hover:z-20",
+        "hover:scale-105 md:hover:scale-110 hover:z-20 active:scale-95",
+        "touch-manipulation select-none",
         className
       )}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleInteraction}
+      onMouseLeave={handleInteractionEnd}
+      onTouchStart={handleInteraction}
+      onTouchEnd={handleInteractionEnd}
       onClick={onClick}
     >
       <AspectRatio ratio={2/3} className="overflow-hidden rounded-md">
@@ -82,14 +107,19 @@ export const NetflixCard = ({
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
-          {/* Badges Stack */}
-          {badges.length > 0 && (
+          {/* Dynamic Badges Stack */}
+          {visibleBadges.length > 0 && (
             <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
-              {badges.slice(0, 3).map((badge, index) => (
+              {visibleBadges.map((badge, index) => (
                 <Badge
-                  key={index}
+                  key={`${badge}-${index}`}
                   variant="secondary"
-                  className="text-xs px-1.5 py-0.5 bg-black/80 text-white border-none"
+                  className={cn(
+                    "text-xs px-1.5 py-0.5 border-none animate-fade-in font-medium",
+                    badges.functional.includes(badge)
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-black/80 text-white"
+                  )}
                 >
                   {badge}
                 </Badge>
@@ -100,13 +130,13 @@ export const NetflixCard = ({
           {/* Type Badge */}
           <div className="absolute top-2 right-2">
             <div className={cn(
-              "w-2 h-2 rounded-full",
+              "w-3 h-3 rounded-full border-2 shadow-sm",
               getTypeColor(type)
             )} />
           </div>
           
-          {/* Hover Controls */}
-          {isHovered && (
+          {/* Hover/Touch Controls */}
+          {(isHovered || isTouched) && (
             <div className="absolute inset-0 flex flex-col justify-end p-3 z-10">
               {/* Title */}
               <h3 className="text-white text-sm font-semibold mb-2 line-clamp-2">

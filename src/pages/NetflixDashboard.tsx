@@ -19,7 +19,7 @@ const NetflixDashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Transform products to Netflix cards
+  // Transform products to Netflix cards with badge rotation
   const transformProductsToCards = (products: any[]): NetflixCardProps[] => {
     return products.map((product, index) => {
       const badges = generateProductBadges({
@@ -38,7 +38,8 @@ const NetflixDashboard = () => {
         type: (product.type === 'curso' ? 'course' : product.type === 'pack' ? 'pack' : 'template') as "course" | "pack" | "template",
         owned: false, // TODO: Check user licenses for ownership
         price: product.price_cents,
-        badges: [],
+        badges, // Now using the proper BadgeConfig format
+        position: index,
         onClick: () => navigate(`/produto/${product.id}`),
         onPlayClick: () => {
           // TODO: Navigate to course player when owned

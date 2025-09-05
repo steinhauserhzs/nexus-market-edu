@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { NetflixCard, NetflixCardProps } from "./NetflixCard";
+import { MobileCarouselGestures } from "./MobileCarouselGestures";
 
 interface NetflixCarouselProps {
   title?: string;
@@ -23,6 +24,7 @@ export const NetflixCarousel = ({
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const checkScrollability = useCallback(() => {
     if (scrollRef.current) {
@@ -33,9 +35,9 @@ export const NetflixCarousel = ({
   }, []);
 
   const scroll = useCallback((direction: 'left' | 'right') => {
-    if (scrollRef.current && !isScrolling) {
+    if (scrollRef.current && !isScrolling && !isDragging) {
       setIsScrolling(true);
-      const scrollAmount = scrollRef.current.clientWidth * 0.8;
+      const scrollAmount = scrollRef.current.clientWidth * 0.7;
       const newScrollLeft = direction === 'left' 
         ? scrollRef.current.scrollLeft - scrollAmount
         : scrollRef.current.scrollLeft + scrollAmount;
@@ -50,7 +52,10 @@ export const NetflixCarousel = ({
         checkScrollability();
       }, 300);
     }
-  }, [isScrolling, checkScrollability]);
+  }, [isScrolling, isDragging, checkScrollability]);
+
+  const handleSwipeLeft = useCallback(() => scroll('right'), [scroll]);
+  const handleSwipeRight = useCallback(() => scroll('left'), [scroll]);
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
@@ -115,27 +120,36 @@ export const NetflixCarousel = ({
           </Button>
         )}
 
-        {/* Scrollable Content */}
-        <div
-          ref={scrollRef}
-          className={cn(
-            "flex gap-2 md:gap-3 overflow-x-auto scrollbar-hide",
-            "px-4 md:px-6 py-2",
-            "scroll-smooth touch-pan-x"
-          )}
-          style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitOverflowScrolling: 'touch'
-          }}
+        {/* Scrollable Content with Gesture Support */}
+        <MobileCarouselGestures
+          onSwipeLeft={handleSwipeLeft}
+          onSwipeRight={handleSwipeRight}
+          className="netflix-carousel-container"
         >
-          {items.map((item) => (
-            <NetflixCard
-              key={item.id}
-              {...item}
-            />
-          ))}
-        </div>
+          <div
+            ref={scrollRef}
+            className={cn(
+              "flex gap-2 md:gap-3 overflow-x-auto scrollbar-hide netflix-carousel-container",
+              "px-4 md:px-6 py-2",
+              "scroll-smooth touch-pan-x"
+            )}
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch'
+            }}
+            onTouchStart={() => setIsDragging(true)}
+            onTouchEnd={() => setTimeout(() => setIsDragging(false), 100)}
+          >
+            {items.map((item, index) => (
+              <NetflixCard
+                key={item.id}
+                {...item}
+                position={index}
+              />
+            ))}
+          </div>
+        </MobileCarouselGestures>
       </div>
     </section>
   );
