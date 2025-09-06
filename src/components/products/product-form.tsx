@@ -141,7 +141,7 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
         allow_affiliates: formData.allow_affiliates,
         requires_shipping: formData.requires_shipping,
         weight_grams: formData.requires_shipping ? formData.weight_grams : null,
-        status: 'draft',
+        status: 'published',
         currency: 'BRL',
       };
 

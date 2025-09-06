@@ -25,6 +25,10 @@ const LazyMemberAreaAdvanced = lazy(() => import('./pages/MemberAreaAdvanced'));
 const LazyNetflixDashboard = lazy(() => import('./pages/NetflixDashboard'));
 const LazyAdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const LazyNotFound = lazy(() => import('./pages/NotFound'));
+const LazyContact = lazy(() => import('./pages/Contact'));
+const LazyProductNew = lazy(() => import('./pages/ProductNew'));
+const LazyPersonalizarLoja = lazy(() => import('./pages/PersonalizarLoja'));
+const LazyAnalytics = lazy(() => import('./pages/Analytics'));
 import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
 import PWAInstallPrompt from "./components/ui/pwa-install-prompt";
@@ -75,8 +79,12 @@ const App = () => (
                    <Route path="/demo" element={<Demo />} />
                    <Route path="/netflix" element={<LazyRoute Component={LazyNetflixDashboard} />} />
                    <Route path="/admin" element={<LazyRoute Component={LazyAdminDashboard} />} />
+                   <Route path="/contato" element={<LazyRoute Component={LazyContact} />} />
+                   <Route path="/produto/novo" element={<LazyRoute Component={LazyProductNew} />} />
+                   <Route path="/personalizar-loja" element={<LazyRoute Component={LazyPersonalizarLoja} />} />
+                   <Route path="/analytics" element={<LazyRoute Component={LazyAnalytics} />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
+                   <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
                 </Routes>
                 <MobileNavigation />
                 <PWAInstallPrompt />

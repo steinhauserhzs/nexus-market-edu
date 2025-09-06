@@ -332,6 +332,56 @@ const MemberArea = () => {
             </div>
           </section>
 
+          {/* Meus PDFs */}
+          {userProducts && userProducts.some(product => product.type === 'digital') && (
+            <section className="mb-8">
+              <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                <FileText className="h-5 w-5 text-primary" />
+                Meus PDFs
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {userProducts
+                  .filter(product => product.type === 'digital')
+                  .map((product) => (
+                    <Card key={product.id} className="hover:shadow-lg transition-shadow">
+                      <div className="aspect-video bg-muted rounded-t-lg mb-4 overflow-hidden relative">
+                        {product.thumbnail_url ? (
+                          <img
+                            src={product.thumbnail_url}
+                            alt={product.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-full">
+                            <FileText className="h-8 w-8 text-muted-foreground" />
+                          </div>
+                        )}
+                        <Badge className="absolute top-2 right-2 bg-blue-600">
+                          <Download className="h-3 w-3 mr-1" />
+                          PDF
+                        </Badge>
+                      </div>
+                      <CardContent className="p-4">
+                        <h3 className="font-semibold mb-2">{product.title}</h3>
+                        {product.description && (
+                          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                            {product.description}
+                          </p>
+                        )}
+                        <Button 
+                          className="w-full" 
+                          onClick={() => navigate(`/produto/${product.slug}`)}
+                        >
+                          <Download className="h-4 w-4 mr-2" />
+                          Baixar PDF
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+              </div>
+            </section>
+          )}
+
           {/* Suporte */}
           <section>
             <h2 className="text-xl font-bold mb-4 flex items-center gap-2">

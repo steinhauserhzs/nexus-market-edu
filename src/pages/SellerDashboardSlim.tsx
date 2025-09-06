@@ -166,14 +166,13 @@ const SellerDashboardSlim = () => {
     }).format(cents / 100);
   };
 
-  // Verificar se usuário é seller
+  // Allow access to authenticated users (removed seller role restriction)
+  // Users can access dashboard and become sellers by creating stores
   useEffect(() => {
-    if (user && user.user_metadata?.role !== 'seller') {
-      navigate('/');
-    }
+    // Remove role restriction - anyone can access dashboard
   }, [user, navigate]);
 
-  if (!user || user.user_metadata?.role !== 'seller') {
+  if (!user) {
     return null;
   }
 
