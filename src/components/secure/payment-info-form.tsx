@@ -32,6 +32,7 @@ const SecurePaymentInfoForm = () => {
   const { logs, loading: logsLoading } = usePaymentAuditLogs();
   
   const [formData, setFormData] = useState({
+    whatsapp_number: '',
     pix_key: '',
     stripe_account_id: '',
     bank_account: {
@@ -48,6 +49,7 @@ const SecurePaymentInfoForm = () => {
   React.useEffect(() => {
     if (paymentInfo) {
       setFormData({
+        whatsapp_number: paymentInfo.whatsapp_number || '',
         pix_key: paymentInfo.pix_key || '',
         stripe_account_id: paymentInfo.stripe_account_id || '',
         bank_account: paymentInfo.bank_account || {
@@ -73,6 +75,7 @@ const SecurePaymentInfoForm = () => {
         // Limpar formulário se for inserção
         if (!paymentInfo) {
           setFormData({
+            whatsapp_number: '',
             pix_key: '',
             stripe_account_id: '',
             bank_account: {
@@ -167,19 +170,30 @@ const SecurePaymentInfoForm = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* PIX Key */}
-                <div className="space-y-2">
-                  <Label htmlFor="pix_key">Chave PIX</Label>
-                  <Input
-                    id="pix_key"
-                    type="text"
-                    value={formData.pix_key}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      pix_key: e.target.value
-                    }))}
-                    placeholder="Digite sua chave PIX (CPF, email, telefone ou chave aleatória)"
-                  />
+                {/* WhatsApp and PIX */}
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <Label htmlFor="whatsapp_number">WhatsApp para notificações</Label>
+                    <Input
+                      id="whatsapp_number"
+                      placeholder="Digite seu WhatsApp com DDD (11999999999)"
+                      value={formData.whatsapp_number || ""}
+                      onChange={(e) => setFormData(prev => ({ ...prev, whatsapp_number: e.target.value }))}
+                    />
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Receberá automaticamente seus dados de acesso após a compra
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="pix_key">Chave PIX</Label>
+                    <Input
+                      id="pix_key"
+                      placeholder="Digite sua chave PIX (CPF, e-mail, telefone ou chave aleatória)"
+                      value={formData.pix_key}
+                      onChange={(e) => setFormData(prev => ({ ...prev, pix_key: e.target.value }))}
+                    />
+                  </div>
                 </div>
 
                 {/* Stripe Account ID */}

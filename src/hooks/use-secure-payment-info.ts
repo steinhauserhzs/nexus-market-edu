@@ -8,6 +8,7 @@ interface PaymentInfo {
   pix_key?: string;
   stripe_account_id?: string;
   bank_account?: any;
+  whatsapp_number?: string;
   verified: boolean;
   created_at: string;
   updated_at: string;

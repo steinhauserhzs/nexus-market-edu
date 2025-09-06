@@ -14,7 +14,7 @@ import { AdminConfigsSection } from '@/components/admin/admin-configs-section';
 import { AdminSettingsSection } from '@/components/admin/admin-settings-section';
 import { AdminDiagnosticsSection } from '@/components/admin/admin-diagnostics-section';
 import { AISystemReviewer } from '@/components/admin/ai-system-reviewer';
-import { AdminQuickActions } from '@/components/admin/admin-quick-actions';
+import { AdminWhatsAppSection } from '@/components/admin/admin-whatsapp-section';
 import { 
   Users, 
   Store, 
@@ -172,12 +172,10 @@ export default function AdminDashboard() {
         </div>
 
         {/* Admin Sections */}
-        <div className="mb-6">
-          <AdminQuickActions />
-        </div>
+        {/* Quick Actions removed temporarily */}
 
-        <Tabs defaultValue="diagnostics" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 gap-1">
+        <Tabs defaultValue="whatsapp" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-1">
             <TabsTrigger value="diagnostics">Diagnósticos</TabsTrigger>
             <TabsTrigger value="ai-reviewer">IA Revisor</TabsTrigger>
             <TabsTrigger value="users">Usuários</TabsTrigger>
@@ -185,7 +183,7 @@ export default function AdminDashboard() {
             <TabsTrigger value="financial">Financeiro</TabsTrigger>
             <TabsTrigger value="logs">Logs</TabsTrigger>
             <TabsTrigger value="configs">Configurações</TabsTrigger>
-            <TabsTrigger value="settings">Sistema</TabsTrigger>
+            <TabsTrigger value="whatsapp">WhatsApp</TabsTrigger>
           </TabsList>
 
         <TabsContent value="diagnostics">
@@ -214,6 +212,10 @@ export default function AdminDashboard() {
 
           <TabsContent value="configs">
             <AdminConfigsSection />
+          </TabsContent>
+
+          <TabsContent value="whatsapp">
+            <AdminWhatsAppSection />
           </TabsContent>
 
           <TabsContent value="settings">
