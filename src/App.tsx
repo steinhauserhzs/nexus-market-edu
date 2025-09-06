@@ -32,7 +32,6 @@ const LazyAnalytics = lazy(() => import('./pages/Analytics'));
 const LazyDashboardHome = lazy(() => import('./pages/DashboardHome'));
 import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
-import PWAInstallPrompt from "./components/ui/pwa-install-prompt";
 import PerformanceMonitor from "./components/ui/performance-monitor";
 
 // Create a client instance
@@ -89,7 +88,6 @@ const App = () => (
                    <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
                 </Routes>
                 <MobileNavigation />
-                <PWAInstallPrompt />
                 <PerformanceMonitor />
               </div>
             </MobileGestures>
