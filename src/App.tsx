@@ -57,9 +57,11 @@ const App = () => (
               >
             <MobileGestures>
               <div className="pb-16 md:pb-0">
-                <Routes>
+                 <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<LazyRoute Component={LazySellerDashboardSlim} />} />
+          <Route path="/biblioteca" element={<LazyRoute Component={LazyLibrary} />} />
                   <Route path="/perfil" element={<LazyRoute Component={LazyProfile} />} />
                   <Route path="/checkout" element={<LazyRoute Component={LazyCheckout} />} />
                   <Route path="/carrinho" element={<LazyRoute Component={LazyCheckout} />} />
