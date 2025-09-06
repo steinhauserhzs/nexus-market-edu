@@ -180,10 +180,10 @@ const LandingProducers = () => {
                 size="lg" 
                 variant="outline"
                 className="text-lg px-8 py-6 h-auto"
-                onClick={() => navigate("/loja/demo/membros")}
+                onClick={() => navigate("/demo")}
               >
                 <MonitorPlay className="w-5 h-5 mr-2" />
-                Ver Demo ao Vivo
+                Ver Demonstração
               </Button>
             </div>
 

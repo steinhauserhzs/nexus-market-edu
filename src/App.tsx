@@ -9,6 +9,7 @@ import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import Demo from "./pages/Demo";
 import { LazyRoute, LazyDashboard, LazyLibrary, LazyProfile } from "./components/layout/lazy-route";
 import { lazy } from "react";
 
@@ -72,6 +73,7 @@ const App = () => (
                    <Route path="/loja/:slug/customizar" element={<LazyRoute Component={LazyStoreCustomizer} />} />
                    <Route path="/produto/:slug" element={<LazyRoute Component={LazyProductDetails} />} />
                    <Route path="/member-area-advanced/:storeId" element={<LazyRoute Component={LazyMemberAreaAdvanced} />} />
+                   <Route path="/demo" element={<Demo />} />
                    <Route path="/netflix" element={<LazyRoute Component={LazyNetflixDashboard} />} />
                    <Route path="/admin" element={<LazyRoute Component={LazyAdminDashboard} />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
