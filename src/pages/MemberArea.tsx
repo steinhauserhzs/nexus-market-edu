@@ -8,7 +8,15 @@ import { NetflixCardProps } from "@/components/netflix/NetflixCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Play, Download, ExternalLink, BookOpen, Users, Star } from "lucide-react";
+import { 
+  Play, 
+  Download, 
+  ExternalLink, 
+  BookOpen, 
+  Users, 
+  Star,
+  Store
+} from "lucide-react";
 import SEOHead from "@/components/ui/seo-head";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
@@ -21,6 +29,7 @@ interface Store {
   banner_url: string | null;
   slug: string;
   owner_id: string;
+  support_channel_url?: string | null;
 }
 
 interface MemberAreaConfig {
@@ -154,7 +163,7 @@ const MemberArea = () => {
           .from('products')
           .select('*')
           .eq('store_id', store.id)
-          .eq('status', 'published')
+          .eq('is_active', true)
           .not('id', 'in', `(${ownedProductIds.join(',')})`)
           .limit(12);
 
@@ -367,55 +376,139 @@ const MemberArea = () => {
           </section>
         )}
 
-        {/* Seus Produtos */}
-        {ownedProducts.length > 0 && (
+        {/* Netflix-style Sections */}
+        <div className="space-y-8 pb-20">
+          {/* Mais Vendidos */}
           <NetflixCarousel
-            title="Seus Produtos"
-            description="Continue de onde parou"
-            items={ownedProducts}
+            title="Mais Vendidos"
+            description="Os produtos mais populares desta loja"
+            items={otherProducts.length > 0 ? otherProducts.slice(0, 6) : []}
           />
-        )}
 
-        {/* Conteúdo Exclusivo */}
-        {exclusiveContent.length > 0 && (
-          <section className="py-8">
-            <div className="container mx-auto px-4">
-              <h2 className="text-2xl font-bold mb-6">Conteúdo Exclusivo</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {exclusiveContent.map((content) => (
-                  <Card key={content.id}>
-                    <CardHeader>
-                      <CardTitle className="text-lg">{content.title}</CardTitle>
-                      {content.description && (
-                        <p className="text-sm text-muted-foreground">
-                          {content.description}
-                        </p>
-                      )}
-                      <Badge variant="secondary" className="w-fit">
-                        {content.content_type === 'video' && 'Vídeo'}
-                        {content.content_type === 'download' && 'Download'}
-                        {content.content_type === 'link' && 'Link Externo'}
-                        {content.content_type === 'text' && 'Texto'}
-                      </Badge>
-                    </CardHeader>
-                    <CardContent>
-                      {renderExclusiveContent(content)}
-                    </CardContent>
-                  </Card>
-                ))}
+          {/* Seus PDFs */}
+          {exclusiveContent.filter(c => c.content_type === 'download' && c.content.toLowerCase().includes('.pdf')).length > 0 && (
+            <section className="container mx-auto px-4">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold mb-2">Seus PDFs</h2>
+                <p className="text-muted-foreground">Downloads e materiais em PDF</p>
               </div>
-            </div>
-          </section>
-        )}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {exclusiveContent
+                  .filter(c => c.content_type === 'download' && c.content.toLowerCase().includes('.pdf'))
+                  .map((content) => (
+                    <Card key={content.id} className="hover:shadow-lg transition-shadow">
+                      <CardHeader>
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          <BookOpen className="w-5 h-5" />
+                          {content.title}
+                        </CardTitle>
+                        {content.description && (
+                          <p className="text-sm text-muted-foreground">
+                            {content.description}
+                          </p>
+                        )}
+                      </CardHeader>
+                      <CardContent>
+                        <Button asChild className="w-full">
+                          <a href={content.content} download target="_blank" rel="noopener noreferrer">
+                            <Download className="w-4 h-4 mr-2" />
+                            Download PDF
+                          </a>
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+              </div>
+            </section>
+          )}
 
-        {/* Outros Produtos da Loja */}
-        {config?.show_other_products && otherProducts.length > 0 && (
-          <NetflixCarousel
-            title="Outros Produtos da Loja"
-            description="Descubra mais conteúdos exclusivos"
-            items={otherProducts}
-          />
-        )}
+          {/* Seus Cursos */}
+          {ownedProducts.length > 0 && (
+            <NetflixCarousel
+              title="Seus Cursos"
+              description="Continue de onde parou"
+              items={ownedProducts}
+            />
+          )}
+
+          {/* Suporte */}
+          <section className="container mx-auto px-4">
+            <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-xl flex items-center gap-2">
+                  <Users className="w-6 h-6" />
+                  Suporte
+                </CardTitle>
+                <p className="text-muted-foreground">
+                  Precisa de ajuda? Entre em contato conosco
+                </p>
+              </CardHeader>
+              <CardContent className="flex flex-col sm:flex-row gap-4">
+                {store?.support_channel_url ? (
+                  <Button asChild className="flex-1">
+                    <a href={store.support_channel_url} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Acessar Suporte
+                    </a>
+                  </Button>
+                ) : (
+                  <Button 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={() => navigate(`/loja/${slug}`)}
+                  >
+                    <Users className="w-4 h-4 mr-2" />
+                    Visitar Loja
+                  </Button>
+                )}
+                
+                <Button 
+                  variant="secondary" 
+                  className="flex-1"
+                  onClick={() => navigate(`/loja/${slug}`)}
+                >
+                  <Store className="w-4 h-4 mr-2" />
+                  Ver Mais Produtos
+                </Button>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Conteúdo Exclusivo Adicional */}
+          {exclusiveContent.filter(c => c.content_type !== 'download' || !c.content.toLowerCase().includes('.pdf')).length > 0 && (
+            <section className="container mx-auto px-4">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold mb-2">Conteúdo Exclusivo</h2>
+                <p className="text-muted-foreground">Materiais especiais para membros</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {exclusiveContent
+                  .filter(c => c.content_type !== 'download' || !c.content.toLowerCase().includes('.pdf'))
+                  .map((content) => (
+                    <Card key={content.id} className="hover:shadow-lg transition-shadow">
+                      <CardHeader>
+                        <CardTitle className="text-lg">{content.title}</CardTitle>
+                        {content.description && (
+                          <p className="text-sm text-muted-foreground">
+                            {content.description}
+                          </p>
+                        )}
+                        <Badge variant="secondary" className="w-fit">
+                          {content.content_type === 'video' && 'Vídeo'}
+                          {content.content_type === 'download' && 'Download'}
+                          {content.content_type === 'link' && 'Link Externo'}
+                          {content.content_type === 'text' && 'Conteúdo'}
+                        </Badge>
+                      </CardHeader>
+                      <CardContent>
+                        {renderExclusiveContent(content)}
+                      </CardContent>
+                    </Card>
+                  ))}
+              </div>
+            </section>
+          )}
+        </div>
       </main>
     </div>
   );

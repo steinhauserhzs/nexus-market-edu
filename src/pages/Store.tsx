@@ -102,6 +102,7 @@ const Store = () => {
         .select('*')
         .eq('store_id', storeData.id)
         .eq('status', 'published')
+        .eq('is_active', true)
         .order('featured', { ascending: false })
         .order('created_at', { ascending: false });
 

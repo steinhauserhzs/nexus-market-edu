@@ -1441,6 +1441,7 @@ export type Database = {
           difficulty_level: string | null
           featured: boolean | null
           id: string
+          is_active: boolean | null
           meta_description: string | null
           meta_title: string | null
           price_cents: number
@@ -1466,6 +1467,7 @@ export type Database = {
           difficulty_level?: string | null
           featured?: boolean | null
           id?: string
+          is_active?: boolean | null
           meta_description?: string | null
           meta_title?: string | null
           price_cents?: number
@@ -1491,6 +1493,7 @@ export type Database = {
           difficulty_level?: string | null
           featured?: boolean | null
           id?: string
+          is_active?: boolean | null
           meta_description?: string | null
           meta_title?: string | null
           price_cents?: number
@@ -1943,8 +1946,11 @@ export type Database = {
           is_active: boolean | null
           logo_url: string | null
           name: string
+          niche: string | null
           owner_id: string | null
+          parent_store_id: string | null
           slug: string
+          support_channel_url: string | null
           theme: Json | null
           updated_at: string | null
         }
@@ -1956,8 +1962,11 @@ export type Database = {
           is_active?: boolean | null
           logo_url?: string | null
           name: string
+          niche?: string | null
           owner_id?: string | null
+          parent_store_id?: string | null
           slug: string
+          support_channel_url?: string | null
           theme?: Json | null
           updated_at?: string | null
         }
@@ -1969,8 +1978,11 @@ export type Database = {
           is_active?: boolean | null
           logo_url?: string | null
           name?: string
+          niche?: string | null
           owner_id?: string | null
+          parent_store_id?: string | null
           slug?: string
+          support_channel_url?: string | null
           theme?: Json | null
           updated_at?: string | null
         }
@@ -1980,6 +1992,13 @@ export type Database = {
             columns: ["owner_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stores_parent_store_id_fkey"
+            columns: ["parent_store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
             referencedColumns: ["id"]
           },
         ]

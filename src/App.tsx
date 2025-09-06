@@ -12,6 +12,7 @@ import Auth from "./pages/Auth";
 import { LazyRoute, LazyDashboard, LazyLibrary, LazyProfile } from "./components/layout/lazy-route";
 import { lazy } from "react";
 
+const LazySellerDashboardSlim = lazy(() => import('./pages/SellerDashboardSlim'));
 const LazyCreateStore = lazy(() => import('./pages/CreateStore'));
 const LazyStore = lazy(() => import('./pages/Store'));
 const LazyStoreCustomizer = lazy(() => import('./pages/StoreCustomizer'));
@@ -60,7 +61,7 @@ const App = () => (
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/biblioteca" element={<LazyRoute Component={LazyLibrary} />} />
                   <Route path="/area-membros" element={<LazyRoute Component={LazyDashboard} />} />
-                  <Route path="/dashboard" element={<LazyRoute Component={LazyDashboard} />} />
+                  <Route path="/dashboard" element={<LazyRoute Component={LazySellerDashboardSlim} />} />
                   <Route path="/perfil" element={<LazyRoute Component={LazyProfile} />} />
                   <Route path="/checkout" element={<LazyRoute Component={LazyCheckout} />} />
                   <Route path="/carrinho" element={<LazyRoute Component={LazyCheckout} />} />

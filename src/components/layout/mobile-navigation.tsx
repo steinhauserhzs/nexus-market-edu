@@ -16,11 +16,16 @@ const MobileNavigation = () => {
   const { user, profile } = useAuth();
 
   const navItems = [
-    { icon: Home, label: "Início", path: "/" },
+    { 
+      icon: Home, 
+      label: profile?.role === 'seller' ? "Dashboard" : "Início", 
+      path: profile?.role === 'seller' ? "/dashboard" : "/",
+      requireAuth: profile?.role === 'seller'
+    },
     { icon: Search, label: "Explorar", path: "/?search=true" },
     { icon: BookOpen, label: "Biblioteca", path: "/biblioteca", requireAuth: true },
     ...(profile?.role === 'seller' ? [
-      { icon: Store, label: "Dashboard", path: "/dashboard", requireAuth: true }
+      { icon: Store, label: "Loja", path: "/loja", requireAuth: true }
     ] : []),
     { icon: User, label: user ? "Perfil" : "Entrar", path: user ? "/perfil" : "/auth" }
   ];

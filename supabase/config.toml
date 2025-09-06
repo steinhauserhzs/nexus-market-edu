@@ -53,5 +53,11 @@ verify_jwt = true
 [functions.send-notification-email]
 verify_jwt = true
 
+[functions.get-seller-kpis]
+verify_jwt = true
+
+[functions.ai-store-analyzer]
+verify_jwt = true
+
 [edge_runtime]
 enabled = true
