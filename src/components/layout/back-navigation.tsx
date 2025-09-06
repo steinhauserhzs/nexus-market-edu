@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface BackNavigationProps {
   showHome?: boolean;
@@ -12,6 +13,7 @@ interface BackNavigationProps {
 const BackNavigation = ({ showHome = true, customAction, title }: BackNavigationProps) => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { user } = useAuth();
 
   const handleBack = () => {
     if (customAction) {
@@ -19,12 +21,12 @@ const BackNavigation = ({ showHome = true, customAction, title }: BackNavigation
     } else if (window.history.length > 1) {
       navigate(-1);
     } else {
-      navigate('/');
+      navigate(user ? '/inicio' : '/');
     }
   };
 
   const handleHome = () => {
-    navigate('/');
+    navigate(user ? '/inicio' : '/');
   };
 
   return (
