@@ -1570,6 +1570,7 @@ export type Database = {
           timezone: string | null
           updated_at: string | null
           website_url: string | null
+          whatsapp_number: string | null
         }
         Insert: {
           address_line1?: string | null
@@ -1614,6 +1615,7 @@ export type Database = {
           timezone?: string | null
           updated_at?: string | null
           website_url?: string | null
+          whatsapp_number?: string | null
         }
         Update: {
           address_line1?: string | null
@@ -1658,6 +1660,7 @@ export type Database = {
           timezone?: string | null
           updated_at?: string | null
           website_url?: string | null
+          whatsapp_number?: string | null
         }
         Relationships: []
       }
@@ -2268,6 +2271,75 @@ export type Database = {
           website_url?: string | null
         }
         Relationships: []
+      }
+      whatsapp_notifications: {
+        Row: {
+          attempts: number
+          created_at: string
+          error_message: string | null
+          id: string
+          max_attempts: number
+          message_sent: string | null
+          message_template: string
+          n8n_webhook_url: string
+          order_id: string | null
+          product_id: string | null
+          sent_at: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+          whatsapp_number: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          max_attempts?: number
+          message_sent?: string | null
+          message_template: string
+          n8n_webhook_url: string
+          order_id?: string | null
+          product_id?: string | null
+          sent_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+          whatsapp_number: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          max_attempts?: number
+          message_sent?: string | null
+          message_template?: string
+          n8n_webhook_url?: string
+          order_id?: string | null
+          product_id?: string | null
+          sent_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+          whatsapp_number?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_notifications_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "whatsapp_notifications_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
