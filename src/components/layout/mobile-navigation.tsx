@@ -18,14 +18,14 @@ const MobileNavigation = () => {
   const navItems = [
     { 
       icon: Home, 
-      label: profile?.role === 'seller' ? "Dashboard" : "Início", 
-      path: profile?.role === 'seller' ? "/dashboard" : "/",
-      requireAuth: profile?.role === 'seller'
+      label: "Início", 
+      path: user ? "/inicio" : "/",
+      requireAuth: false
     },
     { icon: Search, label: "Explorar", path: "/?search=true" },
     { icon: BookOpen, label: "Biblioteca", path: "/biblioteca", requireAuth: true },
-    ...(profile?.role === 'seller' ? [
-      { icon: Store, label: "Loja", path: "/loja", requireAuth: true }
+    ...(user ? [
+      { icon: Store, label: "Dashboard", path: "/dashboard", requireAuth: true }
     ] : []),
     { icon: User, label: user ? "Perfil" : "Entrar", path: user ? "/perfil" : "/auth" }
   ];

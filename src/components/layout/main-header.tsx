@@ -29,7 +29,8 @@ export default function MainHeader() {
         variant="ghost" 
         size={mobile ? "default" : "sm"}
         onClick={() => {
-          navigate('/');
+          // Navigate to dashboard for logged users, home for guests
+          navigate(user ? '/inicio' : '/');
           if (mobile) setMobileMenuOpen(false);
         }}
         className={cn("btn-icon-left", mobile && "justify-start w-full")}

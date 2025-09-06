@@ -29,6 +29,7 @@ const LazyContact = lazy(() => import('./pages/Contact'));
 const LazyProductNew = lazy(() => import('./pages/ProductNew'));
 const LazyPersonalizarLoja = lazy(() => import('./pages/PersonalizarLoja'));
 const LazyAnalytics = lazy(() => import('./pages/Analytics'));
+const LazyDashboardHome = lazy(() => import('./pages/DashboardHome'));
 import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
 import PWAInstallPrompt from "./components/ui/pwa-install-prompt";
@@ -83,6 +84,7 @@ const App = () => (
                    <Route path="/produto/novo" element={<LazyRoute Component={LazyProductNew} />} />
                    <Route path="/personalizar-loja" element={<LazyRoute Component={LazyPersonalizarLoja} />} />
                    <Route path="/analytics" element={<LazyRoute Component={LazyAnalytics} />} />
+                   <Route path="/inicio" element={<LazyRoute Component={LazyDashboardHome} />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                    <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
                 </Routes>
