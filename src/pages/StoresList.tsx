@@ -29,7 +29,7 @@ const StoresList = () => {
       <div className="min-h-screen bg-background pb-20">
         <BackNavigation title="Minhas Lojas" />
         
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-3 py-4 max-w-4xl">
           <StoresSection />
         </div>
       </div>

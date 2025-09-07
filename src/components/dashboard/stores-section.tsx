@@ -165,31 +165,29 @@ const StoresSection = () => {
             </Button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {stores.map((store) => (
               <div
                 key={store.id}
-                className="flex flex-col xs:flex-row items-start xs:items-center gap-3 sm:gap-4 p-3 sm:p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                className="flex flex-col gap-4 p-4 border rounded-lg hover:bg-muted/50 transition-colors"
               >
-                {/* Logo */}
-                <div className="w-12 h-12 xs:w-16 xs:h-16 rounded-lg border flex items-center justify-center bg-background flex-shrink-0">
-                  {store.logo_url ? (
-                    <img
-                      src={store.logo_url}
-                      alt={`${store.name} logo`}
-                      className="w-full h-full object-contain rounded-lg"
-                    />
-                  ) : (
-                    <StoreIcon className="w-8 h-8 text-muted-foreground" />
-                  )}
-                </div>
+                {/* Header: Logo + Store Info */}
+                <div className="flex items-start gap-3">
+                  <div className="w-14 h-14 rounded-lg border flex items-center justify-center bg-background flex-shrink-0">
+                    {store.logo_url ? (
+                      <img
+                        src={store.logo_url}
+                        alt={`${store.name} logo`}
+                        className="w-full h-full object-contain rounded-lg"
+                      />
+                    ) : (
+                      <StoreIcon className="w-6 h-6 text-muted-foreground" />
+                    )}
+                  </div>
 
-                {/* Store Info and Actions Container */}
-                <div className="flex-1 min-w-0 flex flex-col xs:flex-row xs:items-center gap-3 xs:gap-4">
-                  {/* Store Info */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold truncate text-sm sm:text-base">{store.name}</h3>
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <h3 className="font-semibold text-base leading-tight">{store.name}</h3>
                       <Badge 
                         variant={store.is_active ? "default" : "secondary"}
                         className="text-xs flex-shrink-0"
@@ -198,89 +196,65 @@ const StoresSection = () => {
                       </Badge>
                     </div>
                     
-                    <div className="flex flex-col xs:flex-row xs:items-center gap-1 xs:gap-4 text-xs sm:text-sm text-muted-foreground">
+                    <div className="flex flex-col gap-1 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
-                        <Globe className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <Globe className="w-4 h-4 flex-shrink-0" />
                         <span className="truncate">/{store.slug}</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <Package className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <Package className="w-4 h-4 flex-shrink-0" />
                         <span>{store._count?.products || 0} produtos</span>
                       </div>
                     </div>
                     
                     {store.description && (
-                      <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-1">
+                      <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
                         {store.description}
                       </p>
                     )}
                   </div>
+                </div>
 
-                  {/* Actions */}
-                  <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(`/loja/${store.slug}/customizar`)}
-                      className="hidden sm:flex"
-                    >
-                      <Palette className="w-4 h-4 mr-1" />
-                      Personalizar
-                    </Button>
-                    
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(`/loja/${store.slug}/customizar`)}
-                      className="sm:hidden"
-                      title="Personalizar"
-                    >
-                      <Palette className="w-4 h-4" />
-                    </Button>
-                    
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(`/loja/${store.slug}`)}
-                      className="hidden xs:flex"
-                    >
-                      <Eye className="w-4 h-4 mr-1" />
-                      <span className="hidden sm:inline">Ver</span>
-                    </Button>
-                    
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(`/loja/${store.slug}`)}
-                      className="xs:hidden"
-                      title="Ver loja"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </Button>
-                    
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(`/loja/${store.slug}/configuracoes`)}
-                      title="Configurações"
-                    >
-                      <Settings className="w-4 h-4" />
-                    </Button>
-                    
-                    <Button
-                      variant={store.is_active ? "destructive" : "default"}
-                      size="sm"
-                      onClick={() => handleToggleStatus(store.id, store.is_active)}
-                      className="text-xs px-2 sm:px-3"
-                    >
-                      <span className="hidden xs:inline">
-                        {store.is_active ? "Desativar" : "Ativar"}
-                      </span>
-                      <span className="xs:hidden">
-                        {store.is_active ? "Off" : "On"}
-                      </span>
-                    </Button>
-                  </div>
+                {/* Actions - Mobile Optimized */}
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate(`/loja/${store.slug}/customizar`)}
+                    className="flex items-center gap-2 flex-1 min-w-[140px]"
+                  >
+                    <Palette className="w-4 h-4" />
+                    Personalizar
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate(`/loja/${store.slug}`)}
+                    className="flex items-center gap-2 flex-1 min-w-[100px]"
+                  >
+                    <Eye className="w-4 h-4" />
+                    Ver Loja
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate(`/loja/${store.slug}/configuracoes`)}
+                    className="w-10 h-8 p-0 flex items-center justify-center"
+                    title="Configurações"
+                  >
+                    <Settings className="w-4 h-4" />
+                  </Button>
+                  
+                  <Button
+                    variant={store.is_active ? "destructive" : "default"}
+                    size="sm"
+                    onClick={() => handleToggleStatus(store.id, store.is_active)}
+                    className="flex items-center gap-2 min-w-[80px]"
+                  >
+                    {store.is_active ? "Desativar" : "Ativar"}
+                  </Button>
                 </div>
               </div>
             ))}

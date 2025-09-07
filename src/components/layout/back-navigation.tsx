@@ -30,34 +30,38 @@ const BackNavigation = ({ showHome = true, customAction, title }: BackNavigation
   };
 
   return (
-    <div className="flex items-center gap-2 mb-4">
-      <Button
-        variant="ghost"
-        size={isMobile ? "sm" : "default"}
-        onClick={handleBack}
-        className="flex items-center gap-2"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        {!isMobile && "Voltar"}
-      </Button>
-      
-      {showHome && (
-        <Button
-          variant="outline"
-          size={isMobile ? "sm" : "default"}
-          onClick={handleHome}
-          className="flex items-center gap-2"
-        >
-          <Home className="w-4 h-4" />
-          {!isMobile && "Início"}
-        </Button>
-      )}
-      
-      {title && (
-        <div className="flex-1">
-          <h1 className="text-lg font-semibold truncate">{title}</h1>
+    <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border/50">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center gap-2 py-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleBack}
+            className="flex items-center gap-2 h-8"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            {!isMobile && "Voltar"}
+          </Button>
+          
+          {showHome && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleHome}
+              className="flex items-center gap-2 h-8"
+            >
+              <Home className="w-4 h-4" />
+              {!isMobile && "Início"}
+            </Button>
+          )}
+          
+          {title && (
+            <div className="flex-1 ml-2">
+              <h1 className="text-lg font-semibold truncate">{title}</h1>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
