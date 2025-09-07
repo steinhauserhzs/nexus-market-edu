@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
+import MainHeader from "@/components/layout/main-header";
 import { 
   Store, 
   Plus, 
@@ -186,6 +187,8 @@ const DashboardHome = () => {
         title="Centro de Controle - Nexus Market"
         description="Gerencie suas lojas, produtos e vendas em um só lugar."
       />
+      
+      <MainHeader />
       
       <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8 max-w-7xl">

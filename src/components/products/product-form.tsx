@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { validateAndSanitizeInput } from "@/utils/enhanced-validation";
 import { useSecurity } from "@/hooks/use-security";
 import ImageUpload from "./image-upload";
+import EnhancedFileUpload from "./enhanced-file-upload";
 import ProductPreview from "./product-preview";
 
 interface Category {
@@ -45,6 +46,7 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
     meta_description: '',
     thumbnail_url: '',
     images: [] as string[],
+    product_files: [] as string[],
     featured: false,
     allow_affiliates: true,
     requires_shipping: false,
@@ -270,6 +272,14 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
               images={formData.images}
               onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
               storeId={selectedStoreId}
+            />
+
+            <EnhancedFileUpload
+              files={formData.product_files}
+              onFilesChange={(files) => setFormData(prev => ({ ...prev, product_files: files }))}
+              acceptedTypes={['*/*']}
+              storeId={selectedStoreId}
+              title="Arquivos do Produto"
             />
 
             <div className="space-y-2">
