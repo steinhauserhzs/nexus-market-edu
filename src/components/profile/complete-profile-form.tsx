@@ -11,7 +11,11 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { VerificationModal } from "@/components/ui/verification-modal";
 import { useToast } from "@/hooks/use-toast";
+import { useVerification } from "@/hooks/use-verification";
+import { validateCPF, validatePhone } from "@/utils/validators";
+import { toast as sonnerToast } from "sonner";
 import { 
   User, 
   Shield, 
@@ -30,6 +34,13 @@ const CompleteProfileForm = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("personal");
   const { toast } = useToast();
+  
+  // Verification states
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [verificationType, setVerificationType] = useState<'phone' | 'cpf'>('phone');
+  const [verificationContact, setVerificationContact] = useState('');
+  const [loadingCEP, setLoadingCEP] = useState(false);
+  const { loading: verificationLoading, sendPhoneVerification, sendCPFVerification } = useVerification();
 
   const [formData, setFormData] = useState({
     // Dados pessoais
@@ -65,8 +76,6 @@ const CompleteProfileForm = () => {
     sms_notifications: false,
     marketing_emails: false,
   });
-
-  const [loadingCEP, setLoadingCEP] = useState(false);
 
   useEffect(() => {
     if (profile) {
@@ -159,6 +168,65 @@ const CompleteProfileForm = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Verification handlers
+  const handlePhoneVerification = async () => {
+    if (!formData.phone) {
+      sonnerToast.error('Preencha o número de telefone primeiro');
+      return;
+    }
+
+    if (!validatePhone(formData.phone)) {
+      sonnerToast.error('Número de telefone inválido');
+      return;
+    }
+
+    setVerificationType('phone');
+    const result = await sendPhoneVerification(formData.phone);
+    
+    if (result.success) {
+      setVerificationContact(formData.phone);
+      setShowVerificationModal(true);
+      sonnerToast.success(result.message);
+    } else {
+      sonnerToast.error(result.message);
+    }
+  };
+
+  const handleCPFVerification = async () => {
+    if (!formData.cpf) {
+      sonnerToast.error('Preencha o CPF primeiro');
+      return;
+    }
+
+    if (!validateCPF(formData.cpf)) {
+      sonnerToast.error('CPF inválido');
+      return;
+    }
+
+    setVerificationType('cpf');
+    const result = await sendCPFVerification(formData.cpf);
+    
+    if (result.success) {
+      setVerificationContact(formData.cpf);
+      setShowVerificationModal(true);
+      sonnerToast.success(result.message);
+      
+      // For CPF demo, show the verification code
+      if (result.verificationCode) {
+        sonnerToast.info(`Código demo: ${result.verificationCode}`, {
+          duration: 10000,
+        });
+      }
+    } else {
+      sonnerToast.error(result.message);
+    }
+  };
+
+  const handleVerificationSuccess = async () => {
+    await refreshProfile();
+    sonnerToast.success('Verificação realizada com sucesso!');
   };
 
   const formatCPF = (value: string) => {
@@ -768,8 +836,13 @@ const CompleteProfileForm = () => {
                       Confirme seu número de telefone
                     </p>
                   </div>
-                  <Button variant={profile?.phone_verified ? "secondary" : "outline"}>
-                    {profile?.phone_verified ? "Verificado" : "Verificar"}
+                  <Button 
+                    variant={profile?.phone_verified ? "secondary" : "outline"}
+                    onClick={handlePhoneVerification}
+                    disabled={verificationLoading || !formData.phone || profile?.phone_verified}
+                  >
+                    {verificationLoading && verificationType === 'phone' ? "Enviando..." : 
+                     profile?.phone_verified ? "Verificado" : "Verificar"}
                   </Button>
                 </div>
 
@@ -780,8 +853,13 @@ const CompleteProfileForm = () => {
                       Confirme seu documento para maior segurança
                     </p>
                   </div>
-                  <Button variant={profile?.cpf_verified ? "secondary" : "outline"}>
-                    {profile?.cpf_verified ? "Verificado" : "Verificar"}
+                  <Button 
+                    variant={profile?.cpf_verified ? "secondary" : "outline"}
+                    onClick={handleCPFVerification}
+                    disabled={verificationLoading || !formData.cpf || profile?.cpf_verified}
+                  >
+                    {verificationLoading && verificationType === 'cpf' ? "Verificando..." : 
+                     profile?.cpf_verified ? "Verificado" : "Verificar"}
                   </Button>
                 </div>
               </div>
@@ -811,6 +889,15 @@ const CompleteProfileForm = () => {
           {loading ? 'Salvando...' : 'Salvar Alterações'}
         </Button>
       </div>
+
+      {/* Verification Modal */}
+      <VerificationModal
+        isOpen={showVerificationModal}
+        onClose={() => setShowVerificationModal(false)}
+        type={verificationType}
+        contactValue={verificationContact}
+        onSuccess={handleVerificationSuccess}
+      />
     </div>
   );
 };

@@ -1,5 +1,11 @@
 project_id = "phprhrwiuhalxdifdzgn"
 
+[functions.send-verification-sms]
+verify_jwt = true
+
+[functions.verify-cpf]
+verify_jwt = true
+
 [api]
 enabled = true
 port = 54321
