@@ -2465,6 +2465,13 @@ export type Database = {
           contact_phone: string
         }[]
       }
+      get_event_organizer_contact: {
+        Args: { event_id: string }
+        Returns: {
+          contact_email: string
+          contact_phone: string
+        }[]
+      }
       get_event_public_data: {
         Args: { event_id: string }
         Returns: {
@@ -2554,6 +2561,63 @@ export type Database = {
           venue_id: string
         }[]
       }
+      get_public_store_data: {
+        Args: { store_slug: string }
+        Returns: {
+          banner_url: string
+          created_at: string
+          description: string
+          id: string
+          is_active: boolean
+          logo_url: string
+          name: string
+          slug: string
+          theme: Json
+        }[]
+      }
+      get_safe_event_data: {
+        Args: { event_id: string }
+        Returns: {
+          age_restriction: string
+          banner_url: string
+          category: string
+          created_at: string
+          description: string
+          event_date: string
+          event_type: string
+          id: string
+          is_featured: boolean
+          max_capacity: number
+          organizer_id: string
+          price_from: number
+          status: Database["public"]["Enums"]["event_status"]
+          terms_and_conditions: string
+          ticket_sales_end_date: string
+          ticket_sales_start_date: string
+          title: string
+          updated_at: string
+          venue_id: string
+        }[]
+      }
+      get_safe_venue_data: {
+        Args: { venue_id: string }
+        Returns: {
+          address: string
+          amenities: Json
+          capacity: number
+          city: string
+          country: string
+          created_at: string
+          id: string
+          images: Json
+          latitude: number
+          longitude: number
+          name: string
+          postal_code: string
+          state: string
+          updated_at: string
+        }[]
+      }
       get_sanitized_event: {
         Args: { event_id: string }
         Returns: {
@@ -2590,6 +2654,13 @@ export type Database = {
       get_system_config: {
         Args: { p_key: string }
         Returns: Json
+      }
+      get_venue_contact_info: {
+        Args: { venue_id: string }
+        Returns: {
+          contact_email: string
+          contact_phone: string
+        }[]
       }
       get_venue_public_data: {
         Args: { venue_id: string }
@@ -2673,6 +2744,10 @@ export type Database = {
           p_table_name: string
         }
         Returns: undefined
+      }
+      mask_contact_info: {
+        Args: { contact_value: string }
+        Returns: string
       }
       secure_get_payment_info: {
         Args: Record<PropertyKey, never>
