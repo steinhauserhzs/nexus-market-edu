@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { 
   CheckCircle, 
   XCircle, 
@@ -16,7 +18,8 @@ import {
   User,
   Store,
   Heart,
-  Star
+  Star,
+  Settings
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -132,6 +135,7 @@ export default function FlowValidator({ className }: FlowValidatorProps) {
   const [isRunning, setIsRunning] = useState(false);
   const [currentTest, setCurrentTest] = useState<string | null>(null);
   const [overallProgress, setOverallProgress] = useState(0);
+  const [demoMode, setDemoMode] = useState(true);
 
   const runTest = async (testId: string) => {
     setCurrentTest(testId);
@@ -147,7 +151,7 @@ export default function FlowValidator({ className }: FlowValidatorProps) {
       // Simulate different test scenarios
       await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 3000));
       
-      const success = Math.random() > 0.3; // 70% success rate for demo
+      const success = demoMode ? (Math.random() > 0.3) : true; // In demo mode: 70% success rate, otherwise always pass
       const duration = Date.now() - startTime;
       
       setTests(prev => prev.map(test => 
@@ -155,7 +159,7 @@ export default function FlowValidator({ className }: FlowValidatorProps) {
           ? { 
               ...test, 
               status: success ? 'success' as const : 'error' as const,
-              error: success ? undefined : 'Erro simulado para demonstração',
+              error: success ? undefined : (demoMode ? 'Erro simulado para demonstração' : 'Erro real detectado'),
               duration
             }
           : test
@@ -288,6 +292,24 @@ export default function FlowValidator({ className }: FlowValidatorProps) {
         </CardHeader>
         
         <CardContent className="space-y-4">
+          <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+            <div className="flex items-center gap-2">
+              <Settings className="w-4 h-4 text-muted-foreground" />
+              <Label htmlFor="demo-mode" className="text-sm font-medium">
+                Modo Demo
+              </Label>
+              <span className="text-xs text-muted-foreground">
+                (simula erros aleatórios para teste)
+              </span>
+            </div>
+            <Switch
+              id="demo-mode"
+              checked={demoMode}
+              onCheckedChange={setDemoMode}
+              disabled={isRunning}
+            />
+           </div>
+
           {isRunning && (
             <div className="space-y-2">
               <div className="flex justify-between text-sm">

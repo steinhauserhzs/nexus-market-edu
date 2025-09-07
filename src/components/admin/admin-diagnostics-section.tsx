@@ -6,6 +6,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { useSystemDiagnostics, DiagnosticResult } from '@/hooks/use-system-diagnostics';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import { 
   Activity, 
   RefreshCw, 
@@ -19,12 +21,14 @@ import {
   Shield,
   TrendingUp,
   Settings,
-  Download
+  Download,
+  Wrench
 } from 'lucide-react';
 
 export function AdminDiagnosticsSection() {
   const { health, isRunning, runFullDiagnostics } = useSystemDiagnostics();
   const [autoRefresh, setAutoRefresh] = useState(false);
+  const [fixingStorage, setFixingStorage] = useState(false);
 
   useEffect(() => {
     // Executar diagnóstico inicial
@@ -93,6 +97,26 @@ export function AdminDiagnosticsSection() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const fixStorageBuckets = async () => {
+    setFixingStorage(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('ensure-storage-buckets');
+      
+      if (error) {
+        toast.error('Erro ao corrigir storage: ' + error.message);
+      } else {
+        toast.success(data.message);
+        // Re-run diagnostics after fixing
+        setTimeout(() => runFullDiagnostics(), 1000);
+      }
+    } catch (error) {
+      console.error('Error fixing storage buckets:', error);
+      toast.error('Erro ao corrigir buckets de storage');
+    } finally {
+      setFixingStorage(false);
+    }
   };
 
   return (
@@ -318,6 +342,18 @@ export function AdminDiagnosticsSection() {
                       {getStatusBadge(result.status)}
                     </div>
                     <p className="text-sm text-muted-foreground mb-2">{result.message}</p>
+                    
+                    {result.name === 'Storage Buckets' && result.status === 'error' && (
+                      <Button 
+                        size="sm" 
+                        onClick={fixStorageBuckets}
+                        disabled={fixingStorage}
+                        className="mb-2"
+                      >
+                        <Wrench className="h-4 w-4 mr-2" />
+                        {fixingStorage ? 'Corrigindo...' : 'Corrigir Storage'}
+                      </Button>
+                    )}
                     
                     {result.details && (
                       <pre className="text-xs bg-muted p-2 rounded overflow-x-auto">

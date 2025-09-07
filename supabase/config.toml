@@ -6,6 +6,9 @@ verify_jwt = true
 [functions.verify-cpf]
 verify_jwt = true
 
+[functions.ensure-storage-buckets]
+verify_jwt = true
+
 [api]
 enabled = true
 port = 54321

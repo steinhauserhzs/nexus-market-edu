@@ -48,7 +48,13 @@ export const AdminWhatsAppSection = () => {
         ]);
 
       const configMap = data?.reduce((acc, item) => {
-        acc[item.config_key] = typeof item.config_value === 'string' && item.config_value ? JSON.parse(item.config_value) : "";
+        try {
+          acc[item.config_key] = typeof item.config_value === 'string' && item.config_value.startsWith('"') 
+            ? JSON.parse(item.config_value) 
+            : item.config_value || "";
+        } catch {
+          acc[item.config_key] = item.config_value || "";
+        }
         return acc;
       }, {} as Record<string, any>) || {};
 

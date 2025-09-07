@@ -271,10 +271,20 @@ export function AdminStoresSection() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center gap-2 justify-end">
-                      <Button variant="ghost" size="sm">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => window.open(`/store/${store.slug}`, '_blank')}
+                        title="Visualizar loja"
+                      >
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => window.open(`/store-configuracoes/${store.slug}`, '_blank')}
+                        title="Configurações da loja"
+                      >
                         <Settings className="h-4 w-4" />
                       </Button>
                     </div>
