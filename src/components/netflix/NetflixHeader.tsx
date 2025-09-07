@@ -26,15 +26,14 @@ export const NetflixHeader = ({
   const { totalItems } = useCart();
   const navigate = useNavigate();
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      // Handle search logic here
-      console.log("Searching for:", searchQuery);
-      setIsSearchOpen(false);
-      setSearchQuery("");
-    }
-  };
+    const handleSearch = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (searchQuery.trim()) {
+        // Handle search logic here
+        setIsSearchOpen(false);
+        setSearchQuery("");
+      }
+    };
 
   const navigationItems = [
     { label: "Início", href: "/" },

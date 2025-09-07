@@ -12,7 +12,6 @@ import {
   Store as StoreIcon, 
   Users, 
   Star, 
-  Share2, 
   Settings,
   Plus,
   Package,
@@ -24,6 +23,7 @@ import {
 import ProductCard from "@/components/ui/product-card";
 import CustomStoreRenderer from "@/components/store/custom-store-renderer";
 import StorePreviewMode from "@/components/store/store-preview-mode";
+import StoreShareButton from "@/components/ui/store-share-button";
 
 interface Store {
   id: string;
@@ -244,14 +244,11 @@ const Store = () => {
                 </Button>
               </>
             )}
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={handleShare}
-              className="bg-white/90 hover:bg-white"
-            >
-              <Share2 className="w-4 h-4" />
-            </Button>
+              <StoreShareButton 
+                storeSlug={store.slug} 
+                storeName={store.name}
+                className="bg-white/90 hover:bg-white"
+              />
           </div>
         </div>
 

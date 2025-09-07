@@ -85,7 +85,7 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
   const handleSubmitReview = () => {
     if (newReview.trim() && newRating > 0) {
       // In real app, submit to API
-      console.log("Submit review:", { rating: newRating, comment: newReview, productId });
+      // Submit review functionality would be implemented here
       setNewReview("");
       setNewRating(0);
     }

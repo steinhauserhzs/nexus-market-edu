@@ -57,7 +57,6 @@ export default function FeaturedSection({
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      console.log('🔍 Buscando produtos...', { categoryId, featured, limit });
       
       let query = supabase
         .from('products')

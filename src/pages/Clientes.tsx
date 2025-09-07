@@ -7,11 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Users, UserPlus, Search, Filter, Mail, Phone, Calendar } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useCustomerAnalytics } from "@/hooks/use-customer-analytics";
 
 const Clientes = () => {
-  const { user, loading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const { analytics, loading } = useCustomerAnalytics();
 
-  if (loading) {
+  if (authLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -23,34 +25,7 @@ const Clientes = () => {
     return <Navigate to="/auth" replace />;
   }
 
-  // Dados mockados para demonstração
-  const clientes = [
-    {
-      id: "1",
-      nome: "Ana Silva",
-      email: "ana@email.com",
-      telefone: "(11) 99999-9999",
-      ultimaCompra: "2024-01-15",
-      totalGasto: 89.90,
-      status: "Ativo"
-    },
-    {
-      id: "2", 
-      nome: "Carlos Santos",
-      email: "carlos@email.com",
-      telefone: "(11) 88888-8888",
-      ultimaCompra: "2024-01-10",
-      totalGasto: 159.80,
-      status: "Ativo"
-    }
-  ];
-
-  const stats = {
-    totalClientes: clientes.length,
-    novosEsseMes: 5,
-    clientesAtivos: clientes.filter(c => c.status === "Ativo").length,
-    ticketMedio: 124.85
-  };
+  const { customers, totalCustomers, newThisMonth, activeCustomers, averageTicket } = analytics;
 
   return (
     <>
@@ -84,7 +59,7 @@ const Clientes = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Total de Clientes</p>
-                    <p className="text-2xl font-bold">{stats.totalClientes}</p>
+                    <p className="text-2xl font-bold">{loading ? "..." : totalCustomers}</p>
                   </div>
                   <Users className="w-8 h-8 text-blue-500" />
                 </div>
@@ -96,7 +71,7 @@ const Clientes = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Novos este Mês</p>
-                    <p className="text-2xl font-bold">{stats.novosEsseMes}</p>
+                    <p className="text-2xl font-bold">{loading ? "..." : newThisMonth}</p>
                   </div>
                   <UserPlus className="w-8 h-8 text-green-500" />
                 </div>
@@ -108,7 +83,7 @@ const Clientes = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Clientes Ativos</p>
-                    <p className="text-2xl font-bold">{stats.clientesAtivos}</p>
+                    <p className="text-2xl font-bold">{loading ? "..." : activeCustomers}</p>
                   </div>
                   <Users className="w-8 h-8 text-purple-500" />
                 </div>
@@ -120,7 +95,7 @@ const Clientes = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Ticket Médio</p>
-                    <p className="text-2xl font-bold">R$ {stats.ticketMedio.toFixed(2)}</p>
+                    <p className="text-2xl font-bold">R$ {loading ? "..." : averageTicket.toFixed(2)}</p>
                   </div>
                   <Calendar className="w-8 h-8 text-orange-500" />
                 </div>
@@ -155,7 +130,12 @@ const Clientes = () => {
               <CardTitle>Lista de Clientes</CardTitle>
             </CardHeader>
             <CardContent>
-              {clientes.length === 0 ? (
+              {loading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                  <p className="text-muted-foreground mt-4">Carregando clientes...</p>
+                </div>
+              ) : customers.length === 0 ? (
                 <div className="text-center py-8">
                   <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-lg font-semibold mb-2">Nenhum cliente ainda</h3>
@@ -169,7 +149,7 @@ const Clientes = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {clientes.map((cliente) => (
+                  {customers.map((cliente) => (
                     <div
                       key={cliente.id}
                       className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
@@ -177,20 +157,22 @@ const Clientes = () => {
                       <div className="flex items-center space-x-4">
                         <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                           <span className="text-sm font-medium text-primary">
-                            {cliente.nome.split(' ').map(n => n[0]).join('')}
+                            {cliente.name.split(' ').map(n => n[0]).join('')}
                           </span>
                         </div>
                         <div>
-                          <h4 className="font-medium">{cliente.nome}</h4>
-                          <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                          <h4 className="font-medium">{cliente.name}</h4>
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-sm text-muted-foreground">
                             <span className="flex items-center">
                               <Mail className="w-3 h-3 mr-1" />
                               {cliente.email}
                             </span>
-                            <span className="flex items-center">
-                              <Phone className="w-3 h-3 mr-1" />
-                              {cliente.telefone}
-                            </span>
+                            {cliente.phone && (
+                              <span className="flex items-center">
+                                <Phone className="w-3 h-3 mr-1" />
+                                {cliente.phone}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -199,10 +181,10 @@ const Clientes = () => {
                           {cliente.status}
                         </Badge>
                         <div className="text-sm text-muted-foreground mt-1">
-                          Última compra: {new Date(cliente.ultimaCompra).toLocaleDateString('pt-BR')}
+                          Última compra: {new Date(cliente.lastOrderDate).toLocaleDateString('pt-BR')}
                         </div>
                         <div className="text-sm font-medium">
-                          Total gasto: R$ {cliente.totalGasto.toFixed(2)}
+                          {cliente.orderCount} pedido{cliente.orderCount !== 1 ? 's' : ''} • R$ {cliente.totalSpent.toFixed(2)}
                         </div>
                       </div>
                     </div>
