@@ -2398,6 +2398,30 @@ export type Database = {
           contact_phone: string
         }[]
       }
+      get_event_public_data: {
+        Args: { event_id: string }
+        Returns: {
+          age_restriction: string
+          banner_url: string
+          category: string
+          created_at: string
+          description: string
+          event_date: string
+          event_type: string
+          id: string
+          is_featured: boolean
+          max_capacity: number
+          organizer_id: string
+          price_from: number
+          status: Database["public"]["Enums"]["event_status"]
+          terms_and_conditions: string
+          ticket_sales_end_date: string
+          ticket_sales_start_date: string
+          title: string
+          updated_at: string
+          venue_id: string
+        }[]
+      }
       get_my_payment_audit_logs: {
         Args: { end_date?: string; start_date?: string }
         Returns: {
@@ -2500,6 +2524,25 @@ export type Database = {
         Args: { p_key: string }
         Returns: Json
       }
+      get_venue_public_data: {
+        Args: { venue_id: string }
+        Returns: {
+          address: string
+          amenities: Json
+          capacity: number
+          city: string
+          country: string
+          created_at: string
+          id: string
+          images: Json
+          latitude: number
+          longitude: number
+          name: string
+          postal_code: string
+          state: string
+          updated_at: string
+        }[]
+      }
       handle_successful_payment: {
         Args: { payment_intent_id?: string; session_id: string }
         Returns: undefined
@@ -2594,6 +2637,10 @@ export type Database = {
           p_marketing_consent?: boolean
           p_processing_consent?: boolean
         }
+        Returns: boolean
+      }
+      user_can_access_order_item: {
+        Args: { item_order_id: string }
         Returns: boolean
       }
       validate_cpf: {
