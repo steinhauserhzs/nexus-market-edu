@@ -6,10 +6,13 @@ import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CouponInput from "@/components/ui/coupon-input";
+import { CouponValidation } from "@/hooks/use-coupons";
 
 export default function CartSheet() {
   const { items, totalItems, totalAmount, updateQuantity, removeFromCart } = useCart();
   const [open, setOpen] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<CouponValidation | null>(null);
   const navigate = useNavigate();
 
   const formatPrice = (cents: number) => {
@@ -21,8 +24,21 @@ export default function CartSheet() {
 
   const handleCheckout = () => {
     setOpen(false);
-    navigate('/checkout');
+    navigate('/checkout', { 
+      state: { appliedCoupon } 
+    });
   };
+
+  const handleCouponApplied = (coupon: CouponValidation) => {
+    setAppliedCoupon(coupon);
+  };
+
+  const handleCouponRemoved = () => {
+    setAppliedCoupon(null);
+  };
+
+  const discountAmount = appliedCoupon?.discount_amount || 0;
+  const finalTotal = Math.max(0, totalAmount - discountAmount);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -117,20 +133,40 @@ export default function CartSheet() {
         
         {items.length > 0 && (
           <div className="border-t px-4 py-4">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-sm">
-                <span>Subtotal:</span>
-                <span className="font-semibold">{formatPrice(totalAmount)}</span>
-              </div>
+            <div className="space-y-4">
+              {/* Coupon Input */}
+              <CouponInput
+                orderTotal={totalAmount}
+                productIds={items.map(item => item.product_id)}
+                onCouponApplied={handleCouponApplied}
+                onCouponRemoved={handleCouponRemoved}
+              />
               
               <Separator />
               
-              <div className="flex items-center justify-between">
-                <span className="font-semibold">Total:</span>
-                <span className="font-bold text-lg text-accent">{formatPrice(totalAmount)}</span>
+              {/* Order Summary */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span>Subtotal:</span>
+                  <span className="font-semibold">{formatPrice(totalAmount)}</span>
+                </div>
+                
+                {discountAmount > 0 && (
+                  <div className="flex items-center justify-between text-sm">
+                    <span>Desconto:</span>
+                    <span className="font-semibold text-success">-{formatPrice(discountAmount)}</span>
+                  </div>
+                )}
+                
+                <Separator />
+                
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold">Total:</span>
+                  <span className="font-bold text-lg text-accent">{formatPrice(finalTotal)}</span>
+                </div>
               </div>
               
-              <Button className="w-full mt-4" onClick={handleCheckout}>
+              <Button className="w-full" onClick={handleCheckout}>
                 Finalizar Compra
               </Button>
             </div>

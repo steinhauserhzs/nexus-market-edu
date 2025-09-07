@@ -258,23 +258,53 @@
       font-size: 16px !important;
     }
     
-    /* Enhanced mobile responsiveness */
-    .flex-col-mobile {
-      flex-direction: column;
+  /* Enhanced mobile responsiveness */
+  .flex-col-mobile {
+    flex-direction: column;
+  }
+  
+  .gap-mobile {
+    gap: 0.5rem;
+  }
+  
+  .text-mobile {
+    font-size: 0.75rem;
+  }
+  
+  .px-mobile {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  /* Mobile scroll optimization */
+  .scroll-smooth-mobile {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Touch gestures */
+  .touch-friendly {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Prevent zoom on input focus */
+  @media screen and (max-width: 768px) {
+    input[type="search"]::-webkit-search-decoration,
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-results-button,
+    input[type="search"]::-webkit-search-results-decoration {
+      display: none;
     }
     
-    .gap-mobile {
-      gap: 0.5rem;
+    /* Better text rendering on mobile */
+    body {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
-    
-    .text-mobile {
-      font-size: 0.75rem;
-    }
-    
-    .px-mobile {
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-    }
+  }
   }
   
   /* Extra small screens */
