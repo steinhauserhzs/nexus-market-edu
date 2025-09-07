@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ const Dashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { products: userProducts, loading: productsLoading } = useProducts();
+  const [activeTab, setActiveTab] = useState("overview");
 
   if (loading) {
     return (
@@ -93,7 +95,7 @@ const Dashboard = () => {
           </Button>
         </div>
 
-        <Tabs defaultValue="overview" className="space-y-6 md:space-y-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 md:space-y-8">
           <div className="w-full overflow-x-auto animate-slide-up px-2">
             <TabsList className="inline-flex w-max min-w-full justify-start gap-1 sm:gap-2 bg-muted/50 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl">
               <TabsTrigger value="overview" className="flex-shrink-0 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm px-3 sm:px-4 py-2">Visão Geral</TabsTrigger>
@@ -119,7 +121,7 @@ const Dashboard = () => {
                   <Button 
                     variant="outline" 
                     className="h-auto p-4 sm:p-6 flex-col gap-2 sm:gap-3 rounded-xl sm:rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg min-h-[80px] sm:min-h-[100px]"
-                    onClick={() => navigate('#products')}
+                    onClick={() => setActiveTab("products")}
                   >
                     <Plus className="w-6 h-6 sm:w-8 sm:h-8 text-accent" />
                     <span className="text-xs sm:text-sm font-semibold text-center">Novo Produto</span>
@@ -128,7 +130,7 @@ const Dashboard = () => {
                   <Button 
                     variant="outline" 
                     className="h-auto p-6 flex-col gap-3 rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg"
-                    onClick={() => navigate('#analytics')}
+                    onClick={() => setActiveTab("analytics")}
                   >
                     <BarChart3 className="w-8 h-8 text-accent" />
                     <span className="text-sm font-semibold">Analytics</span>
@@ -218,7 +220,7 @@ const Dashboard = () => {
                   <p className="text-muted-foreground mb-4">
                     Crie seu primeiro produto para começar a gerenciar conteúdo.
                   </p>
-                  <Button onClick={() => navigate('#products')}>
+                  <Button onClick={() => setActiveTab("products")}>
                     <Plus className="w-4 h-4 mr-2" />
                     Criar Produto
                   </Button>

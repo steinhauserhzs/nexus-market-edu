@@ -32,6 +32,9 @@ const LazyProductEdit = lazy(() => import('./pages/ProductEdit'));
 const LazyPersonalizarLoja = lazy(() => import('./pages/PersonalizarLoja'));
 const LazyAnalytics = lazy(() => import('./pages/Analytics'));
 const LazyDashboardHome = lazy(() => import('./pages/DashboardHome'));
+const LazyStoresList = lazy(() => import('./pages/StoresList'));
+const LazyStoreConfiguracoes = lazy(() => import('./pages/StoreConfiguracoes'));
+const LazyClientes = lazy(() => import('./pages/Clientes'));
 import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
 import PerformanceMonitor from "./components/ui/performance-monitor";
@@ -89,6 +92,9 @@ const App = () => (
                    <Route path="/personalizar-loja" element={<LazyRoute Component={LazyPersonalizarLoja} />} />
                    <Route path="/analytics" element={<LazyRoute Component={LazyAnalytics} />} />
                    <Route path="/inicio" element={<LazyRoute Component={LazyDashboardHome} />} />
+                   <Route path="/lojas" element={<LazyRoute Component={LazyStoresList} />} />
+                   <Route path="/loja/:slug/configuracoes" element={<LazyRoute Component={LazyStoreConfiguracoes} />} />
+                   <Route path="/clientes" element={<LazyRoute Component={LazyClientes} />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                    <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
                 </Routes>

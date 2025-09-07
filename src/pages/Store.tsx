@@ -60,6 +60,7 @@ const Store = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [following, setFollowing] = useState(false);
+  const [followersCount, setFollowersCount] = useState(0);
   
   const isOwner = user && store && user.id === store.owner_id;
 
@@ -102,7 +103,6 @@ const Store = () => {
         .select('*')
         .eq('store_id', storeData.id)
         .eq('status', 'published')
-        .eq('is_active', true)
         .order('featured', { ascending: false })
         .order('created_at', { ascending: false });
 
@@ -133,8 +133,9 @@ const Store = () => {
       return;
     }
 
-    // TODO: Implement follow/unfollow logic
+    // Sistema de seguidores será implementado em breve
     setFollowing(!following);
+    setFollowersCount(prev => following ? prev - 1 : prev + 1);
     
     toast({
       title: following ? "Deixou de seguir" : "Seguindo loja",
@@ -248,7 +249,7 @@ const Store = () => {
                 <Button
                   size="sm"
                   variant="secondary"
-                  onClick={() => navigate(`/store/${store.slug}/settings`)}
+                  onClick={() => navigate(`/loja/${store.slug}/configuracoes`)}
                   className="bg-white/90 hover:bg-white"
                 >
                   <Settings className="w-4 h-4" />
@@ -324,7 +325,7 @@ const Store = () => {
                     
                     {isOwner && (
                       <Button
-                        onClick={() => navigate('/products/new')}
+                        onClick={() => navigate('/produto/novo')}
                         className="store-button-primary"
                       >
                         <Plus className="w-4 h-4 mr-2" />
@@ -398,7 +399,7 @@ const Store = () => {
               </p>
               {isOwner && (
                 <Button
-                  onClick={() => navigate('/products/new')}
+                  onClick={() => navigate('/produto/novo')}
                   className="store-button-primary"
                 >
                   <Plus className="w-4 h-4 mr-2" />

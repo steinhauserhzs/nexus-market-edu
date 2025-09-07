@@ -58,8 +58,7 @@ export const useProducts = (filters?: {
           stores:stores(name, slug),
           categories:categories(name, slug)
         `)
-        .eq('status', 'published')
-        .eq('is_active', true);
+        .eq('status', 'published');
 
       if (filters?.category) {
         query = query.eq('categories.slug', filters.category);

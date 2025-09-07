@@ -120,6 +120,26 @@ const ProductForm = ({ storeId, onSuccess, onCancel, initialData, isEditing = fa
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validações robustas
+    if (!formData.title.trim()) {
+      toast({
+        title: "Erro de validação",
+        description: "O título do produto é obrigatório.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (formData.price_cents <= 0) {
+      toast({
+        title: "Erro de validação", 
+        description: "O preço deve ser maior que zero.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!user || !selectedStoreId) {
       toast({
         title: "Erro",
@@ -127,6 +147,11 @@ const ProductForm = ({ storeId, onSuccess, onCancel, initialData, isEditing = fa
         variant: "destructive",
       });
       return;
+    }
+
+    // Gerar slug se não existir
+    if (!formData.slug.trim()) {
+      generateSlug();
     }
 
     setLoading(true);
@@ -289,23 +314,33 @@ const ProductForm = ({ storeId, onSuccess, onCancel, initialData, isEditing = fa
               />
             </div>
 
-            <ImageUpload
-              images={formData.images}
-              onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
-              storeId={selectedStoreId}
-            />
+            {/* Upload Areas - Destaque */}
+            <div className="space-y-6 p-6 border-2 border-dashed border-primary/20 rounded-lg bg-primary/5">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold text-primary mb-2">📁 Arquivos do Produto</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Adicione imagens, vídeos, PDFs e outros arquivos para seu produto
+                </p>
+              </div>
 
-            <EnhancedFileUpload
-              onFilesUploaded={(files) => setFormData(prev => ({ 
-                ...prev, 
-                product_files: [...(prev.product_files || []), ...files] 
-              }))}
-              acceptedTypes={['image/*', 'video/*', 'application/pdf', 'application/zip', 'text/plain']}
-              storeId={selectedStoreId}
-              maxFiles={10}
-              maxFileSize={100 * 1024 * 1024} // 100MB
-              allowExternalLinks={true}
-            />
+              <ImageUpload
+                images={formData.images}
+                onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
+                storeId={selectedStoreId}
+              />
+
+              <EnhancedFileUpload
+                onFilesUploaded={(files) => setFormData(prev => ({ 
+                  ...prev, 
+                  product_files: [...(prev.product_files || []), ...files] 
+                }))}
+                acceptedTypes={['image/*', 'video/*', 'application/pdf', 'application/zip', 'text/plain']}
+                storeId={selectedStoreId}
+                maxFiles={10}
+                maxFileSize={100 * 1024 * 1024} // 100MB
+                allowExternalLinks={true}
+              />
+            </div>
 
             <div className="space-y-2">
               <Label htmlFor="thumbnail_url">URL da Imagem Adicional</Label>

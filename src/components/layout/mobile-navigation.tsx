@@ -35,7 +35,7 @@ const MobileNavigation = () => {
       { 
         icon: Store, 
         label: "Lojas", 
-        path: "/dashboard", 
+        path: "/lojas", 
         requireAuth: true 
       }
     ] : []),

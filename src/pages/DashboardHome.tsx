@@ -137,7 +137,7 @@ const DashboardHome = () => {
       icon: Store,
       title: "Minhas Lojas",
       description: "Gerenciar todas as suas lojas",
-      action: () => navigate("/dashboard"),
+      action: () => navigate("/lojas"),
       count: stats.totalStores
     },
           {
@@ -151,7 +151,7 @@ const DashboardHome = () => {
       icon: Users,
       title: "Clientes",
       description: "Base de clientes e vendas",
-      action: () => navigate("/dashboard"),
+      action: () => navigate("/clientes"),
       count: stats.totalSales
     },
     {
