@@ -3,10 +3,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
-import { AuthProvider } from "@/contexts/AuthContext";
-import { CartProvider } from "@/contexts/CartContext";
+import { OptimizedAuthProvider } from "@/contexts/OptimizedAuthContext";
+import { OptimizedCartProvider } from "@/contexts/OptimizedCartContext";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { createOptimizedQueryClient } from "@/lib/optimized-query-client";
 import BreadcrumbNavigation from "@/components/layout/breadcrumb-navigation";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -25,7 +26,7 @@ const LazyMemberAreaConfig = lazy(() => import('./pages/MemberAreaConfig'));
 const LazyMemberAreaAdvanced = lazy(() => import('./pages/MemberAreaAdvanced'));
 const LazyNetflixDashboard = lazy(() => import('./pages/NetflixDashboard'));
 const LazyCoursePlayer = lazy(() => import('./pages/CoursePlayer'));
-const LazyAdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const LazyAdminDashboard = lazy(() => import('./pages/OptimizedAdminDashboard'));
 const LazyNotFound = lazy(() => import('./pages/NotFound'));
 const LazyContact = lazy(() => import('./pages/Contact'));
 const LazyProductNew = lazy(() => import('./pages/ProductNew'));
@@ -43,22 +44,15 @@ import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
 import PerformanceMonitor from "./components/ui/performance-monitor";
 
-// Create a client instance
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      retry: 1,
-    },
-  },
-});
+// Create optimized client instance
+const queryClient = createOptimizedQueryClient();
 
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <AuthProvider>
-          <CartProvider>
+        <OptimizedAuthProvider>
+          <OptimizedCartProvider>
             <BrowserRouter 
               future={{ 
                 v7_startTransition: true,
@@ -112,8 +106,8 @@ const App = () => (
                  </MobileGestures>
               </TooltipProvider>
             </BrowserRouter>
-          </CartProvider>
-        </AuthProvider>
+          </OptimizedCartProvider>
+        </OptimizedAuthProvider>
       </HelmetProvider>
     </QueryClientProvider>
   </ErrorBoundary>
