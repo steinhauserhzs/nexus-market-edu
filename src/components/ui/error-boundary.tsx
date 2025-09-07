@@ -45,7 +45,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 Ocorreu um erro inesperado. Tente recarregar a página.
               </p>
               
-              {process.env.NODE_ENV === 'development' && this.state.error && (
+              {import.meta.env.DEV && this.state.error && (
                 <div className="bg-muted p-3 rounded-md">
                   <p className="text-xs font-mono text-destructive">
                     {this.state.error.message}
