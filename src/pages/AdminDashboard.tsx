@@ -46,7 +46,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <BackNavigation />
         
         <div className="mb-8">
@@ -60,63 +60,63 @@ export default function AdminDashboard() {
 
         {/* Stats Overview */}
         {statsLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
             {[...Array(4)].map((_, i) => (
               <Card key={i} className="animate-pulse">
-                <CardContent className="p-6">
-                  <div className="h-20 bg-muted rounded"></div>
+                <CardContent className="p-4 sm:p-6">
+                  <div className="h-16 sm:h-20 bg-muted rounded"></div>
                 </CardContent>
               </Card>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
             <Card className="bg-gradient-to-r from-blue-500/10 to-blue-600/10 border-blue-200">
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-blue-600">Usuários Totais</p>
-                    <p className="text-2xl font-bold text-blue-700">{stats?.totalUsers || 0}</p>
+                    <p className="text-xs sm:text-sm font-medium text-blue-600">Usuários Totais</p>
+                    <p className="text-xl sm:text-2xl font-bold text-blue-700">{stats?.totalUsers || 0}</p>
                   </div>
-                  <Users className="h-8 w-8 text-blue-600" />
+                  <Users className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
                 </div>
               </CardContent>
             </Card>
 
             <Card className="bg-gradient-to-r from-green-500/10 to-green-600/10 border-green-200">
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-green-600">Lojas Ativas</p>
-                    <p className="text-2xl font-bold text-green-700">{stats?.totalStores || 0}</p>
+                    <p className="text-xs sm:text-sm font-medium text-green-600">Lojas Ativas</p>
+                    <p className="text-xl sm:text-2xl font-bold text-green-700">{stats?.totalStores || 0}</p>
                   </div>
-                  <Store className="h-8 w-8 text-green-600" />
+                  <Store className="h-6 w-6 sm:h-8 sm:w-8 text-green-600" />
                 </div>
               </CardContent>
             </Card>
 
             <Card className="bg-gradient-to-r from-purple-500/10 to-purple-600/10 border-purple-200">
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-purple-600">Produtos</p>
-                    <p className="text-2xl font-bold text-purple-700">{stats?.totalProducts || 0}</p>
+                    <p className="text-xs sm:text-sm font-medium text-purple-600">Produtos</p>
+                    <p className="text-xl sm:text-2xl font-bold text-purple-700">{stats?.totalProducts || 0}</p>
                   </div>
-                  <ShoppingCart className="h-8 w-8 text-purple-600" />
+                  <ShoppingCart className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600" />
                 </div>
               </CardContent>
             </Card>
 
             <Card className="bg-gradient-to-r from-orange-500/10 to-orange-600/10 border-orange-200">
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-orange-600">Receita Total</p>
-                    <p className="text-2xl font-bold text-orange-700">
+                    <p className="text-xs sm:text-sm font-medium text-orange-600">Receita Total</p>
+                    <p className="text-lg sm:text-2xl font-bold text-orange-700">
                       R$ {stats?.totalRevenue?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}
                     </p>
                   </div>
-                  <TrendingUp className="h-8 w-8 text-orange-600" />
+                  <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-orange-600" />
                 </div>
               </CardContent>
             </Card>
@@ -124,28 +124,28 @@ export default function AdminDashboard() {
         )}
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Este Mês</p>
-                  <p className="text-xl font-bold">
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground">Este Mês</p>
+                  <p className="text-lg sm:text-xl font-bold">
                     R$ {stats?.monthlyRevenue?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}
                   </p>
                 </div>
-                <Calendar className="h-6 w-6 text-muted-foreground" />
+                <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Produtos Pendentes</p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-xl font-bold">{stats?.pendingProducts || 0}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground">Produtos Pendentes</p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="text-lg sm:text-xl font-bold">{stats?.pendingProducts || 0}</p>
                     {(stats?.pendingProducts || 0) > 0 && (
                       <Badge variant="destructive" className="text-xs">
                         Requer atenção
@@ -153,19 +153,19 @@ export default function AdminDashboard() {
                     )}
                   </div>
                 </div>
-                <AlertCircle className="h-6 w-6 text-orange-500" />
+                <AlertCircle className="h-5 w-5 sm:h-6 sm:w-6 text-orange-500 flex-shrink-0" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Afiliados Ativos</p>
-                  <p className="text-xl font-bold">{stats?.activeAffiliates || 0}</p>
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground">Afiliados Ativos</p>
+                  <p className="text-lg sm:text-xl font-bold">{stats?.activeAffiliates || 0}</p>
                 </div>
-                <UserCheck className="h-6 w-6 text-muted-foreground" />
+                <UserCheck className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" />
               </div>
             </CardContent>
           </Card>
@@ -174,17 +174,19 @@ export default function AdminDashboard() {
         {/* Admin Sections */}
         {/* Quick Actions removed temporarily */}
 
-        <Tabs defaultValue="whatsapp" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-1">
-            <TabsTrigger value="diagnostics">Diagnósticos</TabsTrigger>
-            <TabsTrigger value="ai-reviewer">IA Revisor</TabsTrigger>
-            <TabsTrigger value="users">Usuários</TabsTrigger>
-            <TabsTrigger value="stores">Lojas</TabsTrigger>
-            <TabsTrigger value="financial">Financeiro</TabsTrigger>
-            <TabsTrigger value="logs">Logs</TabsTrigger>
-            <TabsTrigger value="configs">Configurações</TabsTrigger>
-            <TabsTrigger value="whatsapp">WhatsApp</TabsTrigger>
-          </TabsList>
+        <Tabs defaultValue="diagnostics" className="space-y-6">
+          <div className="w-full overflow-x-auto">
+            <TabsList className="flex w-max min-w-full justify-start gap-1 p-1">
+              <TabsTrigger value="diagnostics" className="whitespace-nowrap">Diagnósticos</TabsTrigger>
+              <TabsTrigger value="ai-reviewer" className="whitespace-nowrap">IA Revisor</TabsTrigger>
+              <TabsTrigger value="users" className="whitespace-nowrap">Usuários</TabsTrigger>
+              <TabsTrigger value="stores" className="whitespace-nowrap">Lojas</TabsTrigger>
+              <TabsTrigger value="financial" className="whitespace-nowrap">Financeiro</TabsTrigger>
+              <TabsTrigger value="logs" className="whitespace-nowrap">Logs</TabsTrigger>
+              <TabsTrigger value="configs" className="whitespace-nowrap">Configurações</TabsTrigger>
+              <TabsTrigger value="whatsapp" className="whitespace-nowrap">WhatsApp</TabsTrigger>
+            </TabsList>
+          </div>
 
         <TabsContent value="diagnostics">
           <AdminDiagnosticsSection />
