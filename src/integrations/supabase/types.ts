@@ -829,6 +829,13 @@ export type Database = {
             referencedRelation: "venues"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "events_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       file_upload_audit: {
@@ -2536,7 +2543,54 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      venues_public: {
+        Row: {
+          accessibility_features: string[] | null
+          address: string | null
+          capacity: number | null
+          city: string | null
+          created_at: string | null
+          description: string | null
+          facilities: string[] | null
+          id: string | null
+          name: string | null
+          parking_available: boolean | null
+          state: string | null
+          updated_at: string | null
+          website_url: string | null
+        }
+        Insert: {
+          accessibility_features?: string[] | null
+          address?: string | null
+          capacity?: number | null
+          city?: string | null
+          created_at?: string | null
+          description?: string | null
+          facilities?: string[] | null
+          id?: string | null
+          name?: string | null
+          parking_available?: boolean | null
+          state?: string | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          accessibility_features?: string[] | null
+          address?: string | null
+          capacity?: number | null
+          city?: string | null
+          created_at?: string | null
+          description?: string | null
+          facilities?: string[] | null
+          id?: string | null
+          name?: string | null
+          parking_available?: boolean | null
+          state?: string | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       admin_get_user_profile: {
@@ -2747,6 +2801,24 @@ export type Database = {
           theme: Json
         }[]
       }
+      get_public_venues_list: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          accessibility_features: string[]
+          address: string
+          capacity: number
+          city: string
+          created_at: string
+          description: string
+          facilities: string[]
+          id: string
+          name: string
+          parking_available: boolean
+          state: string
+          updated_at: string
+          website_url: string
+        }[]
+      }
       get_safe_event_data: {
         Args: { event_id: string }
         Returns: {
@@ -2841,20 +2913,19 @@ export type Database = {
       get_venue_public_data: {
         Args: { venue_id: string }
         Returns: {
+          accessibility_features: string[]
           address: string
-          amenities: Json
           capacity: number
           city: string
-          country: string
           created_at: string
+          description: string
+          facilities: string[]
           id: string
-          images: Json
-          latitude: number
-          longitude: number
           name: string
-          postal_code: string
+          parking_available: boolean
           state: string
           updated_at: string
+          website_url: string
         }[]
       }
       handle_successful_payment: {
