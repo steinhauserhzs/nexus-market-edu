@@ -2602,6 +2602,30 @@ export type Database = {
         Args: { store_name: string }
         Returns: string
       }
+      get_all_public_events: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          age_restriction: string
+          banner_url: string
+          category: string
+          created_at: string
+          description: string
+          event_date: string
+          event_type: string
+          id: string
+          is_featured: boolean
+          max_capacity: number
+          organizer_id: string
+          price_from: number
+          status: Database["public"]["Enums"]["event_status"]
+          terms_and_conditions: string
+          ticket_sales_end_date: string
+          ticket_sales_start_date: string
+          title: string
+          updated_at: string
+          venue_id: string
+        }[]
+      }
       get_current_user_email: {
         Args: Record<PropertyKey, never>
         Returns: string
