@@ -86,10 +86,9 @@ export function useCoupons() {
       if (error) throw error;
 
       // Update coupon used count
-      await supabase
-        .from('coupons')
-        .update({ used_count: supabase.raw('used_count + 1') })
-        .eq('id', couponId);
+      await supabase.rpc('increment_coupon_usage', {
+        coupon_id: couponId
+      });
 
     } catch (error) {
       console.error('Error applying coupon usage:', error);

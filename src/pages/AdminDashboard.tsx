@@ -15,6 +15,7 @@ import { AdminSettingsSection } from '@/components/admin/admin-settings-section'
 import { AdminDiagnosticsSection } from '@/components/admin/admin-diagnostics-section';
 import { AISystemReviewer } from '@/components/admin/ai-system-reviewer';
 import { AdminWhatsAppSection } from '@/components/admin/admin-whatsapp-section';
+import AdminFlowValidationSection from "@/components/admin/admin-flow-validation-section";
 import { 
   Users, 
   Store, 
@@ -185,6 +186,7 @@ export default function AdminDashboard() {
               <TabsTrigger value="logs" className="whitespace-nowrap">Logs</TabsTrigger>
               <TabsTrigger value="configs" className="whitespace-nowrap">Configurações</TabsTrigger>
               <TabsTrigger value="whatsapp" className="whitespace-nowrap">WhatsApp</TabsTrigger>
+              <TabsTrigger value="flow-validation" className="whitespace-nowrap">Validação</TabsTrigger>
             </TabsList>
           </div>
 
@@ -218,6 +220,10 @@ export default function AdminDashboard() {
 
           <TabsContent value="whatsapp">
             <AdminWhatsAppSection />
+          </TabsContent>
+
+          <TabsContent value="flow-validation">
+            <AdminFlowValidationSection />
           </TabsContent>
 
           <TabsContent value="settings">

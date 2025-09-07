@@ -33,10 +33,12 @@ const LazyProductsList = lazy(() => import('./pages/ProductsList'));
 const LazyProductEdit = lazy(() => import('./pages/ProductEdit'));
 const LazyPersonalizarLoja = lazy(() => import('./pages/PersonalizarLoja'));
 const LazyAnalytics = lazy(() => import('./pages/Analytics'));
+const LazyClientes = lazy(() => import('./pages/Clientes'));
+const LazyFlowValidation = lazy(() => import('./pages/FlowValidation'));
+const LazyCouponManagement = lazy(() => import('./pages/CouponManagement'));
 const LazyDashboardHome = lazy(() => import('./pages/DashboardHome'));
 const LazyStoresList = lazy(() => import('./pages/StoresList'));
 const LazyStoreConfiguracoes = lazy(() => import('./pages/StoreConfiguracoes'));
-const LazyClientes = lazy(() => import('./pages/Clientes'));
 import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
 import PerformanceMonitor from "./components/ui/performance-monitor";
@@ -90,6 +92,8 @@ const App = () => (
                    <Route path="/curso/:slug/aula/:lessonId" element={<LazyRoute Component={LazyCoursePlayer} />} />
                    <Route path="/admin" element={<LazyRoute Component={LazyAdminDashboard} />} />
                    <Route path="/contato" element={<LazyRoute Component={LazyContact} />} />
+                   <Route path="/flow-validation" element={<LazyRoute Component={LazyFlowValidation} />} />
+                   <Route path="/cupons" element={<LazyRoute Component={LazyCouponManagement} />} />
             <Route path="/produto/novo" element={<LazyRoute Component={LazyProductNew} />} />
             <Route path="/produtos" element={<LazyRoute Component={LazyProductsList} />} />
             <Route path="/produto/:slug/editar" element={<LazyRoute Component={LazyProductEdit} />} />

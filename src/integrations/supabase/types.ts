@@ -2841,6 +2841,10 @@ export type Database = {
         Args: { post_id: string }
         Returns: undefined
       }
+      increment_coupon_usage: {
+        Args: { coupon_id: string }
+        Returns: undefined
+      }
       increment_likes_count_comment: {
         Args: { comment_id: string }
         Returns: undefined
