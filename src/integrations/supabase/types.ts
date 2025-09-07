@@ -2684,6 +2684,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       get_event_contact_info: {
         Args: { event_id: string }
         Returns: {
@@ -2947,6 +2951,10 @@ export type Database = {
       increment_likes_count_post: {
         Args: { post_id: string }
         Returns: undefined
+      }
+      is_current_user_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
       }
       log_admin_action: {
         Args: {
