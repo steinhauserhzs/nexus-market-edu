@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { 
   Upload, 
   X, 
@@ -17,9 +20,14 @@ import {
   Archive,
   Check,
   AlertCircle,
-  Loader2
+  Loader2,
+  Shield,
+  ExternalLink,
+  Plus
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { validateFileBeforeUpload, validateExternalURL, sanitizeFileName, validateFileContent } from "@/utils/file-security";
+import { logSecurityEvent } from "@/utils/security";
 
 interface UploadedFile {
   id: string;
@@ -40,6 +48,8 @@ interface EnhancedFileUploadProps {
   maxFiles?: number;
   className?: string;
   disabled?: boolean;
+  allowExternalLinks?: boolean;
+  maxFileSize?: number;
 }
 
 const EnhancedFileUpload = ({ 
@@ -49,12 +59,17 @@ const EnhancedFileUpload = ({
   acceptedTypes = ['image/*', 'video/*', 'application/pdf'],
   maxFiles,
   className,
-  disabled = false
+  disabled = false,
+  allowExternalLinks = true,
+  maxFileSize
 }: EnhancedFileUploadProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [dragOver, setDragOver] = useState(false);
+  const [externalUrl, setExternalUrl] = useState('');
+  const [showExternalInput, setShowExternalInput] = useState(false);
+  const [securityWarnings, setSecurityWarnings] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getFileIcon = (type: string) => {
@@ -77,9 +92,62 @@ const EnhancedFileUpload = ({
   const uploadFile = useCallback(async (file: File): Promise<UploadedFile> => {
     const fileId = Math.random().toString(36).substring(2);
     
+    // Security validation before upload
+    const validation = validateFileBeforeUpload(file);
+    if (!validation.isValid) {
+      const errorFile: UploadedFile = {
+        id: fileId,
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        url: '',
+        status: 'error',
+        progress: 0,
+        error: validation.errors.join(', ')
+      };
+      
+      setFiles(prev => [...prev, errorFile]);
+      
+      toast({
+        title: "Arquivo rejeitado por segurança",
+        description: validation.errors.join(', '),
+        variant: "destructive",
+      });
+      
+      return errorFile;
+    }
+
+    // Show security warnings if any
+    if (validation.warnings.length > 0) {
+      setSecurityWarnings(prev => [...prev, ...validation.warnings]);
+    }
+    
+    // Content validation
+    const isValidContent = await validateFileContent(file);
+    if (!isValidContent) {
+      logSecurityEvent('invalid_file_content', {
+        fileName: file.name,
+        mimeType: file.type
+      }, 'high');
+      
+      const errorFile: UploadedFile = {
+        id: fileId,
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        url: '',
+        status: 'error',
+        progress: 0,
+        error: 'File content validation failed'
+      };
+      
+      setFiles(prev => [...prev, errorFile]);
+      return errorFile;
+    }
+    
     const newFile: UploadedFile = {
       id: fileId,
-      name: file.name,
+      name: sanitizeFileName(file.name),
       size: file.size,
       type: file.type,
       url: '',
@@ -168,6 +236,20 @@ const EnhancedFileUpload = ({
       return;
     }
 
+    // Additional size validation if maxFileSize is specified
+    const oversizedFiles = filesArray.filter(file => 
+      maxFileSize && file.size > maxFileSize
+    );
+    
+    if (oversizedFiles.length > 0) {
+      toast({
+        title: "Arquivos muito grandes",
+        description: `Alguns arquivos excedem o tamanho máximo permitido`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Upload files in parallel
     const uploadPromises = filesArray.map(uploadFile);
     
@@ -185,7 +267,57 @@ const EnhancedFileUpload = ({
     } catch (error) {
       console.error('Batch upload error:', error);
     }
-  }, [files.length, maxFiles, uploadFile, onFilesUploaded, toast]);
+  }, [files.length, maxFiles, maxFileSize, uploadFile, onFilesUploaded, toast]);
+
+  const handleExternalUrl = useCallback(async () => {
+    if (!externalUrl.trim()) return;
+    
+    const validation = validateExternalURL(externalUrl);
+    
+    if (!validation.isValid) {
+      toast({
+        title: "URL inválida",
+        description: validation.warnings.join(', '),
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!validation.isSafe) {
+      toast({
+        title: "URL potencialmente perigosa",
+        description: "Esta URL contém padrões suspeitos e pode não ser segura",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (validation.warnings.length > 0) {
+      setSecurityWarnings(prev => [...prev, ...validation.warnings]);
+    }
+    
+    // Create external file object
+    const fileId = Math.random().toString(36).substring(2);
+    const externalFile: UploadedFile = {
+      id: fileId,
+      name: `External Link: ${new URL(validation.sanitizedUrl).hostname}`,
+      size: 0,
+      type: 'external/link',
+      url: validation.sanitizedUrl,
+      status: 'completed',
+      progress: 100
+    };
+    
+    setFiles(prev => [...prev, externalFile]);
+    onFilesUploaded([externalFile]);
+    setExternalUrl('');
+    setShowExternalInput(false);
+    
+    toast({
+      title: "Link adicionado!",
+      description: "Link externo adicionado com sucesso",
+    });
+  }, [externalUrl, onFilesUploaded, toast]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -229,6 +361,21 @@ const EnhancedFileUpload = ({
 
   return (
     <div className={cn("space-y-4", className)}>
+      {/* Security Warnings */}
+      {securityWarnings.length > 0 && (
+        <Alert>
+          <Shield className="h-4 w-4" />
+          <AlertDescription>
+            <div className="space-y-1">
+              <p className="font-medium">Avisos de Segurança:</p>
+              {securityWarnings.map((warning, index) => (
+                <p key={index} className="text-sm">• {warning}</p>
+              ))}
+            </div>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Drop Zone */}
       <Card 
         className={cn(
@@ -247,28 +394,68 @@ const EnhancedFileUpload = ({
               <Upload className="w-6 h-6 text-muted-foreground" />
             </div>
             <div>
-              <h3 className="font-semibold text-lg">Upload de Arquivos</h3>
+              <h3 className="font-semibold text-lg">Upload Seguro de Arquivos</h3>
               <p className="text-sm text-muted-foreground mt-1">
                 Arraste e solte ou clique para selecionar
               </p>
-              <p className="text-xs text-muted-foreground mt-2">
-                Sem limite de tamanho • Suporta: {acceptedTypes.join(', ')}
-              </p>
-              {maxFiles && (
-                <p className="text-xs text-muted-foreground">
-                  Máximo: {maxFiles} arquivo(s)
-                </p>
+              <div className="text-xs text-muted-foreground mt-2 space-y-1">
+                <p>Validação automática de segurança • Tipos permitidos: {acceptedTypes.join(', ')}</p>
+                {maxFileSize && (
+                  <p>Tamanho máximo: {formatFileSize(maxFileSize)}</p>
+                )}
+                {maxFiles && (
+                  <p>Máximo: {maxFiles} arquivo(s)</p>
+                )}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              {!disabled && (
+                <Button variant="outline" type="button">
+                  <Upload className="w-4 h-4 mr-2" />
+                  Selecionar Arquivos
+                </Button>
+              )}
+              {allowExternalLinks && !disabled && (
+                <Button 
+                  variant="ghost" 
+                  type="button"
+                  onClick={() => setShowExternalInput(!showExternalInput)}
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Link Externo
+                </Button>
               )}
             </div>
-            {!disabled && (
-              <Button variant="outline" type="button">
-                <Upload className="w-4 h-4 mr-2" />
-                Selecionar Arquivos
-              </Button>
-            )}
           </div>
         </CardContent>
       </Card>
+
+      {/* External URL Input */}
+      {showExternalInput && allowExternalLinks && (
+        <Card>
+          <CardContent className="p-4">
+            <div className="space-y-3">
+              <Label htmlFor="external-url">Adicionar Link Externo</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="external-url"
+                  type="url"
+                  placeholder="https://youtube.com/watch?v=..."
+                  value={externalUrl}
+                  onChange={(e) => setExternalUrl(e.target.value)}
+                  className="flex-1"
+                />
+                <Button type="button" onClick={handleExternalUrl} disabled={!externalUrl.trim()}>
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Links seguros: YouTube, Vimeo, Google Drive, Dropbox, GitHub
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <input
         ref={fileInputRef}

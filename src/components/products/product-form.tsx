@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { validateAndSanitizeInput } from "@/utils/enhanced-validation";
 import { useSecurity } from "@/hooks/use-security";
+import { SecureForm } from "@/components/security/SecureForm";
 import ImageUpload from "./image-upload";
 import EnhancedFileUpload from "./enhanced-file-upload";
 import ProductPreview from "./product-preview";
@@ -295,11 +296,15 @@ const ProductForm = ({ storeId, onSuccess, onCancel, initialData, isEditing = fa
             />
 
             <EnhancedFileUpload
-              files={formData.product_files}
-              onFilesChange={(files) => setFormData(prev => ({ ...prev, product_files: files }))}
-              acceptedTypes={['*/*']}
+              onFilesUploaded={(files) => setFormData(prev => ({ 
+                ...prev, 
+                product_files: [...(prev.product_files || []), ...files] 
+              }))}
+              acceptedTypes={['image/*', 'video/*', 'application/pdf', 'application/zip', 'text/plain']}
               storeId={selectedStoreId}
-              title="Arquivos do Produto"
+              maxFiles={10}
+              maxFileSize={100 * 1024 * 1024} // 100MB
+              allowExternalLinks={true}
             />
 
             <div className="space-y-2">
