@@ -704,6 +704,48 @@ export type Database = {
           },
         ]
       }
+      file_upload_audit: {
+        Row: {
+          created_at: string
+          file_name: string
+          file_path: string | null
+          file_size: number | null
+          id: string
+          mime_type: string | null
+          rejection_reason: string | null
+          sanitized_name: string | null
+          security_warnings: string[] | null
+          upload_status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          file_path?: string | null
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+          rejection_reason?: string | null
+          sanitized_name?: string | null
+          security_warnings?: string[] | null
+          upload_status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          file_path?: string | null
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+          rejection_reason?: string | null
+          sanitized_name?: string | null
+          security_warnings?: string[] | null
+          upload_status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       leaderboards: {
         Row: {
           created_at: string

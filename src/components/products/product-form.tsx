@@ -13,7 +13,7 @@ import { validateAndSanitizeInput } from "@/utils/enhanced-validation";
 import { useSecurity } from "@/hooks/use-security";
 import { SecureForm } from "@/components/security/SecureForm";
 import ImageUpload from "./image-upload";
-import EnhancedFileUpload from "./enhanced-file-upload";
+import EnhancedFileUpload from "../ui/enhanced-file-upload";
 import ProductPreview from "./product-preview";
 
 interface Category {
