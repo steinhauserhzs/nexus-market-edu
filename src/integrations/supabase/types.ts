@@ -1445,6 +1445,7 @@ export type Database = {
           meta_description: string | null
           meta_title: string | null
           price_cents: number
+          product_files: Json | null
           requires_shipping: boolean | null
           slug: string
           status: string | null
@@ -1471,6 +1472,7 @@ export type Database = {
           meta_description?: string | null
           meta_title?: string | null
           price_cents?: number
+          product_files?: Json | null
           requires_shipping?: boolean | null
           slug: string
           status?: string | null
@@ -1497,6 +1499,7 @@ export type Database = {
           meta_description?: string | null
           meta_title?: string | null
           price_cents?: number
+          product_files?: Json | null
           requires_shipping?: boolean | null
           slug?: string
           status?: string | null

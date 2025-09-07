@@ -139,6 +139,7 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
         meta_title: formData.meta_title || null,
         meta_description: formData.meta_description || null,
         thumbnail_url: formData.images.length > 0 ? formData.images[0] : (formData.thumbnail_url || null),
+        product_files: formData.product_files || [],
         featured: formData.featured,
         allow_affiliates: formData.allow_affiliates,
         requires_shipping: formData.requires_shipping,
