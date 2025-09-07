@@ -104,19 +104,19 @@ export default function MainHeader() {
                 )}
 
                 {/* User Section */}
-                {user && profile ? (
+                {user ? (
                   <div className="space-y-4">
                     <div className="flex items-center gap-3 p-4 rounded-xl bg-muted/50 border border-border/50">
                       <Avatar className="w-12 h-12">
-                        <AvatarImage src={profile.avatar_url || ''} />
+                        <AvatarImage src={profile?.avatar_url || ''} />
                         <AvatarFallback className="text-sm font-medium">
-                          {profile.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
+                          {profile?.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm truncate">{profile.full_name || 'Usuário'}</p>
-                         <Badge variant="outline" className={`text-xs mt-1 ${profile.role === 'admin' ? 'bg-red-100 text-red-800 border-red-200' : profile.role === 'seller' ? 'bg-blue-100 text-blue-800 border-blue-200' : ''}`}>
-                           {profile.role === 'admin' ? '👑 Admin' : profile.role === 'seller' ? 'Vendedor' : 'Usuário'}
+                        <p className="font-medium text-sm truncate">{profile?.full_name || 'Usuário'}</p>
+                         <Badge variant="outline" className={`text-xs mt-1 ${profile?.role === 'admin' ? 'bg-red-100 text-red-800 border-red-200' : profile?.role === 'seller' ? 'bg-blue-100 text-blue-800 border-blue-200' : ''}`}>
+                           {profile?.role === 'admin' ? '👑 Admin' : profile?.role === 'seller' ? 'Vendedor' : 'Usuário'}
                          </Badge>
                       </div>
                     </div>
@@ -220,7 +220,7 @@ export default function MainHeader() {
           </Button>
 
           {/* Notifications */}
-          {user && profile && (
+          {user && (
             <NotificationBadge count={0} size="sm" className="hidden sm:flex">
               <Button variant="ghost" size="icon-sm">
                 <Bell className="icon-sm" />
@@ -230,33 +230,33 @@ export default function MainHeader() {
           
           <CartSheet />
           
-          {user && profile ? (
+          {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-2 hidden md:flex">
                   <Avatar className="w-6 h-6">
-                    <AvatarImage src={profile.avatar_url || ''} />
+                    <AvatarImage src={profile?.avatar_url || ''} />
                     <AvatarFallback>
-                      {profile.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
+                      {profile?.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
                     </AvatarFallback>
                   </Avatar>
                   <span className="hidden lg:inline max-w-24 truncate">
-                    {profile.full_name || 'Usuário'}
+                    {profile?.full_name || 'Usuário'}
                   </span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64 bg-card/98 border-2 border-border shadow-2xl">
                 <div className="flex items-center gap-2 p-2">
                   <Avatar className="w-8 h-8">
-                    <AvatarImage src={profile.avatar_url || ''} />
+                    <AvatarImage src={profile?.avatar_url || ''} />
                     <AvatarFallback>
-                      {profile.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
+                      {profile?.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <p className="text-sm font-medium">{profile.full_name || 'Usuário'}</p>
-                     <Badge variant="outline" className={`text-xs ${profile.role === 'admin' ? 'bg-red-100 text-red-800 border-red-200' : profile.role === 'seller' ? 'bg-blue-100 text-blue-800 border-blue-200' : ''}`}>
-                       {profile.role === 'admin' ? '👑 Administrador' : profile.role === 'seller' ? 'Vendedor' : 'Usuário'}
+                    <p className="text-sm font-medium">{profile?.full_name || 'Usuário'}</p>
+                     <Badge variant="outline" className={`text-xs ${profile?.role === 'admin' ? 'bg-red-100 text-red-800 border-red-200' : profile?.role === 'seller' ? 'bg-blue-100 text-blue-800 border-blue-200' : ''}`}>
+                       {profile?.role === 'admin' ? '👑 Administrador' : profile?.role === 'seller' ? 'Vendedor' : 'Usuário'}
                      </Badge>
                   </div>
                 </div>
@@ -280,7 +280,7 @@ export default function MainHeader() {
                   Criar Loja
                 </DropdownMenuItem>
 
-                  {profile.role === 'seller' && (
+                  {profile?.role === 'seller' && (
                     <DropdownMenuItem onClick={() => navigate('/dashboard')}>
                       <Store className="mr-2 h-4 w-4" />
                       Minhas Lojas
