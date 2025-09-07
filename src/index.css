@@ -174,11 +174,31 @@
       max-height: calc(100vh - 2rem);
     }
     
-    /* Navigation improvements */
-    .mobile-nav {
-      padding-bottom: env(safe-area-inset-bottom);
-      z-index: 100;
-    }
+  /* Navigation improvements */
+  .mobile-nav {
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 80 !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid hsl(var(--border) / 0.3);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mobile-nav-item {
+    @apply transition-all duration-200 ease-in-out;
+  }
+  
+  .mobile-nav-item.active {
+    @apply scale-105;
+  }
+  
+  .mobile-nav-admin {
+    @apply bg-red-50/10 border border-red-500/20 text-red-600;
+  }
+  
+  .mobile-nav-admin:hover {
+    @apply bg-red-100/20 text-red-700;
+  }
   }
 
   /* Small mobile devices */
