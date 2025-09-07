@@ -2584,6 +2584,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      set_first_user_as_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       update_user_consent: {
         Args: {
           p_data_consent?: boolean
