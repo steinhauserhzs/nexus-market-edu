@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useSellerAnalytics } from "@/hooks/use-seller-analytics";
+import { useAdmin } from "@/hooks/use-admin";
 import { useState, useEffect } from "react";
 import MainHeader from "@/components/layout/main-header";
 import { 
@@ -22,7 +23,8 @@ import {
   TrendingUp,
   Eye,
   DollarSign,
-  ArrowRight
+  ArrowRight,
+  Shield
 } from "lucide-react";
 
 interface StoreStats {
@@ -36,6 +38,7 @@ const DashboardHome = () => {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
   const { analytics, loading: analyticsLoading } = useSellerAnalytics();
+  const { isAdmin } = useAdmin();
 
   // Remove useEffect and fetchStats since we're using the hook
 
@@ -51,7 +54,7 @@ const DashboardHome = () => {
 
   // Remove the old fetchStats function
 
-  const quickActions = [
+  const baseQuickActions = [
     {
       icon: Plus,
       title: "Criar Nova Loja",
@@ -82,6 +85,18 @@ const DashboardHome = () => {
       color: "bg-orange-500"
     }
   ];
+
+  // Add admin panel if user is admin
+  const adminAction = isAdmin ? [{
+    icon: Shield,
+    title: "Painel Admin",
+    description: "Gerenciar sistema e usuários",
+    action: () => navigate("/admin"),
+    color: "bg-red-500",
+    highlight: true
+  }] : [];
+
+  const quickActions = [...baseQuickActions, ...adminAction];
 
   const managementOptions = [
     {
