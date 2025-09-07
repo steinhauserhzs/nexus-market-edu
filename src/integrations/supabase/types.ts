@@ -2391,12 +2391,30 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_get_user_profile: {
+        Args: { p_user_id: string }
+        Returns: {
+          created_at: string
+          email: string
+          email_verified: boolean
+          full_name: string
+          id: string
+          is_verified: boolean
+          last_login_at: string
+          phone_verified: boolean
+          role: string
+        }[]
+      }
       calculate_platform_fee: {
         Args: { amount_cents: number }
         Returns: number
       }
       can_access_payment_info: {
         Args: { target_user_id: string }
+        Returns: boolean
+      }
+      check_rate_limit: {
+        Args: { p_action: string; p_limit_per_hour?: number }
         Returns: boolean
       }
       cleanup_old_rate_limits: {
@@ -2424,6 +2442,10 @@ export type Database = {
         Args: { post_id: string }
         Returns: undefined
       }
+      email_exists_for_login: {
+        Args: { p_email: string }
+        Returns: boolean
+      }
       export_user_data: {
         Args: Record<PropertyKey, never>
         Returns: Json
@@ -2432,8 +2454,8 @@ export type Database = {
         Args: { store_name: string }
         Returns: string
       }
-      get_email_by_identifier: {
-        Args: { p_identifier: string }
+      get_current_user_email: {
+        Args: Record<PropertyKey, never>
         Returns: string
       }
       get_event_contact_info: {
@@ -2622,6 +2644,14 @@ export type Database = {
         }
         Returns: undefined
       }
+      log_profile_data_access: {
+        Args: {
+          p_accessed_profile_id: string
+          p_action: string
+          p_reason?: string
+        }
+        Returns: undefined
+      }
       log_security_event: {
         Args: { p_action: string; p_details?: Json; p_user_id?: string }
         Returns: string
@@ -2699,6 +2729,14 @@ export type Database = {
       validate_phone_br: {
         Args: { phone_input: string }
         Returns: boolean
+      }
+      verify_user_contact: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          email: string
+          phone: string
+          whatsapp_number: string
+        }[]
       }
     }
     Enums: {

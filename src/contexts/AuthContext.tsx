@@ -103,29 +103,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Função para buscar usuário por CPF, telefone ou email usando RPC segura
+  // Secure function - removed CPF/phone lookup for security reasons
+  // Users should use their email to login to prevent enumeration attacks
   const findUserByIdentifier = async (identifier: string) => {
     try {
-      console.info('[AuthContext] findUserByIdentifier', { identifier: identifier.substring(0, 3) + '...' });
-      
-      const { data: email, error } = await supabase.rpc('get_email_by_identifier', {
-        p_identifier: identifier
+      // Only allow email-based lookups for security
+      if (!identifier.includes('@')) {
+        return { 
+          user: null, 
+          error: { message: 'Por segurança, use seu email para fazer login' } 
+        };
+      }
+
+      // Check if email exists (secure boolean check only)
+      const { data: emailExists, error } = await supabase.rpc('email_exists_for_login', {
+        p_email: identifier
       });
-      
+
       if (error) {
-        console.error('[AuthContext] RPC error:', error);
+        console.error('[AuthContext] Email check error:', error);
         return { user: null, error };
       }
-      
-      if (!email) {
-        console.info('[AuthContext] No email found for identifier');
-        return { user: null, error: { message: 'Usuário não encontrado' } };
+
+      if (!emailExists) {
+        return { 
+          user: null, 
+          error: { message: 'Email não encontrado' } 
+        };
       }
-      
-      console.info('[AuthContext] Email resolved:', email.substring(0, 3) + '...');
-      return { user: { email }, error: null };
+
+      return { user: { email: identifier }, error: null };
     } catch (error: any) {
-      console.error('[AuthContext] findUserByIdentifier catch:', error);
+      console.error('[AuthContext] findUserByIdentifier error:', error);
       return { user: null, error };
     }
   };
