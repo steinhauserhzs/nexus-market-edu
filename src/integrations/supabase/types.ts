@@ -2472,6 +2472,53 @@ export type Database = {
         }
         Relationships: []
       }
+      verification_codes: {
+        Row: {
+          attempts: number
+          code: string
+          contact_value: string
+          created_at: string
+          expires_at: string
+          id: string
+          is_used: boolean
+          type: string
+          user_id: string
+          verified_at: string | null
+        }
+        Insert: {
+          attempts?: number
+          code: string
+          contact_value: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          is_used?: boolean
+          type: string
+          user_id: string
+          verified_at?: string | null
+        }
+        Update: {
+          attempts?: number
+          code?: string
+          contact_value?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          is_used?: boolean
+          type?: string
+          user_id?: string
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "verification_codes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       whatsapp_notifications: {
         Row: {
           attempts: number
@@ -2618,6 +2665,10 @@ export type Database = {
       check_rate_limit: {
         Args: { p_action: string; p_limit_per_hour?: number }
         Returns: boolean
+      }
+      cleanup_expired_verification_codes: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       cleanup_old_rate_limits: {
         Args: Record<PropertyKey, never>
@@ -3075,6 +3126,10 @@ export type Database = {
       validate_phone_br: {
         Args: { phone_input: string }
         Returns: boolean
+      }
+      verify_code_and_update_profile: {
+        Args: { p_code: string; p_type: string }
+        Returns: Json
       }
       verify_user_contact: {
         Args: Record<PropertyKey, never>
