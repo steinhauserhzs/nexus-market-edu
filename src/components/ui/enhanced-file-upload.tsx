@@ -408,9 +408,9 @@ const EnhancedFileUpload = ({
                 )}
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2 justify-center w-full">
               {!disabled && (
-                <Button variant="outline" type="button">
+                <Button variant="outline" type="button" onClick={() => fileInputRef.current?.click()} className="w-full sm:w-auto">
                   <Upload className="w-4 h-4 mr-2" />
                   Selecionar Arquivos
                 </Button>
@@ -420,6 +420,7 @@ const EnhancedFileUpload = ({
                   variant="ghost" 
                   type="button"
                   onClick={() => setShowExternalInput(!showExternalInput)}
+                  className="w-full sm:w-auto"
                 >
                   <ExternalLink className="w-4 h-4 mr-2" />
                   Link Externo
@@ -436,16 +437,16 @@ const EnhancedFileUpload = ({
           <CardContent className="p-4">
             <div className="space-y-3">
               <Label htmlFor="external-url">Adicionar Link Externo</Label>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2 w-full">
                 <Input
                   id="external-url"
                   type="url"
                   placeholder="https://youtube.com/watch?v=..."
                   value={externalUrl}
                   onChange={(e) => setExternalUrl(e.target.value)}
-                  className="flex-1"
+                  className="flex-1 min-w-0"
                 />
-                <Button type="button" onClick={handleExternalUrl} disabled={!externalUrl.trim()}>
+                <Button type="button" onClick={handleExternalUrl} disabled={!externalUrl.trim()} className="w-full sm:w-auto">
                   <Plus className="w-4 h-4" />
                 </Button>
               </div>

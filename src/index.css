@@ -117,8 +117,21 @@
   html {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 
+  /* Global media responsiveness */
+  img, video, canvas, iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Safe overflow defaults */
+  #root, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
   /* Better touch targets for mobile */
   button, input, select, textarea, a {
     min-height: 48px;

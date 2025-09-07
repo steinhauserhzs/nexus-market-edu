@@ -70,46 +70,46 @@ const App = () => (
               >
                 <BreadcrumbNavigation />
             <MobileGestures>
-              <div className="pb-16 md:pb-0">
+              <div className="pb-16 md:pb-0 overflow-x-hidden">
                  <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/dashboard" element={<LazyRoute Component={LazyDashboard} />} />
-          <Route path="/vendedor" element={<LazyRoute Component={LazySellerDashboardSlim} />} />
-          <Route path="/biblioteca" element={<LazyRoute Component={LazyLibrary} />} />
-                  <Route path="/perfil" element={<LazyRoute Component={LazyProfile} />} />
-                  <Route path="/checkout" element={<LazyRoute Component={LazyCheckout} />} />
-                  <Route path="/carrinho" element={<LazyRoute Component={LazyCheckout} />} />
-                  <Route path="/criar-loja" element={<LazyRoute Component={LazyCreateStore} />} />
-                   <Route path="/loja/:slug" element={<LazyRoute Component={LazyStore} />} />
-                   <Route path="/loja/:slug/membros" element={<LazyRoute Component={LazyMemberArea} />} />
-                   <Route path="/loja/:slug/configurar-membros" element={<LazyRoute Component={LazyMemberAreaConfig} />} />
-                   <Route path="/loja/:slug/customizar" element={<LazyRoute Component={LazyStoreCustomizer} />} />
-                   <Route path="/produto/:slug" element={<LazyRoute Component={LazyProductDetails} />} />
-                   <Route path="/member-area-advanced/:storeId" element={<LazyRoute Component={LazyMemberAreaAdvanced} />} />
-                   <Route path="/demo" element={<Demo />} />
-                   <Route path="/netflix" element={<LazyRoute Component={LazyNetflixDashboard} />} />
-                   <Route path="/curso/:slug/aula/:lessonId" element={<LazyRoute Component={LazyCoursePlayer} />} />
-                   <Route path="/admin" element={<LazyRoute Component={LazyAdminDashboard} />} />
-                   <Route path="/contato" element={<LazyRoute Component={LazyContact} />} />
-                   <Route path="/flow-validation" element={<LazyRoute Component={LazyFlowValidation} />} />
-                   <Route path="/cupons" element={<LazyRoute Component={LazyCouponManagement} />} />
-            <Route path="/produto/novo" element={<LazyRoute Component={LazyProductNew} />} />
-            <Route path="/produtos" element={<LazyRoute Component={LazyProductsList} />} />
-            <Route path="/produto/:slug/editar" element={<LazyRoute Component={LazyProductEdit} />} />
-                   <Route path="/personalizar-loja" element={<LazyRoute Component={LazyPersonalizarLoja} />} />
-                   <Route path="/analytics" element={<LazyRoute Component={LazyAnalytics} />} />
-                   <Route path="/inicio" element={<LazyRoute Component={LazyDashboardHome} />} />
-                   <Route path="/lojas" element={<LazyRoute Component={LazyStoresList} />} />
-                   <Route path="/loja/:slug/configuracoes" element={<LazyRoute Component={LazyStoreConfiguracoes} />} />
-                   <Route path="/clientes" element={<LazyRoute Component={LazyClientes} />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                   <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
-                </Routes>
-                <MobileNavigation />
-                <PerformanceMonitor />
-              </div>
-            </MobileGestures>
+           <Route path="/" element={<Index />} />
+           <Route path="/auth" element={<Auth />} />
+           <Route path="/dashboard" element={<LazyRoute Component={LazyDashboard} />} />
+           <Route path="/vendedor" element={<LazyRoute Component={LazySellerDashboardSlim} />} />
+           <Route path="/biblioteca" element={<LazyRoute Component={LazyLibrary} />} />
+                   <Route path="/perfil" element={<LazyRoute Component={LazyProfile} />} />
+                   <Route path="/checkout" element={<LazyRoute Component={LazyCheckout} />} />
+                   <Route path="/carrinho" element={<LazyRoute Component={LazyCheckout} />} />
+                   <Route path="/criar-loja" element={<LazyRoute Component={LazyCreateStore} />} />
+                    <Route path="/loja/:slug" element={<LazyRoute Component={LazyStore} />} />
+                    <Route path="/loja/:slug/membros" element={<LazyRoute Component={LazyMemberArea} />} />
+                    <Route path="/loja/:slug/configurar-membros" element={<LazyRoute Component={LazyMemberAreaConfig} />} />
+                    <Route path="/loja/:slug/customizar" element={<LazyRoute Component={LazyStoreCustomizer} />} />
+                    <Route path="/produto/:slug" element={<LazyRoute Component={LazyProductDetails} />} />
+                    <Route path="/member-area-advanced/:storeId" element={<LazyRoute Component={LazyMemberAreaAdvanced} />} />
+                    <Route path="/demo" element={<Demo />} />
+                    <Route path="/netflix" element={<LazyRoute Component={LazyNetflixDashboard} />} />
+                    <Route path="/curso/:slug/aula/:lessonId" element={<LazyRoute Component={LazyCoursePlayer} />} />
+                    <Route path="/admin" element={<LazyRoute Component={LazyAdminDashboard} />} />
+                    <Route path="/contato" element={<LazyRoute Component={LazyContact} />} />
+                    <Route path="/flow-validation" element={<LazyRoute Component={LazyFlowValidation} />} />
+                    <Route path="/cupons" element={<LazyRoute Component={LazyCouponManagement} />} />
+             <Route path="/produto/novo" element={<LazyRoute Component={LazyProductNew} />} />
+             <Route path="/produtos" element={<LazyRoute Component={LazyProductsList} />} />
+             <Route path="/produto/:slug/editar" element={<LazyRoute Component={LazyProductEdit} />} />
+                    <Route path="/personalizar-loja" element={<LazyRoute Component={LazyPersonalizarLoja} />} />
+                    <Route path="/analytics" element={<LazyRoute Component={LazyAnalytics} />} />
+                    <Route path="/inicio" element={<LazyRoute Component={LazyDashboardHome} />} />
+                    <Route path="/lojas" element={<LazyRoute Component={LazyStoresList} />} />
+                    <Route path="/loja/:slug/configuracoes" element={<LazyRoute Component={LazyStoreConfiguracoes} />} />
+                    <Route path="/clientes" element={<LazyRoute Component={LazyClientes} />} />
+                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
+                 </Routes>
+                 <MobileNavigation />
+                 <PerformanceMonitor />
+               </div>
+             </MobileGestures>
             </BrowserRouter>
           </TooltipProvider>
         </CartProvider>
