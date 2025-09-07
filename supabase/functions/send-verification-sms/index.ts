@@ -89,7 +89,7 @@ serve(async (req) => {
     
     const formData = new URLSearchParams();
     formData.append('To', `+${cleanPhone}`);
-    formData.append('From', '+1234567890'); // Replace with your Twilio phone number
+    formData.append('From', '+18777804236'); // Your Twilio phone number
     formData.append('Body', `Seu código de verificação é: ${code}. Válido por 5 minutos.`);
 
     const twilioResponse = await fetch(twilioUrl, {
