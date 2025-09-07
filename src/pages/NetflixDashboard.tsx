@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProducts } from "@/hooks/use-products";
+import { useUserLicenses } from "@/hooks/use-user-licenses";
 import { NetflixHeader } from "@/components/netflix/NetflixHeader";
 import { NetflixCarousel } from "@/components/netflix/NetflixCarousel";
 import { NetflixCardProps } from "@/components/netflix/NetflixCard";
@@ -15,6 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 const NetflixDashboard = () => {
   const { user } = useAuth();
   const { products: allProducts, loading } = useProducts({ limit: 50 });
+  const { licenses, hasLicense } = useUserLicenses();
   const { addToCart } = useCart();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -23,7 +25,7 @@ const NetflixDashboard = () => {
   const transformProductsToCards = (products: any[]): NetflixCardProps[] => {
     return products.map((product, index) => {
       const badges = generateProductBadges({
-        owned: false, // TODO: Check user licenses for ownership
+        owned: hasLicense(product.id),
         lessonsCount: product.total_lessons || 0,
         isNew: index < 3, // First 3 are "new"
         isPopular: index % 4 === 0, // Every 4th is "popular"
@@ -36,14 +38,23 @@ const NetflixDashboard = () => {
         title: product.title,
         thumbnail: product.thumbnail_url || "/placeholder.svg",
         type: (product.type === 'curso' ? 'course' : product.type === 'pack' ? 'pack' : 'template') as "course" | "pack" | "template",
-        owned: false, // TODO: Check user licenses for ownership
+        owned: hasLicense(product.id),
         price: product.price_cents,
         badges, // Now using the proper BadgeConfig format
         position: index,
-        onClick: () => navigate(`/produto/${product.slug}`),
+        onClick: () => {
+          if ((product.type === 'course' || product.type === 'digital') && hasLicense(product.id)) {
+            navigate(`/area-membro/${product.slug}`);
+          } else {
+            navigate(`/produto/${product.slug}`);
+          }
+        },
         onPlayClick: () => {
-          // TODO: Navigate to course player when owned
-          navigate(`/curso/${product.slug}/aula/1`);
+          if (hasLicense(product.id)) {
+            navigate(`/curso/${product.slug}/aula/1`);
+          } else {
+            navigate(`/produto/${product.slug}`);
+          }
         },
         onAddClick: () => {
           addToCart({
@@ -78,7 +89,7 @@ const NetflixDashboard = () => {
   );
   
   const ownedProducts = transformProductsToCards(
-    allProducts.filter(p => false).slice(0, 12) // TODO: Filter by user licenses
+    allProducts.filter(p => hasLicense(p.id)).slice(0, 12)
   );
 
   // Hero Content
@@ -135,12 +146,15 @@ const NetflixDashboard = () => {
                     size="lg"
                     className="h-12 w-full sm:w-auto px-6 sm:px-8 bg-white text-black hover:bg-gray-200 font-semibold mobile-friendly-button"
                     onClick={() => {
-                      // TODO: Check if user owns this product
-                      navigate(`/produto/${heroProduct.slug}`);
+                      if (hasLicense(heroProduct.id)) {
+                        navigate(`/area-membro/${heroProduct.slug}`);
+                      } else {
+                        navigate(`/produto/${heroProduct.slug}`);
+                      }
                     }}
                   >
                     <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2 fill-current" />
-                    Começar Agora
+                    {hasLicense(heroProduct.id) ? 'Continuar Assistindo' : 'Começar Agora'}
                   </Button>
                   <Button 
                     size="lg"

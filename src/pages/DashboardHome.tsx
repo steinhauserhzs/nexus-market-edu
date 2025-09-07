@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/integrations/supabase/client";
+import { useSellerAnalytics } from "@/hooks/use-seller-analytics";
 import { useState, useEffect } from "react";
 import MainHeader from "@/components/layout/main-header";
 import { 
@@ -21,6 +21,7 @@ import {
   Star,
   TrendingUp,
   Eye,
+  DollarSign,
   ArrowRight
 } from "lucide-react";
 
@@ -34,21 +35,11 @@ interface StoreStats {
 const DashboardHome = () => {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
-  const [stats, setStats] = useState<StoreStats>({
-    totalStores: 0,
-    totalProducts: 0,
-    totalViews: 0,
-    totalSales: 0
-  });
-  const [loadingStats, setLoadingStats] = useState(true);
+  const { analytics, loading: analyticsLoading } = useSellerAnalytics();
 
-  useEffect(() => {
-    if (user) {
-      fetchStats();
-    }
-  }, [user]);
+  // Remove useEffect and fetchStats since we're using the hook
 
-  if (loading) {
+  if (loading || analyticsLoading) {
     return <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
     </div>;
@@ -58,47 +49,7 @@ const DashboardHome = () => {
     return <Navigate to="/auth" replace />;
   }
 
-  const fetchStats = async () => {
-    try {
-      setLoadingStats(true);
-      
-      // Fetch stores count
-      const { count: storesCount } = await supabase
-        .from('stores')
-        .select('*', { count: 'exact', head: true })
-        .eq('owner_id', user.id)
-        .eq('is_active', true);
-
-      // First get the store IDs
-      const { data: userStores } = await supabase
-        .from('stores')
-        .select('id')
-        .eq('owner_id', user.id);
-
-      const storeIds = userStores?.map(s => s.id) || [];
-
-      // Fetch products count
-      let productsCount = 0;
-      if (storeIds.length > 0) {
-        const { count } = await supabase
-          .from('products')
-          .select('*', { count: 'exact', head: true })
-          .in('store_id', storeIds);
-        productsCount = count || 0;
-      }
-
-      setStats({
-        totalStores: storesCount || 0,
-        totalProducts: productsCount,
-        totalViews: 0, // TODO: Implement view analytics
-        totalSales: 0  // TODO: Implement sales analytics
-      });
-    } catch (error) {
-      console.error('Error fetching stats:', error);
-    } finally {
-      setLoadingStats(false);
-    }
-  };
+  // Remove the old fetchStats function
 
   const quickActions = [
     {
@@ -138,21 +89,21 @@ const DashboardHome = () => {
       title: "Minhas Lojas",
       description: "Gerenciar todas as suas lojas",
       action: () => navigate("/lojas"),
-      count: stats.totalStores
+      count: analytics.totalStores
     },
           {
             icon: FileText,
             title: "Meus Produtos", 
             description: "Ver e editar produtos",
             action: () => navigate("/produtos"),
-            count: stats.totalProducts
+            count: analytics.totalProducts
           },
     {
       icon: Users,
       title: "Clientes",
       description: "Base de clientes e vendas",
       action: () => navigate("/clientes"),
-      count: stats.totalSales
+      count: analytics.totalSales
     },
     {
       icon: BookOpen,
@@ -216,7 +167,7 @@ const DashboardHome = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Lojas</p>
-                    <p className="text-2xl font-bold">{loadingStats ? "..." : stats.totalStores}</p>
+                    <p className="text-2xl font-bold">{analyticsLoading ? "..." : analytics.totalStores}</p>
                   </div>
                   <Store className="w-8 h-8 text-blue-500" />
                 </div>
@@ -228,7 +179,7 @@ const DashboardHome = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Produtos</p>
-                    <p className="text-2xl font-bold">{loadingStats ? "..." : stats.totalProducts}</p>
+                    <p className="text-2xl font-bold">{analyticsLoading ? "..." : analytics.totalProducts}</p>
                   </div>
                   <ShoppingBag className="w-8 h-8 text-green-500" />
                 </div>
@@ -240,7 +191,8 @@ const DashboardHome = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Visitas</p>
-                    <p className="text-2xl font-bold">{stats.totalViews}</p>
+                    <p className="text-2xl font-bold">{analytics.totalViews.toLocaleString()}</p>
+                    <p className="text-xs text-muted-foreground">+{analytics.recentViews} esta semana</p>
                   </div>
                   <Eye className="w-8 h-8 text-purple-500" />
                 </div>
@@ -251,10 +203,11 @@ const DashboardHome = () => {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Vendas</p>
-                    <p className="text-2xl font-bold">{stats.totalSales}</p>
+                    <p className="text-sm text-muted-foreground">Receita</p>
+                    <p className="text-2xl font-bold">R$ {analytics.totalRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                    <p className="text-xs text-muted-foreground">{analytics.totalSales} vendas</p>
                   </div>
-                  <TrendingUp className="w-8 h-8 text-orange-500" />
+                  <DollarSign className="w-8 h-8 text-orange-500" />
                 </div>
               </CardContent>
             </Card>

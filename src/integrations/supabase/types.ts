@@ -1932,6 +1932,27 @@ export type Database = {
           },
         ]
       }
+      store_followers: {
+        Row: {
+          created_at: string
+          id: string
+          store_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          store_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          store_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       store_pages: {
         Row: {
           content: Json
@@ -2651,6 +2672,10 @@ export type Database = {
           severity: string
         }[]
       }
+      get_store_followers_count: {
+        Args: { store_id: string }
+        Returns: number
+      }
       get_system_config: {
         Args: { p_key: string }
         Returns: Json
@@ -2791,6 +2816,10 @@ export type Database = {
       }
       user_can_access_order_item: {
         Args: { item_order_id: string }
+        Returns: boolean
+      }
+      user_follows_store: {
+        Args: { store_id: string }
         Returns: boolean
       }
       validate_cpf: {

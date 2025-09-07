@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useStoreFollowers } from "@/hooks/use-store-followers";
 import BackNavigation from "@/components/layout/back-navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,8 @@ import {
   Package,
   MapPin,
   Globe,
-  Palette
+  Palette,
+  Heart
 } from "lucide-react";
 import ProductCard from "@/components/ui/product-card";
 import CustomStoreRenderer from "@/components/store/custom-store-renderer";
@@ -59,8 +61,13 @@ const Store = () => {
   const [store, setStore] = useState<Store | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [following, setFollowing] = useState(false);
-  const [followersCount, setFollowersCount] = useState(0);
+  
+  const { 
+    isFollowing, 
+    followersCount, 
+    loading: followLoading, 
+    toggleFollow 
+  } = useStoreFollowers(store?.id);
   
   const isOwner = user && store && user.id === store.owner_id;
 
@@ -122,27 +129,8 @@ const Store = () => {
     }
   };
 
-  const handleFollow = async () => {
-    if (!user) {
-      toast({
-        title: "Login necessário",
-        description: "Faça login para seguir esta loja",
-        variant: "destructive",
-      });
-      navigate('/auth');
-      return;
-    }
-
-    // Sistema de seguidores será implementado em breve
-    setFollowing(!following);
-    setFollowersCount(prev => following ? prev - 1 : prev + 1);
-    
-    toast({
-      title: following ? "Deixou de seguir" : "Seguindo loja",
-      description: following 
-        ? `Você não segue mais ${store?.name}` 
-        : `Agora você segue ${store?.name}`,
-    });
+  const handleFollow = () => {
+    toggleFollow();
   };
 
   const handleShare = async () => {
@@ -292,16 +280,20 @@ const Store = () => {
                       <h1 className="store-text-3xl font-bold">
                         {store.name}
                       </h1>
-                      <div className="flex items-center store-gap-xs mt-1">
-                        <Badge variant="secondary" className="store-text-xs">
-                          <Globe className="w-3 h-3 mr-1" />
-                          {store.slug}
-                        </Badge>
-                        <Badge variant="outline" className="store-text-xs">
-                          <Package className="w-3 h-3 mr-1" />
-                          {products.length} produto{products.length !== 1 ? 's' : ''}
-                        </Badge>
-                      </div>
+                  <div className="flex items-center store-gap-xs mt-1">
+                    <Badge variant="secondary" className="store-text-xs">
+                      <Globe className="w-3 h-3 mr-1" />
+                      {store.slug}
+                    </Badge>
+                    <Badge variant="outline" className="store-text-xs">
+                      <Package className="w-3 h-3 mr-1" />
+                      {products.length} produto{products.length !== 1 ? 's' : ''}
+                    </Badge>
+                    <Badge variant="outline" className="store-text-xs">
+                      <Users className="w-3 h-3 mr-1" />
+                      {followersCount} seguidor{followersCount !== 1 ? 'es' : ''}
+                    </Badge>
+                  </div>
                     </div>
                   </div>
 
@@ -316,10 +308,11 @@ const Store = () => {
                     {!isOwner && (
                       <Button
                         onClick={handleFollow}
+                        disabled={followLoading}
                         className="store-button-primary"
                       >
-                        <Users className="w-4 h-4 mr-2" />
-                        {following ? "Seguindo" : "Seguir"}
+                        <Heart className={`w-4 h-4 mr-2 ${isFollowing ? 'fill-current' : ''}`} />
+                        {isFollowing ? "Seguindo" : "Seguir"}
                       </Button>
                     )}
                     

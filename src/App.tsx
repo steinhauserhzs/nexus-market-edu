@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import BreadcrumbNavigation from "@/components/layout/breadcrumb-navigation";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Demo from "./pages/Demo";
@@ -23,6 +24,7 @@ const LazyMemberArea = lazy(() => import('./pages/MemberArea'));
 const LazyMemberAreaConfig = lazy(() => import('./pages/MemberAreaConfig'));
 const LazyMemberAreaAdvanced = lazy(() => import('./pages/MemberAreaAdvanced'));
 const LazyNetflixDashboard = lazy(() => import('./pages/NetflixDashboard'));
+const LazyCoursePlayer = lazy(() => import('./pages/CoursePlayer'));
 const LazyAdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const LazyNotFound = lazy(() => import('./pages/NotFound'));
 const LazyContact = lazy(() => import('./pages/Contact'));
@@ -64,6 +66,7 @@ const App = () => (
                   v7_relativeSplatPath: true 
                 }}
               >
+                <BreadcrumbNavigation />
             <MobileGestures>
               <div className="pb-16 md:pb-0">
                  <Routes>
@@ -84,6 +87,7 @@ const App = () => (
                    <Route path="/member-area-advanced/:storeId" element={<LazyRoute Component={LazyMemberAreaAdvanced} />} />
                    <Route path="/demo" element={<Demo />} />
                    <Route path="/netflix" element={<LazyRoute Component={LazyNetflixDashboard} />} />
+                   <Route path="/curso/:slug/aula/:lessonId" element={<LazyRoute Component={LazyCoursePlayer} />} />
                    <Route path="/admin" element={<LazyRoute Component={LazyAdminDashboard} />} />
                    <Route path="/contato" element={<LazyRoute Component={LazyContact} />} />
             <Route path="/produto/novo" element={<LazyRoute Component={LazyProductNew} />} />
