@@ -140,13 +140,13 @@ const DashboardHome = () => {
       action: () => navigate("/dashboard"),
       count: stats.totalStores
     },
-    {
-      icon: FileText,
-      title: "Meus Produtos",
-      description: "Ver e editar produtos",
-      action: () => navigate("/dashboard"),
-      count: stats.totalProducts
-    },
+          {
+            icon: FileText,
+            title: "Meus Produtos", 
+            description: "Ver e editar produtos",
+            action: () => navigate("/produtos"),
+            count: stats.totalProducts
+          },
     {
       icon: Users,
       title: "Clientes",

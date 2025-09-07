@@ -25,32 +25,36 @@ interface ProductFormProps {
   storeId?: string;
   onSuccess?: () => void;
   onCancel?: () => void;
+  initialData?: any;
+  isEditing?: boolean;
 }
 
-const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
+const ProductForm = ({ storeId, onSuccess, onCancel, initialData, isEditing = false }: ProductFormProps) => {
   const { user } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [stores, setStores] = useState<{ id: string; name: string }[]>([]);
-  const [selectedStoreId, setSelectedStoreId] = useState(storeId || '');
+  const [selectedStoreId, setSelectedStoreId] = useState(initialData?.store_id || storeId || '');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    title: '',
-    slug: '',
-    description: '',
-    price_cents: 0,
-    compare_price_cents: 0,
-    category_id: '',
-    type: 'digital',
-    difficulty_level: '',
-    meta_title: '',
-    meta_description: '',
-    thumbnail_url: '',
-    images: [] as string[],
-    product_files: [] as string[],
-    featured: false,
-    allow_affiliates: true,
-    requires_shipping: false,
-    weight_grams: 0,
+    title: initialData?.title || '',
+    slug: initialData?.slug || '',
+    description: initialData?.description || '',
+    price_cents: initialData?.price_cents || 0,
+    compare_price_cents: initialData?.compare_price_cents || 0,
+    category_id: initialData?.category_id || '',
+    type: initialData?.type || 'digital',
+    difficulty_level: initialData?.difficulty_level || '',
+    meta_title: initialData?.meta_title || '',
+    meta_description: initialData?.meta_description || '',
+    thumbnail_url: initialData?.thumbnail_url || '',
+    images: initialData?.thumbnail_url ? [initialData.thumbnail_url] : [],
+    product_files: initialData?.product_files || [],
+    featured: initialData?.featured || false,
+    allow_affiliates: initialData?.allow_affiliates || true,
+    requires_shipping: initialData?.requires_shipping || false,
+    weight_grams: initialData?.weight_grams || 0,
+    total_lessons: initialData?.total_lessons || 0,
+    total_duration_minutes: initialData?.total_duration_minutes || 0,
   });
   const { toast } = useToast();
   const { logEvent } = useSecurity();
@@ -144,19 +148,34 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
         allow_affiliates: formData.allow_affiliates,
         requires_shipping: formData.requires_shipping,
         weight_grams: formData.requires_shipping ? formData.weight_grams : null,
+        total_lessons: formData.total_lessons || null,
+        total_duration_minutes: formData.total_duration_minutes || null,
         status: 'published',
         currency: 'BRL',
       };
 
-      const { error } = await supabase
-        .from('products')
-        .insert(productData);
+      let result;
+      if (isEditing && initialData?.id) {
+        // Update existing product
+        result = await supabase
+          .from('products')
+          .update(productData)
+          .eq('id', initialData.id)
+          .select();
+      } else {
+        // Create new product
+        result = await supabase
+          .from('products')
+          .insert(productData);
+      }
+
+      const { error } = result;
 
       if (error) throw error;
 
       toast({
-        title: "Produto criado!",
-        description: "Seu produto foi criado com sucesso.",
+        title: isEditing ? "Produto atualizado!" : "Produto criado!",
+        description: isEditing ? "Alterações salvas com sucesso" : "Seu produto foi criado com sucesso.",
       });
 
       onSuccess?.();
@@ -504,7 +523,7 @@ const ProductForm = ({ storeId, onSuccess, onCancel }: ProductFormProps) => {
               disabled={loading || (!selectedStoreId && stores.length === 0)}
               className="flex-1 xs:flex-none"
             >
-              {loading ? 'Criando...' : 'Criar Produto'}
+              {loading ? (isEditing ? 'Salvando...' : 'Criando...') : (isEditing ? 'Salvar Alterações' : 'Criar Produto')}
             </Button>
             {onCancel && (
               <Button 

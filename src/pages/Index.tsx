@@ -10,8 +10,8 @@ const Index = () => {
 
   useEffect(() => {
     if (!loading && user) {
-      // Redireciona usuário logado para o dashboard
-      navigate("/dashboard", { replace: true });
+      // Redireciona usuário logado para a página inicial
+      navigate("/inicio", { replace: true });
     }
   }, [user, loading, navigate]);
 

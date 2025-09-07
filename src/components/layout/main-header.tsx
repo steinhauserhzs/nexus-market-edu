@@ -51,18 +51,18 @@ export default function MainHeader() {
         Biblioteca
       </Button>
       {user && (
-        <Button 
-          variant="ghost" 
-          size={mobile ? "default" : "sm"}
-          onClick={() => {
-            navigate('/dashboard');
-            if (mobile) setMobileMenuOpen(false);
-          }}
-          className={cn("btn-icon-left", mobile && "justify-start w-full")}
-        >
-          <Store className="icon-sm" />
-          Dashboard
-        </Button>
+      <Button 
+        variant="ghost" 
+        size={mobile ? "default" : "sm"}
+        onClick={() => {
+          navigate('/dashboard');
+          if (mobile) setMobileMenuOpen(false);
+        }}
+        className={cn("btn-icon-left", mobile && "justify-start w-full")}
+      >
+        <Store className="icon-sm" />
+        Minhas Lojas
+      </Button>
       )}
     </div>
   );
@@ -280,12 +280,12 @@ export default function MainHeader() {
                   Criar Loja
                 </DropdownMenuItem>
 
-                 {profile.role === 'seller' && (
-                   <DropdownMenuItem onClick={() => navigate('/dashboard')}>
-                     <Store className="mr-2 h-4 w-4" />
-                     Dashboard
-                   </DropdownMenuItem>
-                 )}
+                  {profile.role === 'seller' && (
+                    <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                      <Store className="mr-2 h-4 w-4" />
+                      Minhas Lojas
+                    </DropdownMenuItem>
+                  )}
 
                  {/* Admin Section */}
                  {isAdmin && (
