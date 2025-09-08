@@ -77,7 +77,7 @@ const App = () => (
                        <Route path="/criar-loja" element={<LazyRoute Component={LazyCreateStore} />} />
                         <Route path="/loja/:slug" element={<LazyRoute Component={LazyStore} />} />
                         <Route path="/loja/:slug/membros" element={<LazyRoute Component={LazyMemberArea} />} />
-                        <Route path="/loja/:slug/configurar-membros" element={<LazyRoute Component={LazyMemberAreaConfig} />} />
+                        <Route path="/loja/:slug/membros-config" element={<LazyRoute Component={LazyMemberAreaConfig} />} />
                         <Route path="/loja/:slug/customizar" element={<LazyRoute Component={LazyStoreCustomizer} />} />
                         <Route path="/produto/:slug" element={<LazyRoute Component={LazyProductDetails} />} />
                         <Route path="/member-area-advanced/:storeId" element={<LazyRoute Component={LazyMemberAreaAdvanced} />} />

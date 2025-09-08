@@ -221,7 +221,7 @@ const StoresSection = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => navigate(`/loja/${store.slug}/customizar`)}
-                    className="flex items-center gap-2 flex-1 min-w-[140px]"
+                    className="flex items-center gap-2 flex-1 min-w-[120px]"
                   >
                     <Palette className="w-4 h-4" />
                     Personalizar
@@ -230,8 +230,18 @@ const StoresSection = () => {
                   <Button
                     variant="outline"
                     size="sm"
+                    onClick={() => navigate(`/loja/${store.slug}/membros-config`)}
+                    className="flex items-center gap-2 flex-1 min-w-[130px]"
+                  >
+                    <Users className="w-4 h-4" />
+                    Área Membros
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => navigate(`/loja/${store.slug}`)}
-                    className="flex items-center gap-2 flex-1 min-w-[100px]"
+                    className="flex items-center gap-2 flex-1 min-w-[90px]"
                   >
                     <Eye className="w-4 h-4" />
                     Ver Loja
