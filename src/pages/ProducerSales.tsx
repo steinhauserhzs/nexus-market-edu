@@ -1,29 +1,19 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { 
-  TrendingUp, 
-  DollarSign, 
-  ShoppingBag,
   Search,
   Filter,
   Download,
   Eye,
-  MoreHorizontal,
   ArrowUp,
-  ArrowDown,
   Package,
-  CreditCard,
-  Settings,
-  Bell,
-  User,
-  BarChart3
+  CreditCard
 } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, ResponsiveContainer } from 'recharts';
+import { ProducerLayout } from '@/components/producer/producer-layout';
 
 const mockSalesData = [
   { date: '01 Set', value: 3948 },
@@ -119,9 +109,7 @@ const mockTransactions = [
 ];
 
 const ProducerSales = () => {
-  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const getMethodIcon = (method: string) => {
     switch (method) {
@@ -156,65 +144,7 @@ const ProducerSales = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
-      {/* Header */}
-      <header className="bg-[#1a1a1a] border-b border-gray-800 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="text-2xl font-bold text-blue-600">KVN</div>
-            <div className="h-8 w-px bg-gray-700"></div>
-            <h1 className="text-xl font-semibold">Vendas</h1>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              <Bell className="h-4 w-4" />
-            </Button>
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
-                <User className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-sm font-medium">Pessoa Física</p>
-                <p className="text-xs text-gray-400">PF</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="flex">
-        {/* Sidebar */}
-        <aside className="w-64 bg-[#1a1a1a] border-r border-gray-800 min-h-screen">
-          <nav className="p-4 space-y-2">
-            <a href="/producer" className="flex items-center space-x-3 px-3 py-2 hover:bg-gray-800 rounded-lg text-gray-300">
-              <BarChart3 className="h-4 w-4" />
-              <span>Dashboard</span>
-            </a>
-            <a href="#" className="flex items-center space-x-3 px-3 py-2 bg-gray-800 rounded-lg text-white">
-              <TrendingUp className="h-4 w-4" />
-              <span>Vendas</span>
-            </a>
-            <a href="#" className="flex items-center space-x-3 px-3 py-2 hover:bg-gray-800 rounded-lg text-gray-300">
-              <Package className="h-4 w-4" />
-              <span>Produtos</span>
-            </a>
-            <a href="#" className="flex items-center space-x-3 px-3 py-2 hover:bg-gray-800 rounded-lg text-gray-300">
-              <DollarSign className="h-4 w-4" />
-              <span>Finanças</span>
-            </a>
-            <a href="#" className="flex items-center space-x-3 px-3 py-2 hover:bg-gray-800 rounded-lg text-gray-300">
-              <Settings className="h-4 w-4" />
-              <span>Integrações</span>
-            </a>
-            <a href="#" className="flex items-center space-x-3 px-3 py-2 hover:bg-gray-800 rounded-lg text-gray-300">
-              <ShoppingBag className="h-4 w-4" />
-              <span>Compras</span>
-            </a>
-          </nav>
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 p-6">
+    <ProducerLayout title="Vendas">
           {/* Banner Notice */}
           <div className="bg-green-600/10 border border-green-600/20 rounded-lg p-4 mb-6">
             <div className="flex items-center justify-between">
@@ -414,9 +344,7 @@ const ProducerSales = () => {
               </div>
             </CardContent>
           </Card>
-        </main>
-      </div>
-    </div>
+    </ProducerLayout>
   );
 };
 

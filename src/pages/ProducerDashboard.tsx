@@ -1,34 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  BarChart3, 
-  TrendingUp, 
   DollarSign, 
-  ShoppingBag,
-  Users,
-  Eye,
-  Download,
-  Plus,
   ArrowUp,
   ArrowDown,
-  Calendar,
-  Filter,
-  Search,
   MoreHorizontal,
-  Package,
   CreditCard,
-  Settings,
-  Bell,
-  User,
   Clock
 } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { ProducerLayout } from '@/components/producer/producer-layout';
 
 // Mock data - replace with real data from Supabase
 const mockSalesData = [
@@ -59,7 +42,6 @@ interface DashboardStats {
 
 const ProducerDashboard = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [stats, setStats] = useState<DashboardStats>({
     totalRevenue: 0,
     availableBalance: 0,
@@ -97,72 +79,16 @@ const ProducerDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
+      <ProducerLayout title="Dashboard">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      </ProducerLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
-      {/* Header */}
-      <header className="bg-[#1a1a1a] border-b border-gray-800 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="text-2xl font-bold text-blue-600">KVN</div>
-            <div className="h-8 w-px bg-gray-700"></div>
-            <h1 className="text-xl font-semibold">Dashboard</h1>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              <Bell className="h-4 w-4" />
-            </Button>
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
-                <User className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-sm font-medium">Pessoa Física</p>
-                <p className="text-xs text-gray-400">PF</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="flex">
-        {/* Sidebar */}
-        <aside className="w-64 bg-[#1a1a1a] border-r border-gray-800 min-h-screen">
-          <nav className="p-4 space-y-2">
-            <a href="#" className="flex items-center space-x-3 px-3 py-2 bg-gray-800 rounded-lg text-white">
-              <BarChart3 className="h-4 w-4" />
-              <span>Dashboard</span>
-            </a>
-            <a href="#" className="flex items-center space-x-3 px-3 py-2 hover:bg-gray-800 rounded-lg text-gray-300">
-              <TrendingUp className="h-4 w-4" />
-              <span>Vendas</span>
-            </a>
-            <a href="#" className="flex items-center space-x-3 px-3 py-2 hover:bg-gray-800 rounded-lg text-gray-300">
-              <Package className="h-4 w-4" />
-              <span>Produtos</span>
-            </a>
-            <a href="#" className="flex items-center space-x-3 px-3 py-2 hover:bg-gray-800 rounded-lg text-gray-300">
-              <DollarSign className="h-4 w-4" />
-              <span>Finanças</span>
-            </a>
-            <a href="#" className="flex items-center space-x-3 px-3 py-2 hover:bg-gray-800 rounded-lg text-gray-300">
-              <Settings className="h-4 w-4" />
-              <span>Integrações</span>
-            </a>
-            <a href="#" className="flex items-center space-x-3 px-3 py-2 hover:bg-gray-800 rounded-lg text-gray-300">
-              <ShoppingBag className="h-4 w-4" />
-              <span>Compras</span>
-            </a>
-          </nav>
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 p-6">
+    <ProducerLayout title="Dashboard">
           {/* Welcome Section */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
@@ -214,7 +140,7 @@ const ProducerDashboard = () => {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center">
-                      <TrendingUp className="h-6 w-6 text-blue-400" />
+                      <DollarSign className="h-6 w-6 text-blue-400" />
                     </div>
                     <div className="flex items-center space-x-1">
                       <span className="text-green-400 text-sm">+3.1%</span>
@@ -348,9 +274,7 @@ const ProducerDashboard = () => {
               </div>
             </CardContent>
           </Card>
-        </main>
-      </div>
-    </div>
+    </ProducerLayout>
   );
 };
 
