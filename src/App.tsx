@@ -1,7 +1,7 @@
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { SafeTooltipProvider } from "@/components/ui/safe-tooltip-provider";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import { OptimizedAuthProvider } from "@/contexts/OptimizedAuthContext";
@@ -60,7 +60,7 @@ const App = () => (
                 v7_relativeSplatPath: true 
               }}
             >
-              <TooltipProvider>
+              <SafeTooltipProvider>
                 <Toaster />
                 <Sonner />
                 <BreadcrumbNavigation />
@@ -105,7 +105,7 @@ const App = () => (
                      <PerformanceMonitor />
                    </div>
                  </MobileGestures>
-              </TooltipProvider>
+              </SafeTooltipProvider>
             </BrowserRouter>
           </OptimizedCartProvider>
         </OptimizedAuthProvider>
