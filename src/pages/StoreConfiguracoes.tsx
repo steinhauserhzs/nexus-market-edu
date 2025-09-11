@@ -1,4 +1,4 @@
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import SEOHead from "@/components/ui/seo-head";
 import BackNavigation from "@/components/layout/back-navigation"; 
@@ -18,6 +18,17 @@ import {
   Trash2,
   Save
 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Store {
   id: string;
@@ -32,10 +43,12 @@ interface Store {
 const StoreConfiguracoes = () => {
   const { slug } = useParams<{ slug: string }>();
   const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [store, setStore] = useState<Store | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (slug && user) {
@@ -120,6 +133,40 @@ const StoreConfiguracoes = () => {
       });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleDeleteStore = async () => {
+    if (!store) return;
+    
+    try {
+      setDeleting(true);
+      
+      const { error } = await supabase
+        .from('stores')
+        .delete()
+        .eq('id', store.id)
+        .eq('owner_id', user?.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Loja excluída",
+        description: `A loja "${store.name}" foi excluída com sucesso`,
+      });
+
+      // Redirect to dashboard
+      navigate('/dashboard');
+      
+    } catch (error: any) {
+      console.error('Error deleting store:', error);
+      toast({
+        title: "Erro ao excluir loja",
+        description: error.message || "Tente novamente mais tarde",
+        variant: "destructive",
+      });
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -294,10 +341,44 @@ const StoreConfiguracoes = () => {
                       Esta ação não pode ser desfeita. Todos os produtos e dados serão perdidos.
                     </p>
                   </div>
-                  <Button variant="destructive" size="sm" disabled>
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Excluir
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive" size="sm" disabled={deleting}>
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        {deleting ? "Excluindo..." : "Excluir"}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Excluir loja "{store.name}"?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Esta ação não pode ser desfeita. Todos os dados da loja serão permanentemente removidos, incluindo:
+                          <br /><br />
+                          • Todos os produtos e categorias
+                          <br />
+                          • Configurações e personalizações
+                          <br />
+                          • Área de membros e conteúdo exclusivo
+                          <br />
+                          • Histórico de vendas e relatórios
+                          <br />
+                          • Dados de clientes e licenças
+                          <br /><br />
+                          Tem certeza que deseja continuar?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleDeleteStore}
+                          disabled={deleting}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          {deleting ? "Excluindo..." : "Excluir loja"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </CardContent>
             </Card>

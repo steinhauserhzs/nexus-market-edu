@@ -15,9 +15,21 @@ import {
   Globe,
   Users,
   TrendingUp,
-  Palette
+  Palette,
+  Trash2
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Store {
   id: string;
@@ -41,6 +53,7 @@ const StoresSection = () => {
   
   const [stores, setStores] = useState<Store[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingStore, setDeletingStore] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -111,6 +124,37 @@ const StoresSection = () => {
         description: error.message || "Tente novamente",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleDeleteStore = async (storeId: string, storeName: string) => {
+    try {
+      setDeletingStore(storeId);
+      
+      const { error } = await supabase
+        .from('stores')
+        .delete()
+        .eq('id', storeId)
+        .eq('owner_id', user?.id);
+
+      if (error) throw error;
+
+      setStores(prev => prev.filter(store => store.id !== storeId));
+
+      toast({
+        title: "Loja excluída",
+        description: `A loja "${storeName}" foi excluída com sucesso`,
+      });
+      
+    } catch (error: any) {
+      console.error('Error deleting store:', error);
+      toast({
+        title: "Erro ao excluir loja",
+        description: error.message || "Tente novamente mais tarde",
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingStore(null);
     }
   };
 
@@ -265,6 +309,47 @@ const StoresSection = () => {
                   >
                     {store.is_active ? "Desativar" : "Ativar"}
                   </Button>
+                  
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-10 h-8 p-0 flex items-center justify-center text-destructive hover:text-destructive hover:bg-destructive/10"
+                        title="Excluir loja"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Excluir loja "{store.name}"?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Esta ação não pode ser desfeita. Todos os dados da loja serão permanentemente removidos, incluindo:
+                          <br /><br />
+                          • Todos os produtos ({store._count?.products || 0})
+                          <br />
+                          • Configurações e personalizações
+                          <br />
+                          • Área de membros
+                          <br />
+                          • Histórico de vendas
+                          <br /><br />
+                          Tem certeza que deseja continuar?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleDeleteStore(store.id, store.name)}
+                          disabled={deletingStore === store.id}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          {deletingStore === store.id ? "Excluindo..." : "Excluir loja"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </div>
             ))}
