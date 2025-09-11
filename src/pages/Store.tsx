@@ -301,7 +301,7 @@ const Store = () => {
                   )}
 
                   {/* Action buttons */}
-                  <div className="flex store-gap-xs">
+                  <div className="flex store-gap-xs flex-wrap">
                     {!isOwner && (
                       <Button
                         onClick={handleFollow}
@@ -322,6 +322,16 @@ const Store = () => {
                         Adicionar Produto
                       </Button>
                     )}
+
+                    {/* Botão Área de Membros - visível para todos */}
+                    <Button
+                      onClick={() => navigate(`/loja/${store.slug}/membros`)}
+                      variant="secondary"
+                      className="store-button-secondary"
+                    >
+                      <Users className="w-4 h-4 mr-2" />
+                      Área de Membros
+                    </Button>
 
                     <Button
                       variant="outline"

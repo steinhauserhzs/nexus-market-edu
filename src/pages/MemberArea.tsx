@@ -146,17 +146,21 @@ const MemberArea = () => {
         ) || [];
 
         setUserProducts(userProductsData as Product[]);
+
+        // Buscar conteúdo exclusivo apenas para usuários com licenças ativas nesta loja
+        if (userProductsData.length > 0) {
+          const { data: contentData } = await supabase
+            .from('member_exclusive_content')
+            .select('*')
+            .eq('store_id', storeData.id)
+            .eq('is_active', true)
+            .order('sort_order');
+
+          setExclusiveContent(contentData || []);
+        }
       }
 
-      // Buscar conteúdo exclusivo
-      const { data: contentData } = await supabase
-        .from('member_exclusive_content')
-        .select('*')
-        .eq('store_id', storeData.id)
-        .eq('is_active', true)
-        .order('sort_order');
-
-      setExclusiveContent(contentData || []);
+      // Conteúdo exclusivo já foi buscado acima para usuários com licenças
 
     } catch (error) {
       console.error('Error loading member area:', error);
@@ -216,6 +220,35 @@ const MemberArea = () => {
         </div>
 
         <div className="space-y-8">
+          {/* Mensagem para usuários não logados ou sem produtos */}
+          {(!user || userProducts.length === 0) && (
+            <section>
+              <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5">
+                <CardContent className="p-8 text-center">
+                  <Users className="h-16 w-16 text-primary mx-auto mb-4" />
+                  <h2 className="text-2xl font-bold mb-4">
+                    {!user ? "Faça Login para Acessar a Área de Membros" : "Torne-se um Membro"}
+                  </h2>
+                  <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+                    {!user 
+                      ? "Para acessar conteúdos exclusivos e seus produtos comprados, você precisa estar logado em sua conta."
+                      : "Adquira produtos desta loja para ter acesso ao conteúdo exclusivo da área de membros."
+                    }
+                  </p>
+                  {!user ? (
+                    <Button onClick={() => navigate('/auth')} size="lg" className="mx-2">
+                      Fazer Login
+                    </Button>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      Explore os produtos abaixo e torne-se um membro desta comunidade!
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            </section>
+          )}
+
           {/* Produtos Comprados */}
           {userProducts.length > 0 && (
             <section>
