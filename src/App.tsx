@@ -22,12 +22,15 @@ const LazyStore = lazy(() => import('./pages/Store'));
 const LazyStoreCustomizer = lazy(() => import('./pages/StoreCustomizer'));
 const LazyProductDetails = lazy(() => import('./pages/ProductDetails'));
 const LazyCheckout = lazy(() => import('./pages/Checkout'));
+const LazyCheckoutSuccess = lazy(() => import('./pages/CheckoutSuccess'));
 const LazyMemberArea = lazy(() => import('./pages/MemberArea'));
 const LazyMemberAreaConfig = lazy(() => import('./pages/MemberAreaConfig'));
 const LazyMemberAreaAdvanced = lazy(() => import('./pages/MemberAreaAdvanced'));
 const LazyNetflixDashboard = lazy(() => import('./pages/NetflixDashboard'));
+const LazyNetflixMemberArea = lazy(() => import('./components/member-area/NetflixMemberArea'));
 const LazyCoursePlayer = lazy(() => import('./pages/CoursePlayer'));
 const LazyAdminDashboard = lazy(() => import('./pages/OptimizedAdminDashboard'));
+const LazyNexusAnalytics = lazy(() => import('./pages/NexusAnalytics'));
 const LazyNotFound = lazy(() => import('./pages/NotFound'));
 const LazyContact = lazy(() => import('./pages/Contact'));
 const LazyProductNew = lazy(() => import('./pages/ProductNew'));
@@ -75,8 +78,9 @@ const App = () => (
                <Route path="/vendedor" element={<LazyRoute Component={LazySellerDashboardSlim} />} />
                <Route path="/biblioteca" element={<LazyRoute Component={LazyLibrary} />} />
                        <Route path="/perfil" element={<LazyRoute Component={LazyProfile} />} />
-                       <Route path="/checkout" element={<LazyRoute Component={LazyCheckout} />} />
-                       <Route path="/carrinho" element={<LazyRoute Component={LazyCheckout} />} />
+                        <Route path="/checkout" element={<LazyRoute Component={LazyCheckout} />} />
+                        <Route path="/checkout-success" element={<LazyRoute Component={LazyCheckoutSuccess} />} />
+                        <Route path="/carrinho" element={<LazyRoute Component={LazyCheckout} />} />
                        <Route path="/criar-loja" element={<LazyRoute Component={LazyCreateStore} />} />
                         <Route path="/loja/:slug" element={<LazyRoute Component={LazyStore} />} />
                         <Route path="/loja/:slug/membros" element={<LazyRoute Component={LazyMemberArea} />} />

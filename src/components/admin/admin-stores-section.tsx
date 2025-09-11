@@ -63,7 +63,7 @@ export function AdminStoresSection() {
         .from('stores')
         .select(`
           *,
-          profiles:owner_id(id, full_name, email, avatar_url)
+          owner:profiles!owner_id(id, full_name, email, avatar_url)
         `)
         .order('created_at', { ascending: false });
 
@@ -94,7 +94,7 @@ export function AdminStoresSection() {
 
           return {
             ...store,
-            owner: store.profiles,
+            owner: store.owner || { id: '', full_name: 'Unknown', email: '', avatar_url: null },
             _count: {
               products: productsResult.count || 0,
               orders: ordersResult.data?.length || 0
