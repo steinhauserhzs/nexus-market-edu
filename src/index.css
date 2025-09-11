@@ -161,7 +161,6 @@
     --netflix-card-aspect: 2/3;
     --netflix-carousel-gap: 0.5rem;
   }
-}
 
 @layer base {
   * {
