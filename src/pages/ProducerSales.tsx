@@ -144,7 +144,7 @@ const ProducerSales = () => {
   );
 
   return (
-    <ProducerLayout title="Vendas">
+    <ProducerLayout>
           {/* Banner Notice */}
           <div className="bg-green-600/10 border border-green-600/20 rounded-lg p-4 mb-6">
             <div className="flex items-center justify-between">

@@ -8,7 +8,10 @@ import {
   ArrowDown,
   MoreHorizontal,
   CreditCard,
-  Clock
+  Clock,
+  TrendingUp,
+  Users,
+  Package
 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ProducerLayout } from '@/components/producer/producer-layout';
@@ -27,8 +30,8 @@ const mockSalesData = [
 const mockPaymentMethods = [
   { name: 'Cartão de crédito', percentage: 78, value: 15719 },
   { name: 'PIX', percentage: 88, value: 5463 },
-  { name: 'Boleto', percentage: 0, value: 0 },
-  { name: 'PicPay', percentage: 0, value: 0 },
+  { name: 'Boleto', percentage: 12, value: 1200 },
+  { name: 'PicPay', percentage: 5, value: 300 },
 ];
 
 interface DashboardStats {
@@ -53,227 +56,260 @@ const ProducerDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      loadDashboardData();
-    }
-  }, [user]);
+    loadDashboardData();
+  }, []);
 
   const loadDashboardData = async () => {
-    setLoading(true);
     try {
-      // Simulate API call - replace with real Supabase queries
-      setStats({
-        totalRevenue: 34847.19,
-        availableBalance: 800.56,
-        pendingBalance: 791.20,
-        totalSales: 72,
-        conversionRate: 18.2,
-        averageTicket: 483.99
-      });
+      // Simulate API call - replace with real Supabase data
+      setTimeout(() => {
+        setStats({
+          totalRevenue: 45230.50,
+          availableBalance: 23150.75,
+          pendingBalance: 8940.25,
+          totalSales: 342,
+          conversionRate: 18.2,
+          averageTicket: 483.99
+        });
+        setLoading(false);
+      }, 1000);
     } catch (error) {
       console.error('Error loading dashboard data:', error);
-    } finally {
       setLoading(false);
     }
   };
 
   if (loading) {
     return (
-      <ProducerLayout title="Dashboard">
+      <ProducerLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
       </ProducerLayout>
     );
   }
 
   return (
-    <ProducerLayout title="Dashboard">
-          {/* Welcome Section */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-2xl font-bold mb-1">Olá, {user?.email?.split('@')[0]} 👋</h2>
-                <p className="text-gray-400">Pequenas ações geram grandes resultados</p>
-              </div>
-              <p className="text-sm text-gray-400">
-                Hoje é {new Date().toLocaleDateString('pt-BR', { 
-                  weekday: 'long', 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
-              </p>
-            </div>
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <Card className="bg-[#1a1a1a] border-gray-800">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center">
-                      <DollarSign className="h-6 w-6 text-green-400" />
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-white">R$ {stats.availableBalance.toFixed(2)}</p>
-                    <p className="text-sm text-gray-400">Saldo disponível</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-[#1a1a1a] border-gray-800">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-orange-600/20 rounded-lg flex items-center justify-center">
-                      <Clock className="h-6 w-6 text-orange-400" />
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-white">R$ {stats.pendingBalance.toFixed(2)}</p>
-                    <p className="text-sm text-gray-400">Saldo pendente</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-[#1a1a1a] border-gray-800">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center">
-                      <DollarSign className="h-6 w-6 text-blue-400" />
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <span className="text-green-400 text-sm">+3.1%</span>
-                      <ArrowUp className="h-3 w-3 text-green-400" />
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-white">{stats.totalSales}</p>
-                    <p className="text-sm text-gray-400">A saúde da conta está ótima</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+    <ProducerLayout>
+      <div className="p-6 space-y-6 bg-gradient-to-br from-background to-[hsl(var(--background)_/_0.8)]">
+        {/* Header with Welcome */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground mb-2">
+              Bem-vindo, {user?.email?.split('@')[0] || 'Produtor'}! 👋
+            </h1>
+            <p className="text-muted-foreground">Aqui está um resumo da sua performance hoje</p>
           </div>
+          <div className="flex space-x-3">
+            <Button variant="outline" className="border-border hover:bg-muted/50 transition-all duration-300">
+              Exportar dados
+            </Button>
+            <Button className="bg-gradient-to-r from-primary to-primary-glow hover:from-primary-hover hover:to-primary text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-300 hover:scale-105">
+              Novo produto
+            </Button>
+          </div>
+        </div>
 
-          {/* Charts Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Revenue Chart */}
-            <Card className="bg-[#1a1a1a] border-gray-800">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-white">R$ {stats.totalRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</CardTitle>
-                    <p className="text-sm text-gray-400 flex items-center space-x-1">
-                      <span>-14.2%</span>
-                      <ArrowDown className="h-3 w-3 text-red-400" />
-                    </p>
-                    <p className="text-xs text-gray-500">Receita líquida</p>
-                  </div>
-                  <Button variant="ghost" size="sm">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={200}>
+        {/* Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Revenue Card */}
+          <Card className="bg-gradient-to-br from-[hsl(var(--metric-bg))] to-[hsl(var(--card))] border-border shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevated)] transition-all duration-300 hover:scale-[1.02]">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Receita Total</CardTitle>
+              <div className="p-2 bg-gradient-to-br from-primary/20 to-primary/10 rounded-lg">
+                <DollarSign className="h-4 w-4 text-primary" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-foreground">R$ {stats.totalRevenue.toLocaleString()}</div>
+              <div className="flex items-center text-xs text-success mt-1">
+                <ArrowUp className="h-3 w-3 mr-1" />
+                +20.1% vs mês anterior
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Available Balance */}
+          <Card className="bg-gradient-to-br from-[hsl(var(--metric-bg))] to-[hsl(var(--card))] border-border shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevated)] transition-all duration-300 hover:scale-[1.02]">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Saldo Disponível</CardTitle>
+              <div className="p-2 bg-gradient-to-br from-success/20 to-success/10 rounded-lg">
+                <CreditCard className="h-4 w-4 text-success" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-foreground">R$ {stats.availableBalance.toLocaleString()}</div>
+              <div className="flex items-center text-xs text-success mt-1">
+                <ArrowUp className="h-3 w-3 mr-1" />
+                Disponível para saque
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Pending Balance */}
+          <Card className="bg-gradient-to-br from-[hsl(var(--metric-bg))] to-[hsl(var(--card))] border-border shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevated)] transition-all duration-300 hover:scale-[1.02]">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">A Receber</CardTitle>
+              <div className="p-2 bg-gradient-to-br from-warning/20 to-warning/10 rounded-lg">
+                <Clock className="h-4 w-4 text-warning" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-foreground">R$ {stats.pendingBalance.toLocaleString()}</div>
+              <div className="flex items-center text-xs text-warning mt-1">
+                <Clock className="h-3 w-3 mr-1" />
+                Em processamento
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Total Sales */}
+          <Card className="bg-gradient-to-br from-[hsl(var(--metric-bg))] to-[hsl(var(--card))] border-border shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevated)] transition-all duration-300 hover:scale-[1.02]">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Vendas</CardTitle>
+              <div className="p-2 bg-gradient-to-br from-accent/20 to-accent/10 rounded-lg">
+                <TrendingUp className="h-4 w-4 text-primary" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-foreground">{stats.totalSales}</div>
+              <div className="flex items-center text-xs text-success mt-1">
+                <ArrowUp className="h-3 w-3 mr-1" />
+                +15% vs semana anterior
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Revenue Chart */}
+          <Card className="bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--metric-bg))] border-border shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevated)] transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-lg font-semibold text-foreground">Vendas nos últimos 7 dias</CardTitle>
+                <p className="text-sm text-muted-foreground mt-1">Evolução das vendas recentes</p>
+              </div>
+              <Button variant="ghost" size="icon" className="hover:bg-muted/50">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={mockSalesData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis dataKey="date" stroke="#9CA3AF" fontSize={12} />
-                    <YAxis stroke="#9CA3AF" fontSize={12} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" opacity={0.3} />
+                    <XAxis 
+                      dataKey="date" 
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                    />
+                    <YAxis 
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                      tickFormatter={(value) => `R$ ${value}`}
+                    />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: '#1a1a1a', 
-                        border: '1px solid #374151',
-                        borderRadius: '8px'
-                      }} 
+                        backgroundColor: 'hsl(var(--popover))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px',
+                        color: 'hsl(var(--foreground))'
+                      }}
+                      formatter={(value) => [`R$ ${value}`, 'Vendas']}
                     />
                     <Line 
                       type="monotone" 
                       dataKey="value" 
-                      stroke="#3B82F6" 
-                      strokeWidth={2}
-                      dot={{ fill: '#3B82F6', strokeWidth: 0, r: 4 }}
+                      stroke="hsl(var(--primary))" 
+                      strokeWidth={3}
+                      dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
+                      activeDot={{ r: 6, fill: 'hsl(var(--primary-glow))' }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            {/* Achievement Section */}
-            <Card className="bg-[#1a1a1a] border-gray-800">
-              <CardHeader>
-                <CardTitle className="text-white">Jornada de conquistas</CardTitle>
-                <Button variant="ghost" size="sm" className="text-blue-400">
-                  Saiba mais
-                </Button>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-400">Você é Avançado</span>
-                    <span className="text-sm text-gray-300">Próximo nível Expert</span>
-                  </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: '70%' }}></div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div className="text-center">
-                      <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mb-1">
-                        <span className="text-white text-xs">10x</span>
-                      </div>
-                      <p className="text-xs text-gray-400">Avançado</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center mb-1">
-                        <span className="text-white text-xs">100x</span>
-                      </div>
-                      <p className="text-xs text-gray-400">Expert</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center mb-1">
-                        <span className="text-gray-400 text-xs">500x</span>
-                      </div>
-                      <p className="text-xs text-gray-400">Prata</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Payment Methods */}
-          <Card className="bg-[#1a1a1a] border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white">Métodos de pagamento</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {mockPaymentMethods.map((method, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <CreditCard className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm text-gray-300">{method.name}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex items-center space-x-2 mb-1">
-                        <span className="text-lg font-bold text-white">{method.percentage}%</span>
-                        <span className="text-sm text-blue-400">{method.value.toLocaleString()}</span>
-                      </div>
-                      <div className="w-full bg-gray-700 rounded-full h-1">
-                        <div 
-                          className="bg-blue-600 h-1 rounded-full" 
-                          style={{ width: `${method.percentage}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
               </div>
             </CardContent>
           </Card>
+
+          {/* Payment Methods */}
+          <Card className="bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--metric-bg))] border-border shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevated)] transition-all duration-300">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold text-foreground">Métodos de Pagamento</CardTitle>
+              <p className="text-sm text-muted-foreground">Distribuição dos pagamentos este mês</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {mockPaymentMethods.map((method, index) => (
+                <div key={method.name} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-foreground">{method.name}</span>
+                    <span className="text-sm text-muted-foreground">R$ {method.value.toLocaleString()}</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-2">
+                    <div 
+                      className="bg-gradient-to-r from-primary to-primary-glow h-2 rounded-full transition-all duration-500 ease-out"
+                      style={{ width: `${method.percentage}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Additional Stats Row */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="bg-gradient-to-br from-[hsl(var(--metric-bg))] to-[hsl(var(--card))] border-border shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevated)] transition-all duration-300 hover:scale-[1.02]">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Taxa de Conversão</CardTitle>
+              <div className="p-2 bg-gradient-to-br from-success/20 to-success/10 rounded-lg">
+                <TrendingUp className="h-4 w-4 text-success" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-foreground">{stats.conversionRate}%</div>
+              <div className="flex items-center text-xs text-success mt-1">
+                <ArrowUp className="h-3 w-3 mr-1" />
+                +2.1% vs mês anterior
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-[hsl(var(--metric-bg))] to-[hsl(var(--card))] border-border shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevated)] transition-all duration-300 hover:scale-[1.02]">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Ticket Médio</CardTitle>
+              <div className="p-2 bg-gradient-to-br from-primary/20 to-primary/10 rounded-lg">
+                <DollarSign className="h-4 w-4 text-primary" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-foreground">R$ {stats.averageTicket.toFixed(2)}</div>
+              <div className="flex items-center text-xs text-success mt-1">
+                <ArrowUp className="h-3 w-3 mr-1" />
+                +5.4% vs mês anterior
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-[hsl(var(--metric-bg))] to-[hsl(var(--card))] border-border shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elevated)] transition-all duration-300 hover:scale-[1.02]">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Produtos Ativos</CardTitle>
+              <div className="p-2 bg-gradient-to-br from-accent/20 to-accent/10 rounded-lg">
+                <Package className="h-4 w-4 text-primary" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-foreground">24</div>
+              <div className="flex items-center text-xs text-muted-foreground mt-1">
+                <Package className="h-3 w-3 mr-1" />
+                6 produtos em destaque
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </ProducerLayout>
   );
 };

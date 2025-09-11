@@ -1,19 +1,18 @@
 import { ReactNode } from 'react';
-import { ProducerHeader } from './producer-header';
 import { ProducerSidebar } from './producer-sidebar';
+import { ProducerHeader } from './producer-header';
 
 interface ProducerLayoutProps {
   children: ReactNode;
-  title: string;
 }
 
-export function ProducerLayout({ children, title }: ProducerLayoutProps) {
+export function ProducerLayout({ children }: ProducerLayoutProps) {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
-      <ProducerHeader title={title} />
-      <div className="flex">
-        <ProducerSidebar />
-        <main className="flex-1 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-[hsl(var(--background)_/_0.95)] flex">
+      <ProducerSidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <ProducerHeader />
+        <main className="flex-1 overflow-y-auto">
           {children}
         </main>
       </div>
