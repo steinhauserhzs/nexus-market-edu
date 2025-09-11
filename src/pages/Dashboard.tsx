@@ -13,6 +13,7 @@ import MessagesSection from "@/components/dashboard/messages-section";
 import SalesDashboard from "@/components/analytics/sales-dashboard";
 import ModuleManager from "@/components/modules/module-manager";
 import { useProducts } from "@/hooks/use-products";
+import DeleteProductDialog from "@/components/products/delete-product-dialog";
 import { 
   TrendingUp, 
   Package, 
@@ -24,15 +25,19 @@ import {
   Eye,
   Edit,
   Search,
-  Star
+  Star,
+  Trash2
 } from "lucide-react";
 
 const Dashboard = () => {
   const { user, profile, loading } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { products: userProducts, loading: productsLoading } = useProducts();
+  const { products: userProducts, loading: productsLoading, refetch: refetchProducts } = useProducts();
   const [activeTab, setActiveTab] = useState("overview");
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; productId?: string; productTitle?: string }>({ 
+    open: false 
+  });
 
   if (loading) {
     return (
@@ -311,6 +316,19 @@ const Dashboard = () => {
                                   <Edit className="w-4 h-4 mr-1" />
                                   Editar
                                 </Button>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  className="text-destructive border-destructive/20 hover:bg-destructive hover:text-destructive-foreground"
+                                  onClick={() => setDeleteDialog({ 
+                                    open: true, 
+                                    productId: product.id, 
+                                    productTitle: product.title 
+                                  })}
+                                >
+                                  <Trash2 className="w-4 h-4 mr-1" />
+                                  Excluir
+                                </Button>
                               </div>
                             </div>
                           </div>
@@ -385,6 +403,18 @@ const Dashboard = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Delete Product Dialog */}
+      <DeleteProductDialog
+        productId={deleteDialog.productId || ''}
+        productTitle={deleteDialog.productTitle || ''}
+        isOpen={deleteDialog.open}
+        onOpenChange={(open) => setDeleteDialog({ open })}
+        onDeleted={() => {
+          refetchProducts();
+          setDeleteDialog({ open: false });
+        }}
+      />
     </div>
   );
 };

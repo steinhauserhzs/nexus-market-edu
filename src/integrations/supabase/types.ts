@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_logs: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          entity_id: string | null
+          entity_name: string | null
+          entity_type: string
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_name?: string | null
+          entity_type: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_name?: string | null
+          entity_type?: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       admin_logs: {
         Row: {
           action: string
@@ -1613,6 +1652,8 @@ export type Database = {
           compare_price_cents: number | null
           created_at: string | null
           currency: string | null
+          deleted_at: string | null
+          deleted_by: string | null
           description: string | null
           difficulty_level: string | null
           featured: boolean | null
@@ -1640,6 +1681,8 @@ export type Database = {
           compare_price_cents?: number | null
           created_at?: string | null
           currency?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
           description?: string | null
           difficulty_level?: string | null
           featured?: boolean | null
@@ -1667,6 +1710,8 @@ export type Database = {
           compare_price_cents?: number | null
           created_at?: string | null
           currency?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
           description?: string | null
           difficulty_level?: string | null
           featured?: boolean | null
@@ -3007,6 +3052,16 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      log_activity: {
+        Args: {
+          p_action: string
+          p_details?: Json
+          p_entity_id?: string
+          p_entity_name?: string
+          p_entity_type: string
+        }
+        Returns: undefined
+      }
       log_admin_action: {
         Args: {
           p_action: string
@@ -3090,6 +3145,10 @@ export type Database = {
       set_first_user_as_admin: {
         Args: Record<PropertyKey, never>
         Returns: undefined
+      }
+      soft_delete_product: {
+        Args: { p_product_id: string }
+        Returns: boolean
       }
       update_user_consent: {
         Args: {

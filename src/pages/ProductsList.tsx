@@ -12,6 +12,7 @@ import OptimizedImage from "@/components/ui/optimized-image";
 import { useProducts, useCategories } from "@/hooks/use-products";
 import { useAuth } from "@/contexts/AuthContext";
 import LoadingSpinner from "@/components/ui/loading-spinner";
+import DeleteProductDialog from "@/components/products/delete-product-dialog";
 import { 
   Package, 
   Plus, 
@@ -21,7 +22,8 @@ import {
   Clock,
   BookOpen,
   Eye,
-  Edit
+  Edit,
+  Trash2
 } from "lucide-react";
 
 const ProductsList = () => {
@@ -30,6 +32,9 @@ const ProductsList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; productId?: string; productTitle?: string }>({ 
+    open: false 
+  });
 
   const { products, loading: productsLoading, refetch } = useProducts({
     storeId: user ? undefined : undefined // Para agora vamos buscar todos os produtos do usuário
@@ -292,18 +297,33 @@ const ProductsList = () => {
                           <Eye className="w-4 h-4 mr-1" />
                           Ver
                         </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex-1"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/produto/${product.slug}/editar`);
-                          }}
-                        >
-                          <Edit className="w-4 h-4 mr-1" />
-                          Editar
-                        </Button>
+                         <Button
+                           variant="outline"
+                           size="sm"
+                           className="flex-1"
+                           onClick={(e) => {
+                             e.stopPropagation();
+                             navigate(`/produto/${product.slug}/editar`);
+                           }}
+                         >
+                           <Edit className="w-4 h-4 mr-1" />
+                           Editar
+                         </Button>
+                         <Button
+                           variant="outline"
+                           size="sm"
+                           className="text-destructive border-destructive/20 hover:bg-destructive hover:text-destructive-foreground"
+                           onClick={(e) => {
+                             e.stopPropagation();
+                             setDeleteDialog({ 
+                               open: true, 
+                               productId: product.id, 
+                               productTitle: product.title 
+                             });
+                           }}
+                         >
+                           <Trash2 className="w-4 h-4" />
+                         </Button>
                       </div>
                     </div>
                   </CardContent>
@@ -319,6 +339,18 @@ const ProductsList = () => {
             </div>
           )}
         </div>
+
+        {/* Delete Product Dialog */}
+        <DeleteProductDialog
+          productId={deleteDialog.productId || ''}
+          productTitle={deleteDialog.productTitle || ''}
+          isOpen={deleteDialog.open}
+          onOpenChange={(open) => setDeleteDialog({ open })}
+          onDeleted={() => {
+            refetch();
+            setDeleteDialog({ open: false });
+          }}
+        />
       </div>
     </>
   );
