@@ -12,7 +12,6 @@ import AnalyticsSection from "@/components/dashboard/analytics-section";
 import MessagesSection from "@/components/dashboard/messages-section";
 import SalesDashboard from "@/components/analytics/sales-dashboard";
 import ModuleManager from "@/components/modules/module-manager";
-import ProductForm from "@/components/products/product-form";
 import { useProducts } from "@/hooks/use-products";
 import { 
   TrendingUp, 
@@ -22,7 +21,10 @@ import {
   Plus,
   BarChart3,
   Store,
-  Eye
+  Eye,
+  Edit,
+  Search,
+  Star
 } from "lucide-react";
 
 const Dashboard = () => {
@@ -85,13 +87,13 @@ const Dashboard = () => {
           </div>
           
           <Button 
-            onClick={() => navigate('/criar-loja')}
+            onClick={() => navigate('/produto/novo')}
             variant="accent"
             size="lg"
             className="w-full sm:w-auto h-12 rounded-xl font-medium flex-shrink-0"
           >
             <Plus className="w-4 h-4 mr-2" />
-            Nova Loja
+            Novo Produto
           </Button>
         </div>
 
@@ -121,10 +123,10 @@ const Dashboard = () => {
                   <Button 
                     variant="outline" 
                     className="h-auto p-4 sm:p-6 flex-col gap-2 sm:gap-3 rounded-xl sm:rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg min-h-[80px] sm:min-h-[100px]"
-                    onClick={() => setActiveTab("products")}
+                    onClick={() => navigate('/criar-loja')}
                   >
-                    <Plus className="w-6 h-6 sm:w-8 sm:h-8 text-accent" />
-                    <span className="text-xs sm:text-sm font-semibold text-center">Novo Produto</span>
+                    <Store className="w-6 h-6 sm:w-8 sm:h-8 text-accent" />
+                    <span className="text-xs sm:text-sm font-semibold text-center">Nova Loja</span>
                   </Button>
                   
                   <Button 
@@ -200,7 +202,125 @@ const Dashboard = () => {
           </TabsContent>
 
           <TabsContent value="products" className="space-y-6">
-            <ProductForm />
+            {/* Lista de Produtos */}
+            {productsLoading ? (
+              <div className="flex justify-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent" />
+              </div>
+            ) : userProducts.length === 0 ? (
+              <Card className="rounded-xl sm:rounded-2xl border-border/50 shadow-lg mx-2">
+                <CardContent className="pt-6 text-center py-12">
+                  <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">Nenhum Produto Encontrado</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Crie seu primeiro produto para começar a vender.
+                  </p>
+                  <Button onClick={() => navigate('/produto/novo')}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Criar Produto
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-4 mx-2">
+                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold">Meus Produtos</h2>
+                    <p className="text-sm text-muted-foreground">
+                      {userProducts.length} produto{userProducts.length !== 1 ? 's' : ''} encontrado{userProducts.length !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                  <Button onClick={() => navigate('/produto/novo')} size="sm">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Novo Produto
+                  </Button>
+                </div>
+
+                <div className="grid gap-4 md:gap-6">
+                  {userProducts.map((product) => (
+                    <Card key={product.id} className="rounded-xl border-border/50 shadow-sm hover:shadow-md transition-shadow">
+                      <CardContent className="p-4 sm:p-6">
+                        <div className="flex flex-col sm:flex-row gap-4">
+                          {/* Imagem do produto */}
+                          <div className="w-full sm:w-24 h-32 sm:h-24 bg-muted rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+                            {product.thumbnail_url ? (
+                              <img 
+                                src={product.thumbnail_url} 
+                                alt={product.title}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <Package className="w-8 h-8 text-muted-foreground" />
+                            )}
+                          </div>
+
+                          {/* Informações do produto */}
+                          <div className="flex-1 space-y-2">
+                            <div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4">
+                              <div className="flex-1">
+                                <h3 className="font-semibold text-base sm:text-lg line-clamp-1">
+                                  {product.title}
+                                </h3>
+                                <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                                  {product.description}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-2 flex-shrink-0">
+                                <Badge variant={product.status === 'published' ? 'default' : 'secondary'}>
+                                  {product.status === 'published' ? 'Publicado' : 'Rascunho'}
+                                </Badge>
+                                <Badge variant="outline">
+                                  {product.type === 'digital' ? 'Digital' : 
+                                   product.type === 'curso' ? 'Curso' : 'Físico'}
+                                </Badge>
+                              </div>
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between pt-2">
+                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                <div className="flex items-center gap-1">
+                                  <DollarSign className="w-4 h-4" />
+                                  <span className="font-medium text-foreground">
+                                    R$ {(product.price_cents / 100).toFixed(2)}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <Eye className="w-4 h-4" />
+                                  <span>0 visualizações</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <Star className="w-4 h-4" />
+                                  <span>0 avaliações</span>
+                                </div>
+                              </div>
+
+                              <div className="flex gap-2">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  onClick={() => navigate(`/produto/${product.slug}`)}
+                                >
+                                  <Eye className="w-4 h-4 mr-1" />
+                                  Ver
+                                </Button>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  onClick={() => navigate(`/produto/${product.slug}/editar`)}
+                                >
+                                  <Edit className="w-4 h-4 mr-1" />
+                                  Editar
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="analytics" className="space-y-6">
