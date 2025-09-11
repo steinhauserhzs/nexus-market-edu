@@ -23,6 +23,7 @@ const LazyStoreCustomizer = lazy(() => import('./pages/StoreCustomizer'));
 const LazyProductDetails = lazy(() => import('./pages/ProductDetails'));
 const LazyCheckout = lazy(() => import('./pages/Checkout'));
 const LazyCheckoutSuccess = lazy(() => import('./pages/CheckoutSuccess'));
+const LazyAdvancedCheckoutDemo = lazy(() => import('./pages/AdvancedCheckoutDemo'));
 const LazyMemberArea = lazy(() => import('./pages/MemberArea'));
 const LazyMemberAreaConfig = lazy(() => import('./pages/MemberAreaConfig'));
 const LazyMemberAreaAdvanced = lazy(() => import('./pages/MemberAreaAdvanced'));
@@ -80,6 +81,7 @@ const App = () => (
                        <Route path="/perfil" element={<LazyRoute Component={LazyProfile} />} />
                         <Route path="/checkout" element={<LazyRoute Component={LazyCheckout} />} />
                         <Route path="/checkout-success" element={<LazyRoute Component={LazyCheckoutSuccess} />} />
+                        <Route path="/advanced-checkout-demo" element={<LazyRoute Component={LazyAdvancedCheckoutDemo} />} />
                         <Route path="/carrinho" element={<LazyRoute Component={LazyCheckout} />} />
                        <Route path="/criar-loja" element={<LazyRoute Component={LazyCreateStore} />} />
                         <Route path="/loja/:slug" element={<LazyRoute Component={LazyStore} />} />
