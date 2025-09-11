@@ -3003,6 +3003,27 @@ export type Database = {
         Args: { p_key: string }
         Returns: Json
       }
+      get_user_products: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          category_id: string
+          compare_price_cents: number
+          created_at: string
+          description: string
+          featured: boolean
+          id: string
+          price_cents: number
+          slug: string
+          status: string
+          store_id: string
+          thumbnail_url: string
+          title: string
+          total_duration_minutes: number
+          total_lessons: number
+          type: string
+          updated_at: string
+        }[]
+      }
       get_venue_contact_info: {
         Args: { venue_id: string }
         Returns: {
