@@ -42,8 +42,7 @@ const LazyDashboardHome = lazy(() => import('./pages/DashboardHome'));
 const LazyStoresList = lazy(() => import('./pages/StoresList'));
 const LazyStoreConfiguracoes = lazy(() => import('./pages/StoreConfiguracoes'));
 const LazyConfiguracoes = lazy(() => import('./pages/Configuracoes'));
-const LazyProducerDashboard = lazy(() => import('./pages/ProducerDashboard'));
-const LazyProducerSales = lazy(() => import('./pages/ProducerSales'));
+const LazyProducer = lazy(() => import('./pages/Producer'));
 import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
 import PerformanceMonitor from "./components/ui/performance-monitor";
@@ -102,8 +101,7 @@ const App = () => (
                          <Route path="/loja/:slug/configuracoes" element={<LazyRoute Component={LazyStoreConfiguracoes} />} />
                          <Route path="/configuracoes" element={<LazyRoute Component={LazyConfiguracoes} />} />
                          <Route path="/clientes" element={<LazyRoute Component={LazyClientes} />} />
-                         <Route path="/producer" element={<LazyRoute Component={LazyProducerDashboard} />} />
-                         <Route path="/producer/sales" element={<LazyRoute Component={LazyProducerSales} />} />
+                         <Route path="/producer/*" element={<LazyRoute Component={LazyProducer} />} />
                          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                         <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
                      </Routes>

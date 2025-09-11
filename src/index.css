@@ -152,43 +152,14 @@
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--primary-hover));
   }
-}
     
-    /* Netflix Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(0 0% 8%), hsl(0 0% 12%));
-    --gradient-accent: linear-gradient(135deg, hsl(0 75% 60%), hsl(0 75% 50%));
-    --gradient-hero: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(0,0,0,0.4));
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 12%), hsl(0 0% 15%));
-    --gradient-overlay: linear-gradient(0deg, rgba(0,0,0,0.8), rgba(0,0,0,0));
-    
-    /* Netflix Shadows & Effects */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-    --shadow-accent: 0 4px 14px 0 hsl(0 75% 60% / 0.4);
-    --shadow-glow: 0 0 20px hsl(0 75% 60% / 0.3);
-    
-    /* Netflix Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    --transition-netflix: all 0.2s ease-in-out;
-    
+    /* Additional System Variables */
     --radius: 0.5rem;
     
     /* Netflix Card Dimensions */
     --netflix-card-width: 110px;
     --netflix-card-aspect: 2/3;
     --netflix-carousel-gap: 0.5rem;
-    
-    /* Sidebar - Dark Theme */
-    --sidebar-background: 0 0% 8%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 0 75% 60%;
-    --sidebar-primary-foreground: 0 0% 95%;
-    --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 0 75% 60%;
   }
 }
 
