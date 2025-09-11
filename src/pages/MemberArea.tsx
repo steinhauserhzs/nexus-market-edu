@@ -22,7 +22,9 @@ import {
   ExternalLink,
   ShoppingCart,
   Plus,
-  TrendingUp
+  TrendingUp,
+  Eye,
+  Settings
 } from "lucide-react";
 
 interface Store {
@@ -82,6 +84,7 @@ const MemberArea = () => {
   const [userProducts, setUserProducts] = useState<Product[]>([]);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isOwnerPreview, setIsOwnerPreview] = useState(false);
 
   useEffect(() => {
     if (slug) {
@@ -109,7 +112,9 @@ const MemberArea = () => {
 
       setStore(storeData);
 
-      // Buscar configuração da área de membros
+      // Verificar se é o dono da loja para modo preview
+      const isOwner = user && user.id === storeData.owner_id;
+      setIsOwnerPreview(!!isOwner);
       const { data: configData } = await supabase
         .from('member_area_configs')
         .select('*')
@@ -147,8 +152,13 @@ const MemberArea = () => {
 
         setUserProducts(userProductsData as Product[]);
 
+        // Se é o dono e não tem produtos próprios, simular produtos para o preview
+        if (isOwner && userProductsData.length === 0 && productsData && productsData.length > 0) {
+          setUserProducts(productsData.slice(0, 2) as Product[]); // Simula que o dono tem os primeiros 2 produtos
+        }
+
         // Buscar conteúdo exclusivo apenas para usuários com licenças ativas nesta loja
-        if (userProductsData.length > 0) {
+        if (userProductsData.length > 0 || isOwner) {
           const { data: contentData } = await supabase
             .from('member_exclusive_content')
             .select('*')
@@ -161,6 +171,29 @@ const MemberArea = () => {
       }
 
       // Conteúdo exclusivo já foi buscado acima para usuários com licenças
+      
+      // Se é modo preview do dono e não há conteúdo exclusivo, simular conteúdo para demonstração
+      if (isOwner && exclusiveContent.length === 0) {
+        const simulatedContent = [
+          {
+            id: 'demo-1',
+            title: 'Vídeo de Boas-vindas',
+            content_type: 'video',
+            content: '#',
+            description: 'Vídeo exclusivo para novos membros',
+            sort_order: 0,
+          },
+          {
+            id: 'demo-2', 
+            title: 'Material de Apoio',
+            content_type: 'download',
+            content: '#',
+            description: 'PDFs e recursos exclusivos para download',
+            sort_order: 1,
+          }
+        ];
+        setExclusiveContent(simulatedContent as ExclusiveContent[]);
+      }
 
     } catch (error) {
       console.error('Error loading member area:', error);
@@ -199,6 +232,34 @@ const MemberArea = () => {
       />
 
       <div className="container mx-auto px-4 py-8">
+        {/* Banner de Preview para Produtores */}
+        {isOwnerPreview && (
+          <Card className="mb-6 border-primary bg-primary/5">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Eye className="h-5 w-5 text-primary" />
+                  <div>
+                    <h3 className="font-semibold text-primary">Modo Preview - Visualização do Produtor</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Esta é uma simulação de como os clientes verão a área de membros. 
+                      {userProducts.length === 0 && " Produtos simulados são mostrados para demonstração."}
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate(`/loja/${slug}/membros-config`)}
+                >
+                  <Settings className="h-4 w-4 mr-2" />
+                  Configurar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        
         {/* Hero/Banner Section */}
         <div 
           className="relative h-48 md:h-64 bg-gradient-to-r from-primary to-secondary rounded-lg mb-8 overflow-hidden"
@@ -220,8 +281,8 @@ const MemberArea = () => {
         </div>
 
         <div className="space-y-8">
-          {/* Mensagem para usuários não logados ou sem produtos */}
-          {(!user || userProducts.length === 0) && (
+          {/* Mensagem para usuários não logados ou sem produtos (exceto modo preview do dono) */}
+          {(!user || (userProducts.length === 0 && !isOwnerPreview)) && (
             <section>
               <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5">
                 <CardContent className="p-8 text-center">
@@ -279,6 +340,12 @@ const MemberArea = () => {
                         <CheckCircle className="h-3 w-3 mr-1" />
                         Comprado
                       </Badge>
+                      {isOwnerPreview && (
+                        <Badge className="absolute top-2 left-2 bg-blue-600">
+                          <Eye className="h-3 w-3 mr-1" />
+                          Preview
+                        </Badge>
+                      )}
                     </div>
                     <CardContent className="p-4">
                       <h3 className="font-semibold mb-2">{product.title}</h3>
@@ -461,7 +528,15 @@ const MemberArea = () => {
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between mb-4">
                         <div>
-                          <h3 className="text-lg font-semibold mb-2">{content.title}</h3>
+                          <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+                            {content.title}
+                            {isOwnerPreview && content.id?.startsWith('demo-') && (
+                              <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200">
+                                <Eye className="h-3 w-3 mr-1" />
+                                Preview
+                              </Badge>
+                            )}
+                          </h3>
                           {content.description && (
                             <p className="text-muted-foreground mb-4">{content.description}</p>
                           )}
@@ -482,30 +557,48 @@ const MemberArea = () => {
                       
                       {content.content_type === 'video' && (
                         <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                          <Button asChild>
-                            <a href={content.content} target="_blank" rel="noopener noreferrer">
-                              <Play className="h-4 w-4 mr-2" />
-                              Assistir Vídeo
-                            </a>
-                          </Button>
+                          {isOwnerPreview && content.id?.startsWith('demo-') ? (
+                            <div className="text-center">
+                              <Play className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
+                              <p className="text-sm text-muted-foreground">
+                                Configure um vídeo de boas-vindas na área de configuração
+                              </p>
+                            </div>
+                          ) : (
+                            <Button asChild>
+                              <a href={content.content} target="_blank" rel="noopener noreferrer">
+                                <Play className="h-4 w-4 mr-2" />
+                                Assistir Vídeo
+                              </a>
+                            </Button>
+                          )}
                         </div>
                       )}
                       
                       {(content.content_type === 'download' || content.content_type === 'link') && (
-                        <Button asChild className="w-full">
-                          <a href={content.content} target="_blank" rel="noopener noreferrer">
-                            {content.content_type === 'download' ? (
-                              <>
-                                <Download className="h-4 w-4 mr-2" />
-                                Fazer Download
-                              </>
-                            ) : (
-                              <>
-                                <ExternalLink className="h-4 w-4 mr-2" />
-                                Acessar Link
-                              </>
-                            )}
-                          </a>
+                        <Button 
+                          className="w-full"
+                          disabled={isOwnerPreview && content.id?.startsWith('demo-')}
+                          onClick={() => {
+                            if (isOwnerPreview && content.id?.startsWith('demo-')) {
+                              // No modo preview, não faz nada
+                              return;
+                            }
+                            // Em produção, abriria o link
+                            window.open(content.content, '_blank');
+                          }}
+                        >
+                          {content.content_type === 'download' ? (
+                            <>
+                              <Download className="h-4 w-4 mr-2" />
+                              {isOwnerPreview && content.id?.startsWith('demo-') ? 'Configure um arquivo para download' : 'Fazer Download'}
+                            </>
+                          ) : (
+                            <>
+                              <ExternalLink className="h-4 w-4 mr-2" />
+                              {isOwnerPreview && content.id?.startsWith('demo-') ? 'Configure um link externo' : 'Acessar Link'}
+                            </>
+                          )}
                         </Button>
                       )}
                     </CardContent>
