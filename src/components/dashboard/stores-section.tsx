@@ -16,7 +16,8 @@ import {
   Users,
   TrendingUp,
   Palette,
-  Trash2
+  Trash2,
+  BarChart3
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -279,6 +280,16 @@ const StoresSection = () => {
                   >
                     <Users className="w-4 h-4" />
                     Área Membros
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate(`/loja/${store.id}/dashboard`)}
+                    className="flex items-center gap-2 flex-1 min-w-[100px]"
+                  >
+                    <BarChart3 className="w-4 h-4" />
+                    Dashboard
                   </Button>
                   
                   <Button

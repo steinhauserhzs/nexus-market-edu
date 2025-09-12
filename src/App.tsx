@@ -5,6 +5,7 @@ import { SafeTooltipProvider } from "@/components/ui/safe-tooltip-provider";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import { OptimizedAuthProvider } from "@/contexts/OptimizedAuthContext";
+import { StoreProvider } from "@/contexts/StoreContext";
 import { OptimizedCartProvider } from "@/contexts/OptimizedCartContext";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -47,6 +48,7 @@ const LazyStoresList = lazy(() => import('./pages/StoresList'));
 const LazyStoreConfiguracoes = lazy(() => import('./pages/StoreConfiguracoes'));
 const LazyConfiguracoes = lazy(() => import('./pages/Configuracoes'));
 const LazyProducer = lazy(() => import('./pages/Producer'));
+const LazyStoreSpecific = lazy(() => import('./pages/StoreSpecific'));
 const LazyVendas = lazy(() => import('./pages/Vendas'));
 const LazySaldo = lazy(() => import('./pages/Saldo'));
 const LazyMembros = lazy(() => import('./pages/Membros'));
@@ -65,7 +67,8 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
         <OptimizedAuthProvider>
-          <OptimizedCartProvider>
+          <StoreProvider>
+            <OptimizedCartProvider>
             <BrowserRouter 
               future={{ 
                 v7_startTransition: true,
@@ -120,6 +123,7 @@ const App = () => (
                           <Route path="/loja/:slug/configuracoes" element={<LazyRoute Component={LazyStoreConfiguracoes} />} />
                           <Route path="/configuracoes" element={<LazyRoute Component={LazyConfiguracoes} />} />
                           <Route path="/clientes" element={<LazyRoute Component={LazyClientes} />} />
+                          <Route path="/loja/:storeId/dashboard" element={<LazyRoute Component={LazyStoreSpecific} />} />
                           <Route path="/producer/*" element={<LazyRoute Component={LazyProducer} />} />
                          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                         <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
@@ -130,7 +134,8 @@ const App = () => (
                  </MobileGestures>
               </SafeTooltipProvider>
             </BrowserRouter>
-          </OptimizedCartProvider>
+            </OptimizedCartProvider>
+          </StoreProvider>
         </OptimizedAuthProvider>
       </HelmetProvider>
     </QueryClientProvider>

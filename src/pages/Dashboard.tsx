@@ -8,11 +8,13 @@ import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { AdminLayout } from "@/components/layout/admin-layout";
 import StoresSection from "@/components/dashboard/stores-section";
-import AnalyticsSection from "@/components/dashboard/analytics-section";
+import EnhancedAnalyticsSection from "@/components/dashboard/enhanced-analytics-section";
 import MessagesSection from "@/components/dashboard/messages-section";
 import SalesDashboard from "@/components/analytics/sales-dashboard";
 import ModuleManager from "@/components/modules/module-manager";
-import { useProducts } from "@/hooks/use-products";
+import { useProducts } from "@/hooks/use-products-filtered";
+import { useStores } from "@/contexts/StoreContext";
+import { StoreSelector } from "@/components/ui/store-selector";
 import DeleteProductDialog from "@/components/products/delete-product-dialog";
 import { 
   TrendingUp, 
@@ -32,6 +34,7 @@ import {
 
 const Dashboard = () => {
   const { user, profile, loading } = useAuth();
+  const { currentStore, stores } = useStores();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { products: userProducts, loading: productsLoading, refetch: refetchProducts } = useProducts();
@@ -102,8 +105,7 @@ const Dashboard = () => {
           </div>
 
           <TabsContent value="overview" className="space-y-8 animate-fade-in">
-            {/* Quick Stats */}
-            <AnalyticsSection />
+            <EnhancedAnalyticsSection />
 
             {/* Quick Actions */}
             <Card className="rounded-xl sm:rounded-2xl border-border/50 shadow-lg mx-2">
@@ -116,9 +118,12 @@ const Dashboard = () => {
                     variant="outline" 
                     className="h-auto p-4 sm:p-6 flex-col gap-2 sm:gap-3 rounded-xl sm:rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg min-h-[80px] sm:min-h-[100px]"
                     onClick={() => navigate('/produto/novo')}
+                    disabled={!currentStore}
                   >
                     <PlusCircle className="w-6 h-6 sm:w-8 sm:h-8 text-accent" />
-                    <span className="text-xs sm:text-sm font-semibold text-center">Novo Produto</span>
+                    <span className="text-xs sm:text-sm font-semibold text-center">
+                      {currentStore ? 'Novo Produto' : 'Selecione uma loja'}
+                    </span>
                   </Button>
                   
                   <Button 
@@ -181,13 +186,23 @@ const Dashboard = () => {
               <div className="flex justify-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent" />
               </div>
+            ) : !currentStore ? (
+              <Card className="rounded-xl sm:rounded-2xl border-border/50 shadow-lg mx-2">
+                <CardContent className="pt-6 text-center py-12">
+                  <Store className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">Selecione uma Loja</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Escolha uma loja para ver e gerenciar seus produtos.
+                  </p>
+                </CardContent>
+              </Card>
             ) : userProducts.length === 0 ? (
               <Card className="rounded-xl sm:rounded-2xl border-border/50 shadow-lg mx-2">
                 <CardContent className="pt-6 text-center py-12">
                   <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Nenhum Produto Encontrado</h3>
+                  <h3 className="text-lg font-semibold mb-2">Nenhum Produto na {currentStore.name}</h3>
                   <p className="text-muted-foreground mb-4">
-                    Crie seu primeiro produto para começar a vender.
+                    Crie seu primeiro produto para esta loja.
                   </p>
                   <Button onClick={() => navigate('/produto/novo')}>
                     <Plus className="w-4 h-4 mr-2" />
@@ -199,7 +214,9 @@ const Dashboard = () => {
               <div className="space-y-4 mx-2">
                 <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                   <div>
-                    <h2 className="text-xl font-semibold">Meus Produtos</h2>
+                    <h2 className="text-xl font-semibold">
+                      Produtos da {currentStore?.name || 'Loja'}
+                    </h2>
                     <p className="text-sm text-muted-foreground">
                       {userProducts.length} produto{userProducts.length !== 1 ? 's' : ''} encontrado{userProducts.length !== 1 ? 's' : ''}
                     </p>
