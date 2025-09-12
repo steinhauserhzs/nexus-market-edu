@@ -14,7 +14,10 @@ import {
   PlusCircle,
   CreditCard,
   UserCheck,
-  Wrench
+  Wrench,
+  ShoppingCart,
+  ArrowUpCircle,
+  Zap
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -35,63 +38,53 @@ const mainNavItems = [
   {
     title: 'Dashboard',
     href: '/dashboard',
-    icon: BarChart3,
-  },
-  {
-    title: 'Início',
-    href: '/inicio',
     icon: Home,
   },
 ];
 
 const businessNavItems = [
   {
-    title: 'Vendas',
-    href: '/producer/sales',
-    icon: TrendingUp,
-  },
-  {
     title: 'Produtos',
     href: '/produtos',
     icon: Package,
   },
   {
-    title: 'Nova Produto',
-    href: '/produto/novo',
-    icon: PlusCircle,
+    title: 'Vendas',
+    href: '/vendas',
+    icon: ShoppingCart,
   },
   {
-    title: 'Clientes',
-    href: '/clientes',
-    icon: Users,
-  },
-  {
-    title: 'Lojas',
-    href: '/stores',
-    icon: Store,
-  },
-  {
-    title: 'Finanças',
-    href: '/analytics',
+    title: 'Saldo',
+    href: '/saldo',
     icon: DollarSign,
   },
   {
-    title: 'Cupons',
-    href: '/cupons',
-    icon: FileText,
+    title: 'Membros',
+    href: '/membros',
+    icon: Users,
+  },
+  {
+    title: 'Order Bumps',
+    href: '/order-bumps',
+    icon: TrendingUp,
+  },
+  {
+    title: 'Upsells',
+    href: '/upsells',
+    icon: ArrowUpCircle,
   },
 ];
 
 const toolsNavItems = [
   {
-    title: 'Afiliados',
-    href: '/producer/affiliates',
-    icon: Megaphone,
+    title: 'Integrações',
+    href: '/integracoes',
+    icon: Zap,
   },
   {
-    title: 'Integrações',
-    href: '/producer/integrations',
-    icon: Wrench,
+    title: 'Analytics',
+    href: '/analytics',
+    icon: BarChart3,
   },
 ];
 
