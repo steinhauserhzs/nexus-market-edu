@@ -96,7 +96,7 @@ const settingsNavItems = [
   },
   {
     title: 'Perfil',
-    href: '/profile',
+    href: '/perfil',
     icon: UserCheck,
   },
 ];

@@ -20,6 +20,7 @@ import {
   Users, 
   DollarSign,
   Plus,
+  PlusCircle,
   BarChart3,
   Store,
   Eye,
@@ -86,16 +87,6 @@ const Dashboard = () => {
               Gerencie suas lojas, produtos e vendas
             </p>
           </div>
-          
-          <Button 
-            onClick={() => navigate('/produto/novo')}
-            variant="accent"
-            size="lg"
-            className="w-full sm:w-auto h-12 rounded-xl font-medium flex-shrink-0"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Novo Produto
-          </Button>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 md:space-y-8">
@@ -120,7 +111,16 @@ const Dashboard = () => {
                 <CardTitle className="text-lg sm:text-xl">Ações Rápidas</CardTitle>
               </CardHeader>
               <CardContent className="px-4 sm:px-6">
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-3 sm:gap-4">
+                  <Button 
+                    variant="outline" 
+                    className="h-auto p-4 sm:p-6 flex-col gap-2 sm:gap-3 rounded-xl sm:rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg min-h-[80px] sm:min-h-[100px]"
+                    onClick={() => navigate('/produto/novo')}
+                  >
+                    <PlusCircle className="w-6 h-6 sm:w-8 sm:h-8 text-accent" />
+                    <span className="text-xs sm:text-sm font-semibold text-center">Novo Produto</span>
+                  </Button>
+                  
                   <Button 
                     variant="outline" 
                     className="h-auto p-4 sm:p-6 flex-col gap-2 sm:gap-3 rounded-xl sm:rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg min-h-[80px] sm:min-h-[100px]"
@@ -128,33 +128,6 @@ const Dashboard = () => {
                   >
                     <Store className="w-6 h-6 sm:w-8 sm:h-8 text-accent" />
                     <span className="text-xs sm:text-sm font-semibold text-center">Nova Loja</span>
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    className="h-auto p-6 flex-col gap-3 rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg"
-                    onClick={() => setActiveTab("analytics")}
-                  >
-                    <BarChart3 className="w-8 h-8 text-accent" />
-                    <span className="text-sm font-semibold">Analytics</span>
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    className="h-auto p-6 flex-col gap-3 rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg"
-                    onClick={() => navigate('#content')}
-                  >
-                    <Users className="w-8 h-8 text-accent" />
-                    <span className="text-sm font-semibold">Gerenciar Cursos</span>
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    className="h-auto p-6 flex-col gap-3 rounded-2xl border-2 hover:border-accent/50 transition-all duration-300 hover:shadow-lg"
-                    onClick={() => navigate('/biblioteca')}
-                  >
-                    <Eye className="w-8 h-8 text-accent" />
-                    <span className="text-sm font-semibold">Ver Biblioteca</span>
                   </Button>
                 </div>
               </CardContent>

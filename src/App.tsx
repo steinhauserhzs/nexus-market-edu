@@ -47,6 +47,12 @@ const LazyStoresList = lazy(() => import('./pages/StoresList'));
 const LazyStoreConfiguracoes = lazy(() => import('./pages/StoreConfiguracoes'));
 const LazyConfiguracoes = lazy(() => import('./pages/Configuracoes'));
 const LazyProducer = lazy(() => import('./pages/Producer'));
+const LazyVendas = lazy(() => import('./pages/Vendas'));
+const LazySaldo = lazy(() => import('./pages/Saldo'));
+const LazyMembros = lazy(() => import('./pages/Membros'));
+const LazyOrderBumps = lazy(() => import('./pages/OrderBumps'));
+const LazyUpsells = lazy(() => import('./pages/Upsells'));
+const LazyIntegracoes = lazy(() => import('./pages/Integracoes'));
 import MobileNavigation from "./components/layout/mobile-navigation";
 import MobileGestures from "./components/layout/mobile-gestures";
 import PerformanceMonitor from "./components/ui/performance-monitor";
@@ -75,11 +81,12 @@ const App = () => (
                      <Routes>
                <Route path="/" element={<Index />} />
                <Route path="/auth" element={<Auth />} />
-               <Route path="/dashboard" element={<LazyRoute Component={LazyDashboard} />} />
-               <Route path="/vendedor" element={<LazyRoute Component={LazySellerDashboardSlim} />} />
-               <Route path="/biblioteca" element={<LazyRoute Component={LazyLibrary} />} />
-                       <Route path="/perfil" element={<LazyRoute Component={LazyProfile} />} />
-                        <Route path="/checkout" element={<LazyRoute Component={LazyCheckout} />} />
+                <Route path="/dashboard" element={<LazyRoute Component={LazyDashboard} />} />
+                <Route path="/vendedor" element={<LazyRoute Component={LazySellerDashboardSlim} />} />
+                <Route path="/biblioteca" element={<LazyRoute Component={LazyLibrary} />} />
+                        <Route path="/perfil" element={<LazyRoute Component={LazyProfile} />} />
+                        <Route path="/profile" element={<LazyRoute Component={LazyProfile} />} />
+                         <Route path="/checkout" element={<LazyRoute Component={LazyCheckout} />} />
                         <Route path="/checkout-success" element={<LazyRoute Component={LazyCheckoutSuccess} />} />
                         <Route path="/advanced-checkout-demo" element={<LazyRoute Component={LazyAdvancedCheckoutDemo} />} />
                         <Route path="/carrinho" element={<LazyRoute Component={LazyCheckout} />} />
@@ -97,17 +104,23 @@ const App = () => (
                         <Route path="/contato" element={<LazyRoute Component={LazyContact} />} />
                         <Route path="/flow-validation" element={<LazyRoute Component={LazyFlowValidation} />} />
                         <Route path="/cupons" element={<LazyRoute Component={LazyCouponManagement} />} />
-                 <Route path="/produto/novo" element={<LazyRoute Component={LazyProductNew} />} />
-                 <Route path="/produtos" element={<LazyRoute Component={LazyProductsList} />} />
-                 <Route path="/produto/:slug/editar" element={<LazyRoute Component={LazyProductEdit} />} />
-                        <Route path="/personalizar-loja" element={<LazyRoute Component={LazyPersonalizarLoja} />} />
-                        <Route path="/analytics" element={<LazyRoute Component={LazyAnalytics} />} />
-                        <Route path="/inicio" element={<LazyRoute Component={LazyDashboardHome} />} />
-                        <Route path="/lojas" element={<LazyRoute Component={LazyStoresList} />} />
-                         <Route path="/loja/:slug/configuracoes" element={<LazyRoute Component={LazyStoreConfiguracoes} />} />
-                         <Route path="/configuracoes" element={<LazyRoute Component={LazyConfiguracoes} />} />
-                         <Route path="/clientes" element={<LazyRoute Component={LazyClientes} />} />
-                         <Route path="/producer/*" element={<LazyRoute Component={LazyProducer} />} />
+                  <Route path="/produto/novo" element={<LazyRoute Component={LazyProductNew} />} />
+                  <Route path="/produtos" element={<LazyRoute Component={LazyProductsList} />} />
+                  <Route path="/produto/:slug/editar" element={<LazyRoute Component={LazyProductEdit} />} />
+                         <Route path="/personalizar-loja" element={<LazyRoute Component={LazyPersonalizarLoja} />} />
+                         <Route path="/analytics" element={<LazyRoute Component={LazyAnalytics} />} />
+                         <Route path="/vendas" element={<LazyRoute Component={LazyVendas} />} />
+                         <Route path="/saldo" element={<LazyRoute Component={LazySaldo} />} />
+                         <Route path="/membros" element={<LazyRoute Component={LazyMembros} />} />
+                         <Route path="/order-bumps" element={<LazyRoute Component={LazyOrderBumps} />} />
+                         <Route path="/upsells" element={<LazyRoute Component={LazyUpsells} />} />
+                         <Route path="/integracoes" element={<LazyRoute Component={LazyIntegracoes} />} />
+                         <Route path="/inicio" element={<LazyRoute Component={LazyDashboardHome} />} />
+                         <Route path="/lojas" element={<LazyRoute Component={LazyStoresList} />} />
+                          <Route path="/loja/:slug/configuracoes" element={<LazyRoute Component={LazyStoreConfiguracoes} />} />
+                          <Route path="/configuracoes" element={<LazyRoute Component={LazyConfiguracoes} />} />
+                          <Route path="/clientes" element={<LazyRoute Component={LazyClientes} />} />
+                          <Route path="/producer/*" element={<LazyRoute Component={LazyProducer} />} />
                          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                         <Route path="*" element={<LazyRoute Component={LazyNotFound} />} />
                      </Routes>
