@@ -6,8 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from "@/components/ui/select";
 import SEOHead from "@/components/ui/seo-head";
-import MainHeader from "@/components/layout/main-header";
-import BackNavigation from "@/components/layout/back-navigation";
+import { AdminLayout } from "@/components/layout/admin-layout";
 import OptimizedImage from "@/components/ui/optimized-image";
 import { useProducts, useCategories } from "@/hooks/use-products";
 import { useAuth } from "@/contexts/AuthContext";
@@ -84,10 +83,8 @@ const ProductsList = () => {
           title="Meus Produtos - Nexus Market"
           description="Gerencie seus produtos digitais na Nexus Market"
         />
-        <MainHeader />
-        <div className="min-h-screen bg-background">
-          <BackNavigation title="Meus Produtos" />
-          <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <AdminLayout>
+          <div className="container mx-auto px-6 py-8 max-w-4xl">
             <Card>
               <CardContent className="pt-6 text-center py-12">
                 <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
@@ -99,7 +96,7 @@ const ProductsList = () => {
               </CardContent>
             </Card>
           </div>
-        </div>
+        </AdminLayout>
       </>
     );
   }
@@ -110,12 +107,8 @@ const ProductsList = () => {
         title="Meus Produtos - Nexus Market"
         description="Gerencie seus produtos digitais na Nexus Market"
       />
-      <MainHeader />
-      
-      <div className="min-h-screen bg-background pb-20">
-        <BackNavigation title="Meus Produtos" />
-        
-        <div className="container mx-auto px-4 py-6 max-w-7xl">
+      <AdminLayout>
+        <div className="container mx-auto px-6 py-8 max-w-7xl">
           {/* Header with actions */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
             <div>
@@ -351,9 +344,9 @@ const ProductsList = () => {
             setDeleteDialog({ open: false });
           }}
         />
-      </div>
-    </>
-  );
+        </AdminLayout>
+      </>
+    );
 };
 
 export default ProductsList;

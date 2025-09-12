@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-import BackNavigation from "@/components/layout/back-navigation";
+import { AdminLayout } from "@/components/layout/admin-layout";
 import StoresSection from "@/components/dashboard/stores-section";
 import AnalyticsSection from "@/components/dashboard/analytics-section";
 import MessagesSection from "@/components/dashboard/messages-section";
@@ -70,12 +70,8 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20 safe-area-bottom">
-      <div className="px-4 sm:px-6">
-        <BackNavigation title="Dashboard" />
-      </div>
-      
-      <div className="container mx-auto px-4 sm:px-6 py-6 space-y-6 md:space-y-8 max-w-7xl">
+    <AdminLayout>
+      <div className="container mx-auto px-6 py-8 space-y-6 md:space-y-8 max-w-7xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in px-2">
           <div className="space-y-2 flex-1 min-w-0">
             <div className="space-y-1">
@@ -415,8 +411,9 @@ const Dashboard = () => {
           setDeleteDialog({ open: false });
         }}
       />
-    </div>
-  );
-};
+        </div>
+      </AdminLayout>
+    );
+  };
 
 export default Dashboard;
