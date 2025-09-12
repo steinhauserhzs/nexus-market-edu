@@ -2,16 +2,21 @@ import SEOHead from "@/components/ui/seo-head";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import BackNavigation from "@/components/layout/back-navigation";
+import { AdminLayout } from "@/components/layout/admin-layout";
 import { TrendingUp, Users, ShoppingCart, DollarSign, Eye, MousePointer } from "lucide-react";
 
 const Analytics = () => {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-    </div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background pb-20">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto" />
+          <p className="text-muted-foreground">Carregando analytics...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!user) {
@@ -70,10 +75,8 @@ const Analytics = () => {
         description="Acompanhe o desempenho da sua loja com métricas detalhadas."
       />
       
-      <div className="min-h-screen bg-background">
-        <BackNavigation title="Analytics" />
-        
-        <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <AdminLayout>
+        <div className="container mx-auto px-6 py-8 max-w-6xl">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold mb-4">Analytics da Loja</h1>
             <p className="text-muted-foreground text-lg">
@@ -149,7 +152,7 @@ const Analytics = () => {
             </Card>
           </div>
         </div>
-      </div>
+      </AdminLayout>
     </>
   );
 };

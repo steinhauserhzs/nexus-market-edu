@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import BackNavigation from "@/components/layout/back-navigation";
+import { AdminLayout } from "@/components/layout/admin-layout";
 import { Upload, Palette, Eye, Store, Image as ImageIcon } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -231,10 +231,8 @@ const CreateStore = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20 safe-area-bottom animate-fade-in">
-      <BackNavigation title="Criar Loja" />
-      
-      <div className="container mx-auto px-4 py-6 max-w-5xl">
+    <AdminLayout>
+      <div className="container mx-auto px-6 py-8 max-w-5xl">
         <div className="mb-8 text-center animate-slide-up">
           <div className="mx-auto w-20 h-20 bg-gradient-accent rounded-2xl flex items-center justify-center mb-6 shadow-lg animate-bounce-in">
             <Store className="w-10 h-10 text-accent-foreground" />
@@ -638,7 +636,7 @@ const CreateStore = () => {
           </div>
         </form>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 

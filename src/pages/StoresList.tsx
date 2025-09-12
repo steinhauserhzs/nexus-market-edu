@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 import SEOHead from "@/components/ui/seo-head";
-import BackNavigation from "@/components/layout/back-navigation";
+import { AdminLayout } from "@/components/layout/admin-layout";
 import StoresSection from "@/components/dashboard/stores-section";
 
 const StoresList = () => {
@@ -9,8 +9,11 @@ const StoresList = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex items-center justify-center bg-background pb-20">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto" />
+          <p className="text-muted-foreground">Carregando...</p>
+        </div>
       </div>
     );
   }
@@ -26,13 +29,11 @@ const StoresList = () => {
         description="Gerencie todas as suas lojas na Nexus Market."
       />
       
-      <div className="min-h-screen bg-background pb-20">
-        <BackNavigation title="Minhas Lojas" />
-        
-        <div className="container mx-auto px-3 py-4 max-w-4xl">
+      <AdminLayout>
+        <div className="container mx-auto px-6 py-8 max-w-4xl">
           <StoresSection />
         </div>
-      </div>
+      </AdminLayout>
     </>
   );
 };
