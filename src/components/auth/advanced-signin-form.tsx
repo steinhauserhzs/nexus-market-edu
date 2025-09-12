@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useSecurity } from "@/hooks/use-security";
-import { Eye, EyeOff, Mail, Phone, CreditCard, Chrome, Shield } from "lucide-react";
+import { Eye, EyeOff, Mail, Phone, CreditCard, User, Briefcase, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { logger } from "@/lib/logger";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,6 +23,7 @@ const AdvancedSigninForm = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [userType, setUserType] = useState("cliente"); // Novo estado para tipo de usuário
   const [rememberedIdentifier, setRememberedIdentifier] = useLocalStorage('rememberedIdentifier', '');
   const { toast } = useToast();
   
@@ -43,6 +44,42 @@ const AdvancedSigninForm = () => {
       setRememberMe(true);
     }
   }, [rememberedIdentifier]);
+
+  const getUserTypeIcon = () => {
+    switch (userType) {
+      case 'cliente': return <User className="w-4 h-4" />;
+      case 'produtor': return <Briefcase className="w-4 h-4" />;
+      case 'admin': return <Settings className="w-4 h-4" />;
+      default: return <User className="w-4 h-4" />;
+    }
+  };
+
+  const getUserTypeLabel = () => {
+    switch (userType) {
+      case 'cliente': return 'Cliente';
+      case 'produtor': return 'Produtor';
+      case 'admin': return 'Administrador';
+      default: return 'Cliente';
+    }
+  };
+
+  const getUserTypeDescription = () => {
+    switch (userType) {
+      case 'cliente': return 'Acessar meus produtos e área de membros';
+      case 'produtor': return 'Gerenciar meus produtos e vendas';
+      case 'admin': return 'Painel administrativo completo';
+      default: return 'Acessar meus produtos e área de membros';
+    }
+  };
+
+  const getRedirectPath = () => {
+    switch (userType) {
+      case 'cliente': return '/biblioteca';
+      case 'produtor': return '/dashboard';
+      case 'admin': return '/admin';
+      default: return '/biblioteca';
+    }
+  };
 
   const getIdentifierType = (value: string) => {
     if (value.includes('@')) return 'email';
@@ -181,10 +218,15 @@ const AdvancedSigninForm = () => {
 
       toast({
         title: "Login realizado!",
-        description: "Bem-vindo de volta!",
+        description: `Bem-vindo de volta! Redirecionando para ${getUserTypeLabel()}`,
       });
 
       console.info('[Auth] Login success, aguardando redirecionamento automático pelo AuthContext/Auth page');
+      
+      // Redirecionar baseado no tipo de usuário selecionado
+      setTimeout(() => {
+        navigate(getRedirectPath());
+      }, 1000);
     } catch (error: any) {
       if (timeoutId) window.clearTimeout(timeoutId);
 
@@ -255,26 +297,106 @@ const AdvancedSigninForm = () => {
       <CardHeader>
         <CardTitle className="text-center text-2xl">Entrar na Conta</CardTitle>
         <p className="text-center text-sm text-muted-foreground">
-          Use email, CPF ou telefone para entrar
+          Escolha como deseja acessar a plataforma
         </p>
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {/* Google Login - Temporarily disabled until OAuth is configured in Supabase */}
-        {/* 
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full"
-          onClick={handleGoogleLogin}
-          disabled={googleLoading}
-        >
-          <Chrome className="w-4 h-4 mr-2" />
-          {googleLoading ? "Entrando..." : "Entrar com Google"}
-        </Button>
-        */}
+        {/* Seleção do Tipo de Usuário */}
+        <div className="space-y-3">
+          <Label className="text-base font-medium">Como você quer acessar?</Label>
+          
+          <div className="grid grid-cols-1 gap-3">
+            {/* Cliente - Padrão */}
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md border-2 ${
+                userType === 'cliente' ? 'border-primary bg-primary/5 ring-1 ring-primary/20' : 'border-border hover:border-primary/50'
+              }`}
+              onClick={() => setUserType('cliente')}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-start space-x-3">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    userType === 'cliente' ? 'bg-primary text-primary-foreground' : 'bg-muted'
+                  }`}>
+                    <User className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <div className="font-medium text-sm">👨‍💻 Cliente</div>
+                      {userType === 'cliente' && (
+                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                      )}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Ver meus produtos comprados e área de membros
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-        {/* Separator removed since Google login is disabled */}
+            {/* Produtor */}
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md border-2 ${
+                userType === 'produtor' ? 'border-primary bg-primary/5 ring-1 ring-primary/20' : 'border-border hover:border-primary/50'
+              }`}
+              onClick={() => setUserType('produtor')}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-start space-x-3">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    userType === 'produtor' ? 'bg-primary text-primary-foreground' : 'bg-muted'
+                  }`}>
+                    <Briefcase className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <div className="font-medium text-sm">🏪 Produtor</div>
+                      {userType === 'produtor' && (
+                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                      )}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Gerenciar produtos, vendas e lojas
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Admin */}
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md border-2 ${
+                userType === 'admin' ? 'border-primary bg-primary/5 ring-1 ring-primary/20' : 'border-border hover:border-primary/50'
+              }`}
+              onClick={() => setUserType('admin')}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-start space-x-3">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    userType === 'admin' ? 'bg-primary text-primary-foreground' : 'bg-muted'
+                  }`}>
+                    <Settings className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <div className="font-medium text-sm">⚙️ Admin</div>
+                      {userType === 'admin' && (
+                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                      )}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Painel administrativo completo
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        <Separator />
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -366,7 +488,16 @@ const AdvancedSigninForm = () => {
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Entrando..." : "Entrar"}
+            <div className="flex items-center justify-center space-x-2">
+              {loading ? (
+                <span>Entrando...</span>
+              ) : (
+                <>
+                  {getUserTypeIcon()}
+                  <span>Entrar como {getUserTypeLabel()}</span>
+                </>
+              )}
+            </div>
           </Button>
         </form>
 
