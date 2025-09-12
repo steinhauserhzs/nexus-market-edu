@@ -385,7 +385,6 @@ const CourseProductFields = ({ formData, setFormData, selectedStoreId }: any) =>
                             value={lesson.title || ''}
                             onChange={(e) => updateLesson(module.id, lesson.id, 'title', e.target.value)}
                             placeholder="Título da aula"
-                            size="sm"
                           />
                         </div>
                         
@@ -396,7 +395,6 @@ const CourseProductFields = ({ formData, setFormData, selectedStoreId }: any) =>
                             value={lesson.duration_minutes || ''}
                             onChange={(e) => updateLesson(module.id, lesson.id, 'duration_minutes', parseInt(e.target.value) || 0)}
                             placeholder="30"
-                            size="sm"
                           />
                         </div>
                       </div>
@@ -407,7 +405,6 @@ const CourseProductFields = ({ formData, setFormData, selectedStoreId }: any) =>
                           value={lesson.video_url || ''}
                           onChange={(e) => updateLesson(module.id, lesson.id, 'video_url', e.target.value)}
                           placeholder="https://www.youtube.com/watch?v=... ou Vimeo"
-                          size="sm"
                         />
                       </div>
                     </CardContent>
