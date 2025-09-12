@@ -323,13 +323,13 @@ const AdvancedSigninForm = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <div className="font-medium text-sm">👨‍💻 Cliente</div>
+                      <div className="font-medium text-sm">📚 Ver Meus Produtos</div>
                       {userType === 'cliente' && (
                         <div className="w-2 h-2 bg-primary rounded-full"></div>
                       )}
                     </div>
                     <div className="text-xs text-muted-foreground mt-1">
-                      Ver meus produtos comprados e área de membros
+                      Acessar produtos comprados e área de membros
                     </div>
                   </div>
                 </div>
@@ -352,13 +352,13 @@ const AdvancedSigninForm = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <div className="font-medium text-sm">🏪 Produtor</div>
+                      <div className="font-medium text-sm">🚀 Gerenciar Meu Negócio</div>
                       {userType === 'produtor' && (
                         <div className="w-2 h-2 bg-primary rounded-full"></div>
                       )}
                     </div>
                     <div className="text-xs text-muted-foreground mt-1">
-                      Gerenciar produtos, vendas e lojas
+                      Painel do produtor - vendas, produtos e lojas
                     </div>
                   </div>
                 </div>
@@ -381,13 +381,13 @@ const AdvancedSigninForm = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <div className="font-medium text-sm">⚙️ Admin</div>
+                      <div className="font-medium text-sm">⚡ Equipe Nexus</div>
                       {userType === 'admin' && (
                         <div className="w-2 h-2 bg-primary rounded-full"></div>
                       )}
                     </div>
                     <div className="text-xs text-muted-foreground mt-1">
-                      Painel administrativo completo
+                      Administração da plataforma Nexus
                     </div>
                   </div>
                 </div>
