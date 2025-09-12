@@ -411,9 +411,8 @@ const Dashboard = () => {
           setDeleteDialog({ open: false });
         }}
       />
-        </div>
-      </AdminLayout>
-    );
-  };
+    </AdminLayout>
+  );
+};
 
 export default Dashboard;
