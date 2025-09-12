@@ -8,12 +8,7 @@ const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!loading && user) {
-      // Redireciona usuário logado para a página inicial
-      navigate("/inicio", { replace: true });
-    }
-  }, [user, loading, navigate]);
+  // Não redirecionar automaticamente - usuário escolhe na tela de login
 
   // Mostra loading enquanto verifica autenticação
   if (loading) {
@@ -24,13 +19,8 @@ const Index = () => {
     );
   }
 
-  // Se não estiver logado, mostra a landing page
-  if (!user) {
-    return <LandingProducers />;
-  }
-
-  // Se chegou até aqui, está redirecionando
-  return null;
+  // Mostra sempre a landing page (logado ou não)
+  return <LandingProducers />;
 };
 
 export default Index;

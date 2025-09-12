@@ -324,6 +324,8 @@ export const OptimizedAuthProvider = ({ children }: { children: ReactNode }) => 
     try {
       await supabase.auth.signOut();
       profileCache.clear(); // Clear cache on signout
+      // Redireciona para a home page após logout
+      window.location.href = '/';
       toast({
         title: "Logout realizado",
         description: "Você foi desconectado com sucesso."
