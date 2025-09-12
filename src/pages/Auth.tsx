@@ -10,11 +10,58 @@ import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+
+// Test Login Button Component
+const TestLoginButton = ({ label, email, password, description }: {
+  label: string;
+  email: string;
+  password: string;
+  description: string;
+}) => {
+  const { signIn } = useAuth();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+
+  const handleTestLogin = async () => {
+    setLoading(true);
+    try {
+      const { error } = await signIn(email, password);
+      if (error) throw error;
+      
+      toast({
+        title: "Login de teste realizado!",
+        description: `Entrando como: ${description}`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Erro no login de teste",
+        description: error.message || "Tente novamente",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Button
+      onClick={handleTestLogin}
+      disabled={loading}
+      variant="outline"
+      className="p-3 h-auto flex-col items-start bg-background/50 hover:bg-background/80 border-yellow-500/30 hover:border-yellow-500/50"
+    >
+      <div className="font-medium text-sm">{loading ? "Entrando..." : label}</div>
+      <div className="text-xs text-muted-foreground mt-1">{description}</div>
+    </Button>
+  );
+};
 
 const Auth = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { user, loading: authLoading } = useAuth();
+  const { toast } = useToast();
   const [showRecovery, setShowRecovery] = useState(false);
 
   useEffect(() => {
@@ -88,6 +135,28 @@ const Auth = () => {
           <p className="text-primary-foreground/80 text-base sm:text-lg px-4">
             Entre ou crie sua conta para acessar cursos e vender produtos
           </p>
+        </div>
+
+        {/* Test Access Buttons */}
+        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 mb-6 mx-2 sm:mx-0">
+          <div className="text-center mb-3">
+            <h3 className="font-semibold text-yellow-600 dark:text-yellow-400 mb-2">🧪 Acesso de Teste Rápido</h3>
+            <p className="text-xs text-yellow-600/80 dark:text-yellow-400/80">Use estes botões para testar a experiência completa</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <TestLoginButton 
+              label="👨‍💼 Entrar como Vendedor"
+              email="steinhauser.haira@gmail.com"
+              password="123456"
+              description="Acesse painel do produtor"
+            />
+            <TestLoginButton 
+              label="🛒 Entrar como Cliente"
+              email="cliente.teste@gmail.com"
+              password="123456"
+              description="Experimente como comprador"
+            />
+          </div>
         </div>
 
         {/* Auth Forms */}
