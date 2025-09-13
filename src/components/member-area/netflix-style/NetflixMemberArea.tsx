@@ -1,7 +1,7 @@
 // Nexus Netflix-Style Member Area - Main Component
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import NetflixHeader from './NetflixHeader';
 import NetflixBottomTabs from './NetflixBottomTabs';
 import NetflixHeroBanner from './NetflixHeroBanner';
@@ -19,6 +19,11 @@ const NetflixMemberArea = () => {
   const [loading, setLoading] = useState(true);
   const [config, setConfig] = useState<MemberAreaConfig | null>(null);
   const { toast } = useToast();
+  const location = useLocation();
+
+  // Check if we're in a specific products/courses view
+  const isProductsView = location.pathname.includes('/produtos');
+  const isCoursesView = location.pathname.includes('/cursos');
 
   useEffect(() => {
     if (storeSlug) {
@@ -165,19 +170,96 @@ const NetflixMemberArea = () => {
       badge: getSalesBadge(index) as any
     }));
 
+  // If we're in products or courses view, render the appropriate filtered view
+  if (isProductsView || isCoursesView) {
+    const filteredProducts = isProductsView 
+      ? products 
+      : products.filter(p => p.type === 'curso');
+    
+    return (
+      <div className="min-h-screen bg-background pwa-app no-overscroll">
+        {/* Preview Notice for Store Owners */}
+        <div className="fixed top-0 left-0 right-0 z-40 bg-yellow-500/90 backdrop-blur text-black text-center py-2 px-4 text-sm font-medium safe-area-inset-top">
+          🎬 Preview da Área de Membros - {isProductsView ? 'Todos os Produtos' : 'Cursos'} | 
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => window.close()}
+            className="ml-2 h-auto p-1 text-black hover:text-black/80"
+          >
+            Fechar Preview
+          </Button>
+        </div>
+        
+        <NetflixHeader 
+          storeName={config?.storeName || 'Loja'}
+          storeSlug={config?.storeSlug || ''}
+          logo={config?.logo}
+          showBackButton={true}
+        />
+        
+        <main className="pt-12 sm:pt-16 pb-20 safe-area-inset-left safe-area-inset-right" style={{ marginTop: '32px' }}>
+          <div className="container mx-auto px-4 py-6">
+            <h1 className="text-2xl font-bold mb-6">
+              {isProductsView ? 'Todos os Produtos' : 'Cursos Disponíveis'}
+            </h1>
+            
+            <div className="netflix-grid">
+              {filteredProducts.map((product, index) => (
+                <NetflixCard 
+                  key={product.id} 
+                  product={product} 
+                  itemIndex={index}
+                  carouselType="home"
+                  storeSlug={config?.storeSlug || ''}
+                />
+              ))}
+            </div>
+            
+            {filteredProducts.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">
+                  {isProductsView ? 'Nenhum produto encontrado' : 'Nenhum curso encontrado'}
+                </p>
+              </div>
+            )}
+          </div>
+        </main>
+
+        <NetflixBottomTabs storeSlug={config?.storeSlug || ''} />
+      </div>
+    );
+  }
+
+  // Main dashboard view (default)
   return (
     <div className="min-h-screen bg-background pwa-app no-overscroll">
+      {/* Preview Notice for Store Owners */}
+      {config && (
+        <div className="fixed top-0 left-0 right-0 z-40 bg-yellow-500/90 backdrop-blur text-black text-center py-2 px-4 text-sm font-medium safe-area-inset-top">
+          🎬 Preview da Área de Membros - Visão do Cliente | 
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => window.close()}
+            className="ml-2 h-auto p-1 text-black hover:text-black/80"
+          >
+            Fechar Preview
+          </Button>
+        </div>
+      )}
+      
       <NetflixHeader 
-        storeName={config.storeName}
-        storeSlug={config.storeSlug}
-        logo={config.logo}
+        storeName={config?.storeName || 'Loja'}
+        storeSlug={config?.storeSlug || ''}
+        logo={config?.logo}
         showBackButton={true}
       />
       
-      <main className="pt-12 sm:pt-16 pb-20 safe-area-inset-left safe-area-inset-right">
+      <main className="pt-12 sm:pt-16 pb-20 safe-area-inset-left safe-area-inset-right" style={{ marginTop: '32px' }}>
         <div className="space-y-4 sm:space-y-6">
           {/* Hero Banners */}
-          {config.banners.length > 0 && (
+          {config && config.banners.length > 0 && (
             <div className="px-3 sm:px-4">
               <NetflixHeroBanner banners={config.banners} />
             </div>
@@ -192,7 +274,7 @@ const NetflixMemberArea = () => {
                   product={product} 
                   itemIndex={index}
                   carouselType="owned"
-                  storeSlug={config.storeSlug}
+                  storeSlug={config?.storeSlug || ''}
                 />
               ))}
             </NetflixCarousel>
@@ -206,7 +288,7 @@ const NetflixMemberArea = () => {
                 product={product} 
                 itemIndex={index}
                 carouselType="home"
-                storeSlug={config.storeSlug}
+                storeSlug={config?.storeSlug || ''}
               />
             ))}
           </NetflixCarousel>
@@ -220,7 +302,7 @@ const NetflixMemberArea = () => {
                   product={product} 
                   itemIndex={index}
                   carouselType="home"
-                  storeSlug={config.storeSlug}
+                  storeSlug={config?.storeSlug || ''}
                 />
               ))}
             </NetflixCarousel>
@@ -235,7 +317,7 @@ const NetflixMemberArea = () => {
                   product={product} 
                   itemIndex={index}
                   carouselType="home"
-                  storeSlug={config.storeSlug}
+                  storeSlug={config?.storeSlug || ''}
                 />
               ))}
             </NetflixCarousel>
@@ -249,7 +331,7 @@ const NetflixMemberArea = () => {
                 product={product} 
                 itemIndex={index}
                 carouselType="bestsellers"
-                storeSlug={config.storeSlug}
+                storeSlug={config?.storeSlug || ''}
               />
             ))}
           </NetflixCarousel>
@@ -279,7 +361,7 @@ const NetflixMemberArea = () => {
         </div>
       </main>
 
-      <NetflixBottomTabs storeSlug={config.storeSlug} />
+      <NetflixBottomTabs storeSlug={config?.storeSlug || ''} />
     </div>
   );
 };

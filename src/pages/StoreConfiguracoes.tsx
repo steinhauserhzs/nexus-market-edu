@@ -325,6 +325,49 @@ const StoreConfiguracoes = () => {
               </CardContent>
             </Card>
 
+            {/* Member Area Management */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  Área de Membros
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-medium">Visualizar Área de Membros</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Veja como seus clientes visualizam a área de membros da sua loja
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => window.open(`/loja/${store.slug}/area-membros`, '_blank')}
+                    variant="outline"
+                  >
+                    <Globe className="w-4 h-4 mr-2" />
+                    Preview (Nova Aba)
+                  </Button>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-medium">Acessar Configurações</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Configure banners e personalize a área de membros
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => navigate(`/loja/${store.slug}/area-membros-config`)}
+                    variant="secondary"
+                  >
+                    <Settings className="w-4 h-4 mr-2" />
+                    Configurar
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Actions */}
             <Card>
               <CardHeader>

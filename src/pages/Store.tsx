@@ -323,7 +323,19 @@ const Store = () => {
                       </Button>
                     )}
 
-                    {/* Botão Área de Membros Netflix-Style */}
+                    {/* Preview da Área de Membros - Só para o dono */}
+                    {isOwner && (
+                      <Button
+                        onClick={() => window.open(`/loja/${store.slug}/area-membros`, '_blank')}
+                        variant="outline"
+                        className="store-button-accent"
+                      >
+                        <Globe className="w-4 h-4 mr-2" />
+                        Preview Área de Membros
+                      </Button>
+                    )}
+
+                    {/* Botão Área de Membros Netflix-Style - Para todos */}
                     <Button
                       onClick={() => navigate(`/loja/${store.slug}/area-membros`)}
                       variant="secondary"

@@ -167,10 +167,10 @@ const MemberAreaConfig = () => {
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
-                onClick={() => navigate(`/loja/${slug}/membros`)}
+                onClick={() => window.open(`/loja/${slug}/area-membros`, '_blank')}
               >
                 <Eye className="h-4 w-4 mr-2" />
-                Visualizar
+                Preview Netflix-Style
               </Button>
               <Button 
                 onClick={handleSaveConfig}
