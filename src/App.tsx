@@ -28,6 +28,8 @@ const LazyAdvancedCheckoutDemo = lazy(() => import('./pages/AdvancedCheckoutDemo
 const LazyMemberArea = lazy(() => import('./pages/MemberArea'));
 const LazyMemberAreaConfig = lazy(() => import('./pages/MemberAreaConfig'));
 const LazyMemberAreaAdvanced = lazy(() => import('./pages/MemberAreaAdvanced'));
+const LazyMemberAreaNetflix = lazy(() => import('./pages/MemberAreaNetflix'));
+const LazyNetflixProductView = lazy(() => import('./components/member-area/netflix-style/NetflixProductView'));
 const LazyNetflixDashboard = lazy(() => import('./pages/NetflixDashboard'));
 const LazyNetflixMemberArea = lazy(() => import('./components/member-area/NetflixMemberArea'));
 const LazyCoursePlayer = lazy(() => import('./pages/CoursePlayer'));
@@ -97,6 +99,12 @@ const App = () => (
                         <Route path="/loja/:slug" element={<LazyRoute Component={LazyStore} />} />
                         <Route path="/loja/:slug/membros" element={<LazyRoute Component={LazyMemberArea} />} />
                         <Route path="/loja/:slug/membros-config" element={<LazyRoute Component={LazyMemberAreaConfig} />} />
+                        {/* Netflix-Style Member Area Routes */}
+                        <Route path="/loja/:storeSlug/area-membros" element={<LazyRoute Component={LazyMemberAreaNetflix} />} />
+                        <Route path="/loja/:storeSlug/area-membros/produto/:productId" element={<LazyRoute Component={LazyNetflixProductView} />} />
+                        <Route path="/loja/:storeSlug/area-membros/curso/:productId" element={<LazyRoute Component={LazyNetflixProductView} />} />
+                        <Route path="/loja/:storeSlug/area-membros/produtos" element={<LazyRoute Component={LazyMemberAreaNetflix} />} />
+                        <Route path="/loja/:storeSlug/area-membros/cursos" element={<LazyRoute Component={LazyMemberAreaNetflix} />} />
                         <Route path="/loja/:slug/customizar" element={<LazyRoute Component={LazyStoreCustomizer} />} />
                         <Route path="/produto/:slug" element={<LazyRoute Component={LazyProductDetails} />} />
                         <Route path="/member-area-advanced/:storeId" element={<LazyRoute Component={LazyMemberAreaAdvanced} />} />

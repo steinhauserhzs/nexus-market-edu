@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import './components/ui/line-clamp.css';
+@import './components/member-area/netflix-style/netflix-styles.css';
+
 /* Kirvano Design System - Modern Business Theme */
 
 @layer base {

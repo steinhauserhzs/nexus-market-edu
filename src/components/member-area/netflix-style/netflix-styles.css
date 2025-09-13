@@ -1,0 +1,179 @@
+/* Nexus Netflix-Style Member Area - Additional Styles */
+
+/* Netflix-inspired enhancements to existing design system */
+@layer components {
+  /* Enhanced Netflix-style card hover effect */
+  .netflix-card-hover {
+    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-xl;
+  }
+  
+  /* Netflix-style carousel styling */
+  .netflix-carousel-container {
+    @apply relative overflow-hidden;
+  }
+  
+  .netflix-carousel-track {
+    @apply flex gap-3 transition-transform duration-300 ease-out;
+  }
+  
+  /* Netflix-style badge variants */
+  .netflix-badge-new {
+    @apply bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-md;
+  }
+  
+  .netflix-badge-free {
+    @apply bg-gradient-to-r from-green-600 to-green-500 text-white shadow-md;
+  }
+  
+  .netflix-badge-owned {
+    @apply bg-gradient-to-r from-yellow-500 to-yellow-400 text-black font-semibold shadow-md;
+  }
+
+  .netflix-badge-bestseller {
+    @apply bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold shadow-md;
+  }
+
+  /* Netflix-style scrollbar */
+  .netflix-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .netflix-scrollbar::-webkit-scrollbar-track {
+    @apply bg-background/50;
+  }
+  
+  .netflix-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full;
+  }
+  
+  .netflix-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
+
+  /* Netflix-style focus states for accessibility */
+  .netflix-focus-ring:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+
+  /* Netflix-style loading animation */
+  .netflix-shimmer {
+    background: linear-gradient(90deg, 
+      hsl(var(--secondary)) 25%, 
+      hsl(var(--secondary) / 0.5) 50%, 
+      hsl(var(--secondary)) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Member area specific utilities */
+  .member-area-safe {
+    min-height: 100svh;
+    min-height: 100dvh;
+  }
+
+  .member-area-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .member-area-safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* Netflix-style card grid responsive layout */
+  .netflix-grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 640px) {
+    .netflix-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .netflix-grid {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .netflix-grid {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .netflix-grid {
+      grid-template-columns: repeat(7, 1fr);
+    }
+  }
+
+  /* Hide scrollbar in carousels */
+  .netflix-hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .netflix-hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Smooth scrolling for carousels */
+  .netflix-smooth-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Text truncation utilities for Netflix cards */
+  .netflix-title-clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    line-height: 1.3;
+  }
+
+  .netflix-description-clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    line-height: 1.4;
+  }
+}
+
+/* Keyframes for animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Netflix-style hover animations for cards */
+@keyframes netflix-scale {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.02);
+  }
+}
+
+@keyframes netflix-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

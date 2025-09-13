@@ -323,9 +323,9 @@ const Store = () => {
                       </Button>
                     )}
 
-                    {/* Botão Área de Membros - visível para todos */}
+                    {/* Botão Área de Membros Netflix-Style */}
                     <Button
-                      onClick={() => navigate(`/loja/${store.slug}/membros`)}
+                      onClick={() => navigate(`/loja/${store.slug}/area-membros`)}
                       variant="secondary"
                       className="store-button-secondary"
                     >
