@@ -228,33 +228,6 @@ const DashboardHome = () => {
             </Card>
           </div>
 
-          {/* Quick Actions */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-6">Ações Rápidas</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {quickActions.map((action, index) => (
-                <Card 
-                  key={index} 
-                  className={`hover:shadow-lg transition-all cursor-pointer group ${
-                    action.highlight ? 'ring-2 ring-primary ring-offset-2' : ''
-                  }`}
-                  onClick={action.action}
-                >
-                  <CardContent className="p-6 text-center">
-                    <div className={`w-12 h-12 ${action.color} rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
-                      <action.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="font-semibold mb-2">{action.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      {action.description}
-                    </p>
-                    <ArrowRight className="w-4 h-4 mx-auto text-muted-foreground group-hover:text-primary" />
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-
           {/* Management Options */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold mb-6">Gerenciamento</h2>
@@ -311,18 +284,18 @@ const DashboardHome = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Star className="w-5 h-5" />
-                  Atividade Recente
+                  <MessageCircle className="w-5 h-5" />
+                  Suporte e Ajuda
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="text-center py-8">
                     <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                      <BarChart3 className="w-8 h-8 text-muted-foreground" />
+                      <MessageCircle className="w-8 h-8 text-muted-foreground" />
                     </div>
                     <p className="text-muted-foreground">
-                      Suas atividades recentes aparecerão aqui
+                      Entre em contato para suporte especializado
                     </p>
                   </div>
                 </div>

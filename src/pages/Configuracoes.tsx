@@ -3,13 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SEOHead from "@/components/ui/seo-head";
 import MainHeader from "@/components/layout/main-header";
 import BackNavigation from "@/components/layout/back-navigation";
-import ActivityHistory from "@/components/dashboard/activity-history";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { 
   Settings, 
-  Clock, 
   User, 
   Shield, 
   Bell,
@@ -69,12 +67,8 @@ const Configuracoes = () => {
             </div>
           </div>
 
-          <Tabs defaultValue="activity" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="activity" className="flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                <span className="hidden sm:inline">Histórico</span>
-              </TabsTrigger>
+          <Tabs defaultValue="account" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="account" className="flex items-center gap-2">
                 <User className="w-4 h-4" />
                 <span className="hidden sm:inline">Conta</span>
@@ -88,10 +82,6 @@ const Configuracoes = () => {
                 <span className="hidden sm:inline">Notificações</span>
               </TabsTrigger>
             </TabsList>
-
-            <TabsContent value="activity" className="space-y-6">
-              <ActivityHistory />
-            </TabsContent>
 
             <TabsContent value="account" className="space-y-6">
               <Card>
